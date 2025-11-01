@@ -27,7 +27,7 @@ public class UsuarioController {
      * POST /api/usuarios/login
      * Login de usuario
      */
-    @PostMapping("/login")
+   /* @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return usuarioService.login(request.getUsername(), request.getPassword())
                 .map(usuario -> {
@@ -44,6 +44,25 @@ public class UsuarioController {
                 })
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("success", false, "message", "Credenciales inválidas")));
+    }
+
+    */
+    // ENDPOINT CRÍTICO PARA EL LOGIN
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+        try {
+            String username = credentials.get("username");
+            String password = credentials.get("password");
+
+            if (username == null || password == null) {
+                return ResponseEntity.badRequest().body("Usuario y contraseña son requeridos");
+            }
+
+            Usuario usuario = usuarioService.autenticar(username, password);
+            return ResponseEntity.ok(usuario);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     /**

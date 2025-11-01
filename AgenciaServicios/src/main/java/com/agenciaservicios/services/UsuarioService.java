@@ -45,4 +45,24 @@ public class UsuarioService {
         }
     }
 
+    public Usuario autenticar(String username, String password) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        if (!usuario.getActivo()) {
+            throw new IllegalArgumentException("Usuario inactivo");
+        }
+
+        // IMPORTANTE: Aquí comparamos la contraseña en texto plano
+        // En producción deberías usar BCrypt
+        if (!usuario.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
+
+        // No devolver la contraseña al frontend
+        usuario.setPassword(null);
+
+        return usuario;
+    }
+
 }
