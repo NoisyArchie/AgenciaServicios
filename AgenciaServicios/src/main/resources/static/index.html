@@ -1,15 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tailwind funcionando 🚗</title>
-  <link href="/AgenciaServicios/src/main/resources/static/css/output.css" rel="stylesheet">
-</head>
-<body class="bg-motor text-white h-screen flex items-center justify-center">
-  <div class="bg-grafito p-8 rounded-2xl shadow-lg text-center">
-    <h1 class="text-3xl font-bold text-energia mb-3">🚗 Agencia Mantenimiento</h1>
-    <p class="text-metal">TailwindCSS corriendo perfecto en Fedora</p>
-  </div>
-</body>
+    <head>
+        <body class="bg-black text-orange-100 antialiased">
+            <header class="bg-black shadow-sm">
+                <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-md bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center text-black font-bold">AS</div>
+                        <div>
+                            <div class="text-lg font-semibold text-orange-400">AgenciaServicios</div>
+                            <div class="text-xs text-orange-300">Servicios para tu vehículo</div>
+                        </div>
+                    </div>
+
+                    <nav class="hidden md:flex items-center gap-4">
+                        <a href="#servicios" class="text-orange-300 hover:text-orange-500">Servicios</a>
+                        <a href="#nosotros" class="text-orange-300 hover:text-orange-500">Nosotros</a>
+                        <a href="#contacto" class="text-orange-300 hover:text-orange-500">Contacto</a>
+                        <a href="/login" class="ml-4 inline-flex items-center px-4 py-2 bg-orange-500 text-black rounded-lg shadow hover:bg-orange-600">Iniciar sesión</a>
+                    </nav>
+
+                    <!-- botón visible en móvil -->
+                    <div class="md:hidden">
+                        <a href="/login" class="inline-flex items-center px-3 py-2 bg-orange-500 text-black rounded-md">Entrar</a>
+                    </div>
+                </div>
+            </header>
+
+            <main class="max-w-6xl mx-auto px-6 py-12">
+                <!-- Hero -->
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-orange-400">Tu taller de confianza para cada kilómetro</h1>
+                        <p class="mt-4 text-orange-200">Mantenimiento, reparación y repuestos con garantía. Agenda tu cita en línea o consulta nuestro catálogo de servicios.</p>
+
+                        <div class="mt-6 flex gap-3 flex-wrap">
+                            <a href="#contacto" class="px-5 py-3 bg-orange-500 text-black rounded-lg font-medium shadow hover:bg-orange-600">Solicitar cita</a>
+                            <a href="#servicios" class="px-5 py-3 border border-orange-400 rounded-lg text-orange-300 hover:bg-orange-900">Ver servicios</a>
+                        </div>
+                    </div>
+
+                    <div class="bg-orange-900 rounded-xl shadow p-6">
+                        <h3 class="text-lg font-semibold text-orange-300">Inicio de sesión</h3>
+                        <p class="text-sm text-orange-200 mt-1">Accede a tu cuenta para ver historial, facturas y estado de reparaciones.</p>
+
+                        <div class="mt-4">
+                            <a href="/login" class="w-full inline-flex justify-center items-center px-4 py-2 bg-orange-500 text-black rounded-lg">Iniciar sesión</a>
+                        </div>
+
+                        <div class="mt-4 text-sm text-orange-200">
+                            ¿No tienes cuenta? <a href="#contacto" class="text-orange-400 hover:underline">Contáctanos</a> para crear una.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Servicios -->
+                <section id="servicios" class="mt-12">
+                    <h2 class="text-2xl font-semibold text-orange-400">Nuestros servicios</h2>
+                    <p class="text-orange-200 mt-2">Rápidos, confiables y con garantía.</p>
+
+                    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-orange-900 rounded-lg shadow p-4">
+                            <h3 class="font-semibold text-orange-300">Mantenimiento general</h3>
+                            <p class="text-sm text-orange-200 mt-2">Cambio de aceite, filtros, revisión de frenos y más.</p>
+                        </div>
+
+                        <div class="bg-orange-900 rounded-lg shadow p-4">
+                            <h3 class="font-semibold text-orange-300">Diagnóstico y reparación</h3>
+                            <p class="text-sm text-orange-200 mt-2">Diagnóstico con scanner y reparaciones con piezas certificadas.</p>
+                        </div>
+
+                        <div class="bg-orange-900 rounded-lg shadow p-4">
+                            <h3 class="font-semibold text-orange-300">Repuestos</h3>
+                            <p class="text-sm text-orange-200 mt-2">Piezas originales y alternativas de alta calidad.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Nosotros y contacto -->
+                <section id="nosotros" class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-orange-900 rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold text-orange-300">Sobre la agencia</h3>
+                        <p class="text-orange-200 mt-3">Somos un equipo de técnicos certificados con años de experiencia en mantenimiento y reparación de vehículos. Prioridad: seguridad y transparencia.</p>
+                    </div>
+
+                    <div id="contacto" class="bg-orange-900 rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold text-orange-300">Contacto rápido</h3>
+                        <form class="mt-4 space-y-3" id="contactForm">
+                            <input type="text" placeholder="Nombre" required class="w-full border border-orange-500 rounded-md px-3 py-2 bg-black text-orange-100" />
+                            <input type="email" placeholder="Correo eléctronico" required class="w-full border border-orange-500 rounded-md px-3 py-2 bg-black text-orange-100" />
+                            <textarea placeholder="Tu consulta" rows="4" class="w-full border border-orange-500 rounded-md px-3 py-2 bg-black text-orange-100"></textarea>
+                            <div class="flex items-center gap-3">
+                                <button type="submit" class="px-4 py-2 bg-orange-500 text-black rounded-md">Enviar</button>
+                                <span class="text-sm text-orange-200">Te respondemos en 48h</span>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="bg-black border-t border-orange-900 mt-12">
+                <div class="max-w-6xl mx-auto px-6 py-6 text-sm text-orange-300 flex flex-col md:flex-row justify-between items-center">
+                    <div>© <span id="year"></span> AgenciaServicios — Taller y mantenimiento</div>
+                    <div class="mt-3 md:mt-0">Contacto: <a href="mailto:hola@agenciaservicios.local" class="text-orange-400">hola@agenciaservicios.local</a></div>
+                </div>
+            </footer>
+
+            <script>
+                // comportamiento mínimo: año dinámico y simulación de envío
+                document.getElementById('year').textContent = new Date().getFullYear();
+
+                document.getElementById('contactForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const btn = e.target.querySelector('button');
+                    const original = btn.textContent;
+                    btn.textContent = 'Enviando...';
+                    btn.disabled = true;
+                    setTimeout(() => { btn.textContent = original; btn.disabled = false; alert('Mensaje enviado. Nos pondremos en contacto.'); e.target.reset(); }, 900);
+                });
+            </script>
+        </body>
+    </html>
+                btn.textContent = 'Enviando...';
+                btn.disabled = true;
+                setTimeout(() => { btn.textContent = original; btn.disabled = false; alert('Mensaje enviado. Nos pondremos en contacto.'); e.target.reset(); }, 900);
+            });
+        </script>
+    </body>
 </html>
