@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Siscare</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="/css/login.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body class="bg-black text-white flex min-h-screen">
@@ -13,7 +13,7 @@
 <!-- Lado Izquierdo con Imagen -->
 <div class="hidden md:flex w-1/2 relative overflow-hidden z-50">
     <img
-            src="img/Challenger.png"
+            src="/img/Challenger.png"
             class="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
             style="
           object-position: 80% center;
@@ -53,7 +53,6 @@
                     <span class="text-gray-300 text-sm">Usuario</span>
                     <div class="input-box flex items-center gap-3 bg-[#0D0D0D] p-3 rounded-lg mt-1 border transition">
                         <i class='bx bx-user text-gray-300 text-xl'></i>
-                        <!-- ✅ CORREGIDO: type="text" y placeholder="Usuario" -->
                         <input
                                 type="text"
                                 id="username"
@@ -93,6 +92,13 @@
                     Entrar
                 </button>
             </form>
+
+            <!-- Link para volver al inicio -->
+            <div class="text-center mt-6">
+                <a href="/" class="text-sm text-gray-400 hover:text-orange-400 transition">
+                    ← Volver al inicio
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -103,7 +109,7 @@
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const username = document.getElementById('username').value;
+        const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
         const remember = document.getElementById('remember').checked;
 
@@ -111,9 +117,11 @@
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
 
+        // Ocultar mensajes anteriores
         errorMessage.classList.add('hidden');
         successMessage.classList.add('hidden');
 
+        // Deshabilitar botón durante la petición
         loginButton.disabled = true;
         loginButton.textContent = 'Iniciando sesión...';
 
@@ -132,17 +140,20 @@
             if (response.ok) {
                 const usuario = await response.json();
 
+                // Guardar usuario en localStorage o sessionStorage
                 if (remember) {
                     localStorage.setItem('usuario', JSON.stringify(usuario));
                 } else {
                     sessionStorage.setItem('usuario', JSON.stringify(usuario));
                 }
 
+                // Mostrar mensaje de éxito
                 document.getElementById('successText').textContent = '¡Bienvenido! Redirigiendo...';
                 successMessage.classList.remove('hidden');
 
+                // ✅ REDIRIGIR A CATÁLOGO DE MARCAS
                 setTimeout(() => {
-                    window.location.href = 'layout.html';
+                    window.location.href = '/admin/catalogoMarcas.html';
                 }, 1000);
 
             } else {
@@ -157,18 +168,21 @@
             errorMessage.classList.remove('hidden');
 
         } finally {
+            // Rehabilitar botón
             loginButton.disabled = false;
             loginButton.textContent = 'Entrar';
         }
     });
 
+    // Verificar si ya hay sesión iniciada
     window.addEventListener('DOMContentLoaded', () => {
         const usuario = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
         if (usuario) {
-            window.location.href = 'layout.html';
+            // Si ya hay sesión, redirigir directo a catálogo de marcas
+            window.location.href = '/admin/catalogoMarcas.html';
         }
     });
 </script>
 
 </body>
-</html></html>
+</html>
