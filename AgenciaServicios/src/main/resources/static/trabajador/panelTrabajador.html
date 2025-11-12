@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Panel Trabajador - Siscare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-[#0D0D0D] text-white min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+        <div>
+            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+                Siscare
+            </h2>
+
+            <nav class="flex flex-col gap-1">
+                <a href="/trabajador/panelTrabajador.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                    <i class="bx bx-home text-xl"></i> Panel
+                </a>
+
+                <a href="/admin/servicios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-wrench text-xl"></i> Servicios
+                </a>
+
+                <a href="/trabajador/clientes.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-user text-xl"></i> Clientes
+                </a>
+            </nav>
+        </div>
+
+        <div class="border-t border-gray-700 pt-4">
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+        <!-- NAVBAR SUPERIOR -->
+        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+            <div>
+                <h1 class="text-2xl font-bold">Panel</h1>
+                <p class="text-gray-400 text-sm">Resumen general para atención al cliente</p>
+            </div>
+
+            <!-- Icono de usuario -->
+            <div class="flex items-center gap-3">
+                <span class="text-gray-300 text-sm">Trabajador</span>
+                <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                    <i class="bx bx-user text-white text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENIDO -->
+        <section class="p-8 flex-1 overflow-y-auto">
+            <!-- Cards de Información Rápida -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Servicios del Día -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Servicios Hoy</p>
+                            <p class="text-3xl font-bold">-</p>
+                            <p class="text-gray-400 text-sm mt-1">Cargando...</p>
+                        </div>
+                        <div class="bg-blue-500/20 p-4 rounded-full">
+                            <i class="bx bx-calendar text-blue-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Servicios Activos -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">En Taller</p>
+                            <p class="text-3xl font-bold text-yellow-400">-</p>
+                            <p class="text-gray-400 text-sm mt-1">Cargando...</p>
+                        </div>
+                        <div class="bg-yellow-500/20 p-4 rounded-full">
+                            <i class="bx bx-wrench text-yellow-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clientes Nuevos -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Clientes Mes</p>
+                            <p class="text-3xl font-bold">-</p>
+                            <p class="text-gray-400 text-sm mt-1">Cargando...</p>
+                        </div>
+                        <div class="bg-green-500/20 p-4 rounded-full">
+                            <i class="bx bx-user-plus text-green-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehículos Registrados -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Vehículos Mes</p>
+                            <p class="text-3xl font-bold">-</p>
+                            <p class="text-gray-400 text-sm mt-1">Cargando...</p>
+                        </div>
+                        <div class="bg-purple-500/20 p-4 rounded-full">
+                            <i class="bx bx-car text-purple-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficas Simples -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Servicios por Estatus -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <h2 class="text-xl font-bold text-orange-400 mb-6">Servicios por Estatus</h2>
+                    <div class="h-64">
+                        <canvas id="graficaEstatus"></canvas>
+                    </div>
+                </div>
+
+                <!-- Servicios de Hoy -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <h2 class="text-xl font-bold text-orange-400 mb-6">Servicios de Hoy</h2>
+                    <div class="space-y-4">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="bx bx-loader-circle bx-spin text-2xl mb-2"></i>
+                            <p>Cargando servicios...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                <h2 class="text-xl font-bold text-orange-400 mb-6">Acciones Rápidas</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="/trabajador/altaClientes.html" 
+                       class="flex items-center gap-3 p-4 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded-lg transition">
+                        <div class="bg-green-500/20 p-3 rounded-full">
+                            <i class="bx bx-user-plus text-green-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Registrar Cliente</p>
+                            <p class="text-gray-400 text-sm">Nuevo cliente en el sistema</p>
+                        </div>
+                    </a>
+
+                    <a href="/admin/crearServicio.html"
+                       class="flex items-center gap-3 p-4 bg-orange-600/20 hover:bg-orange-600/30 border border-orange-500/30 rounded-lg transition">
+                        <div class="bg-orange-500/20 p-3 rounded-full">
+                            <i class="bx bx-plus text-orange-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Crear Servicio</p>
+                            <p class="text-gray-400 text-sm">Nuevo servicio de taller</p>
+                        </div>
+                    </a>
+
+                    <a href="/trabajador/altaVehiculosCliente.html"
+                       class="flex items-center gap-3 p-4 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg transition">
+                        <div class="bg-blue-500/20 p-3 rounded-full">
+                            <i class="bx bx-car text-blue-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Agregar Vehículo</p>
+                            <p class="text-gray-400 text-sm">Vehículo a cliente existente</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <style>
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+
+    <script>
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarGrafica();
+            cargarDatos();
+        });
+
+        // Inicializar gráfica simple
+        function inicializarGrafica() {
+            const ctx = document.getElementById('graficaEstatus').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pendiente', 'En Proceso', 'Listo', 'Entregado'],
+                    datasets: [{
+                        label: 'Cantidad',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: [
+                            '#3B82F6', // Azul - Pendiente
+                            '#F59E0B', // Amarillo - En Proceso
+                            '#10B981', // Verde - Listo
+                            '#059669'  // Verde oscuro - Entregado
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1F2937',
+                            titleColor: '#F9FAFB',
+                            bodyColor: '#D1D5DB'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#9CA3AF',
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#374151'
+                            },
+                            ticks: {
+                                color: '#9CA3AF'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Cargar datos (placeholder - en producción se conectaría al backend)
+        async function cargarDatos() {
+            try {
+                // Simular carga de datos
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // En producción, aquí se harían las llamadas al API
+                // const datos = await fetch('/api/trabajador/dashboard').then(r => r.json());
+                
+                //  datos de ejemplo estáticos
+                const datosEjemplo = {
+                    serviciosHoy: 8,
+                    enTaller: 5,
+                    clientesMes: 12,
+                    vehiculosMes: 15,
+                    serviciosEstatus: [3, 5, 2, 4],
+                    serviciosHoyLista: [
+                        { folio: 'SER-2024-024', vehiculo: 'Toyota Corolla', cliente: 'Juan Pérez', estatus: 'en_proceso' },
+                        { folio: 'SER-2024-025', vehiculo: 'Honda Civic', cliente: 'María López', estatus: 'pendiente' },
+                        { folio: 'SER-2024-026', vehiculo: 'Nissan Sentra', cliente: 'Carlos Rodríguez', estatus: 'listo' }
+                    ]
+                };
+
+                actualizarUI(datosEjemplo);
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                mostrarError();
+            }
+        }
+
+        // Actualizar la interfaz con los datos
+        function actualizarUI(datos) {
+            // Actualizar cards
+            document.querySelectorAll('.text-3xl')[0].textContent = datos.serviciosHoy;
+            document.querySelectorAll('.text-3xl')[1].textContent = datos.enTaller;
+            document.querySelectorAll('.text-3xl')[2].textContent = datos.clientesMes;
+            document.querySelectorAll('.text-3xl')[3].textContent = datos.vehiculosMes;
+
+            // Actualizar textos de carga
+            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[0].textContent = `${datos.serviciosEstatus[0]} pendientes`;
+            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[1].textContent = 'En proceso';
+            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[2].textContent = '+2 vs ayer';
+            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[3].textContent = 'Nuevos registros';
+
+            // Actualizar gráfica
+            const grafica = Chart.getChart('graficaEstatus');
+            grafica.data.datasets[0].data = datos.serviciosEstatus;
+            grafica.update();
+
+            // Actualizar lista de servicios de hoy
+            const listaServicios = document.querySelector('.space-y-4');
+            listaServicios.innerHTML = datos.serviciosHoyLista.map(servicio => `
+                <div class="flex justify-between items-center p-3 bg-black/30 rounded-lg border border-gray-700">
+                    <div>
+                        <p class="font-medium">${servicio.folio}</p>
+                        <p class="text-gray-400 text-sm">${servicio.vehiculo} - ${servicio.cliente}</p>
+                    </div>
+                    <span class="${obtenerClaseEstatus(servicio.estatus)} px-2 py-1 rounded-full text-xs">
+                        ${obtenerTextoEstatus(servicio.estatus)}
+                    </span>
+                </div>
+            `).join('') + `
+                <a href="/admin/servicios.html" class="block text-center text-orange-400 hover:text-orange-300 text-sm mt-4">
+                    Ver todos los servicios <i class="bx bx-chevron-right"></i>
+                </a>
+            `;
+        }
+
+        // Funciones auxiliares para estatus
+        function obtenerClaseEstatus(estatus) {
+            const clases = {
+                'pendiente': 'bg-blue-500/20 text-blue-400',
+                'en_proceso': 'bg-yellow-500/20 text-yellow-400',
+                'listo': 'bg-green-500/20 text-green-400',
+                'entregado': 'bg-green-500/20 text-green-400'
+            };
+            return clases[estatus] || 'bg-gray-500/20 text-gray-400';
+        }
+
+        function obtenerTextoEstatus(estatus) {
+            const textos = {
+                'pendiente': 'Pendiente',
+                'en_proceso': 'En Proceso',
+                'listo': 'Listo',
+                'entregado': 'Entregado'
+            };
+            return textos[estatus] || estatus;
+        }
+
+        // Mostrar error
+        function mostrarError() {
+            document.querySelectorAll('.text-3xl').forEach(el => {
+                el.textContent = 'Error';
+            });
+            document.querySelectorAll('.text-gray-400.text-sm.mt-1').forEach(el => {
+                el.textContent = 'Error al cargar';
+                el.className = 'text-red-400 text-sm mt-1';
+            });
+        }
+    </script>
+</body>
+
+</html>

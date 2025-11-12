@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Clientes - Siscare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-[#0D0D0D] text-white min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+        <div>
+            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+                Siscare
+            </h2>
+
+            <nav class="flex flex-col gap-1">
+                <a href="/trabajador/panelTrabajador.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-home text-xl"></i> Panel
+                </a>
+
+                <a href="/admin/servicios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-wrench text-xl"></i> Servicios
+                </a>
+
+                <a href="/trabajador/clientes.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                    <i class="bx bx-user text-xl"></i> Clientes
+                </a>
+            </nav>
+        </div>
+
+        <div class="border-t border-gray-700 pt-4">
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+        <!-- NAVBAR SUPERIOR -->
+        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+            <!-- Icono de usuario -->
+            <div class="flex items-center gap-3">
+                <span class="text-gray-300 text-sm">Trabajador</span>
+                <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                    <i class="bx bx-user text-white text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENIDO -->
+        <section class="p-8 flex-1 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold">Gestión de Clientes</h1>
+                    <p class="text-gray-400 text-sm">
+                        Administra los clientes del sistema
+                    </p>
+                </div>
+
+                <div class="flex gap-3">
+                    <a href="/trabajador/altaVehiculosCliente.html"
+                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 transition px-4 py-2 rounded shadow">
+                        <i class="bx bx-car"></i> Agregar Vehículo
+                    </a>
+                    <a href="/trabajador/altaClientes.html"
+                        class="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded shadow">
+                        <i class="bx bx-plus"></i> Nuevo Cliente
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm text-gray-300 mb-2">Buscar Cliente</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="inputBuscarCliente" placeholder="Buscar por nombre, email o teléfono"
+                                class="flex-1 bg-black/30 border border-gray-700 text-white p-2 rounded-lg focus:border-orange-500">
+                            <button onclick="buscarClientes()" class="bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
+                                <i class="bx bx-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-300 mb-2">Estado</label>
+                        <select id="selectEstado" class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg">
+                            <option value="">Todos los estados</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4">
+                    <button onclick="aplicarFiltros()" class="bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
+                        Aplicar Filtros
+                    </button>
+                    <button onclick="limpiarFiltros()" class="bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded">
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de Clientes -->
+            <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700">
+                <table class="w-full text-sm">
+                    <thead class="border-b border-gray-700 text-orange-400">
+                        <tr>
+                            <th class="py-3 text-left">ID</th>
+                            <th class="text-left">Nombre Completo</th>
+                            <th class="text-left">Teléfono</th>
+                            <th class="text-left">Email</th>
+                            <th class="text-left">Fecha Registro</th>
+                            <th class="text-left">Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tablaClientes">
+                        <!-- Los clientes se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-700">
+                    <div class="text-gray-400 text-sm" id="infoPaginacion">
+                        Mostrando 0 de 0 clientes
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="cambiarPagina('anterior')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <i class="bx bx-chevron-left"></i>
+                        </button>
+                        <button id="pagina1" class="px-3 py-1 bg-orange-600 text-white rounded">1</button>
+                        <button id="pagina2" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">2</button>
+                        <button id="pagina3" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">3</button>
+                        <button onclick="cambiarPagina('siguiente')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <i class="bx bx-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Detalle Cliente -->
+    <div id="modalDetalleCliente" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+        <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-full max-w-2xl animate-[zoomIn_.3s_ease] relative max-h-[90vh] overflow-y-auto">
+            <button onclick="cerrarModalDetalle()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl">
+                <i class="bx bx-x"></i>
+            </button>
+
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Detalle del Cliente</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Información Personal -->
+                <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold text-orange-400 mb-3">Información Personal</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Nombre:</span>
+                            <span class="font-medium" id="detalleNombre">Juan Pérez García</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Email:</span>
+                            <span id="detalleEmail">juan@email.com</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Teléfono:</span>
+                            <span id="detalleTelefono">+52 555 123 4567</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Fecha Registro:</span>
+                            <span id="detalleFechaRegistro">2023-10-15</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Contacto -->
+                <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold text-orange-400 mb-3">Información de Contacto</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Dirección:</span>
+                            <span id="detalleDireccion" class="text-right">Av. Principal #123, Col. Centro, CDMX</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Estado:</span>
+                            <span id="detalleEstado" class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Activo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehículos del Cliente -->
+            <div class="bg-black/30 p-4 rounded-lg border border-gray-700 mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-lg font-semibold text-orange-400">Vehículos del Cliente</h3>
+                    <a href="/trabajador/altaVehiculosCliente.html" 
+                       class="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 transition px-3 py-1 rounded text-sm">
+                        <i class="bx bx-plus"></i> Agregar Vehículo
+                    </a>
+                </div>
+                <div class="space-y-2" id="listaVehiculosCliente">
+                    <!-- Los vehículos se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Historial de Servicios -->
+            <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">Últimos Servicios</h3>
+                <div class="space-y-2" id="listaServiciosCliente">
+                    <!-- Los servicios se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Cliente -->
+    <div id="modalEditarCliente" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+        <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-full max-w-2xl animate-[zoomIn_.3s_ease] relative max-h-[90vh] overflow-y-auto">
+            <button onclick="cerrarModalEditar()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl">
+                <i class="bx bx-x"></i>
+            </button>
+
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Editar Cliente</h2>
+
+            <form id="formEditarCliente" class="space-y-6">
+                <input type="hidden" id="clienteIdEditar">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Nombre Completo *
+                        </label>
+                        <input type="text" id="inputNombreEditar" required
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="Nombre completo del cliente">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Teléfono *
+                        </label>
+                        <input type="tel" id="inputTelefonoEditar" required
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="Número de teléfono">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Email *
+                    </label>
+                    <input type="email" id="inputEmailEditar" required
+                        class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                        placeholder="correo@ejemplo.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Dirección
+                    </label>
+                    <textarea id="textareaDireccionEditar" rows="3"
+                        class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 resize-none"
+                        placeholder="Dirección completa del cliente"></textarea>
+                </div>
+
+                <div class="flex items-center gap-3 pt-4 border-t border-gray-700">
+                    <input type="checkbox" id="checkActivoEditar" checked
+                        class="w-4 h-4 accent-orange-500 bg-black/30 border-gray-700 rounded focus:ring-orange-500">
+                    <label for="checkActivoEditar" class="text-sm font-medium text-gray-300">
+                        Cliente activo
+                    </label>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-6 border-t border-gray-700">
+                    <button type="button" onclick="cerrarModalEditar()"
+                        class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg font-semibold">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        @keyframes zoomIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 140, 0, 0.05);
+            transform: scale(1.01);
+        }
+    </style>
+
+    <script>
+        // Datos de ejemplo para los clientes
+        const clientes = [
+            {
+                id: 1,
+                nombre_completo: "Juan Pérez García",
+                telefono: "+52 555 123 4567",
+                email: "juan@email.com",
+                direccion: "Av. Principal #123, Col. Centro, CDMX",
+                fecha_registro: "2023-10-15",
+                activo: true,
+                vehiculos: [
+                    { marca: "Toyota", modelo: "Corolla", anio: 2022, placas: "ABC-1234" },
+                    { marca: "Honda", modelo: "Civic", anio: 2020, placas: "XYZ-5678" }
+                ],
+                servicios: [
+                    { folio: "SER-2024-001", fecha: "2024-01-15", tipo: "Mantenimiento Mayor", costo: 2450.00 },
+                    { folio: "SER-2023-045", fecha: "2023-12-10", tipo: "Cambio de Aceite", costo: 450.00 }
+                ]
+            },
+            {
+                id: 2,
+                nombre_completo: "María López Hernández",
+                telefono: "+52 555 987 6543",
+                email: "maria@email.com",
+                direccion: "Calle Secundaria #456, Col. Norte",
+                fecha_registro: "2023-11-20",
+                activo: true,
+                vehiculos: [
+                    { marca: "Nissan", modelo: "Sentra", anio: 2021, placas: "DEF-9012" }
+                ],
+                servicios: [
+                    { folio: "SER-2024-002", fecha: "2024-01-16", tipo: "Mantenimiento Básico", costo: 850.00 }
+                ]
+            },
+            {
+                id: 3,
+                nombre_completo: "Carlos Rodríguez",
+                telefono: "+52 555 456 7890",
+                email: "carlos@email.com",
+                direccion: "Blvd. Industrial #789, Zona Industrial",
+                fecha_registro: "2024-01-05",
+                activo: true,
+                vehiculos: [
+                    { marca: "Ford", modelo: "Focus", anio: 2019, placas: "GHI-3456" }
+                ],
+                servicios: []
+            },
+            {
+                id: 4,
+                nombre_completo: "Ana Martínez",
+                telefono: "+52 555 234 5678",
+                email: "ana@email.com",
+                direccion: "Privada Jardines #321, Col. Sur",
+                fecha_registro: "2023-09-12",
+                activo: false,
+                vehiculos: [],
+                servicios: [
+                    { folio: "SER-2023-038", fecha: "2023-08-20", tipo: "Reparación de Frenos", costo: 1200.00 }
+                ]
+            }
+        ];
+
+        // Variables globales
+        let clientesFiltrados = [...clientes];
+        let paginaActual = 1;
+        const clientesPorPagina = 5;
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarClientes();
+            configurarEventos();
+        });
+
+        // Configurar eventos
+        function configurarEventos() {
+            // Buscar cliente con Enter
+            document.getElementById('inputBuscarCliente').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    buscarClientes();
+                }
+            });
+
+            // Formulario editar cliente
+            document.getElementById('formEditarCliente').addEventListener('submit', function(e) {
+                e.preventDefault();
+                actualizarCliente();
+            });
+        }
+
+        // Cargar clientes en la tabla
+        function cargarClientes() {
+            const tabla = document.getElementById('tablaClientes');
+            const inicio = (paginaActual - 1) * clientesPorPagina;
+            const fin = inicio + clientesPorPagina;
+            const clientesPagina = clientesFiltrados.slice(inicio, fin);
+
+            tabla.innerHTML = '';
+
+            if (clientesPagina.length === 0) {
+                tabla.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-gray-400">
+                            No se encontraron clientes
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            clientesPagina.forEach(cliente => {
+                const fila = document.createElement('tr');
+                fila.className = 'border-b border-gray-800 hover:bg-black/40 transition';
+                fila.innerHTML = `
+                    <td class="py-3">${cliente.id}</td>
+                    <td class="font-medium">${cliente.nombre_completo}</td>
+                    <td>${cliente.telefono}</td>
+                    <td>${cliente.email}</td>
+                    <td>${cliente.fecha_registro}</td>
+                    <td>
+                        ${cliente.activo ? 
+                            '<span class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Activo</span>' : 
+                            '<span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Inactivo</span>'
+                        }
+                    </td>
+                    <td class="text-center">
+                        <div class="flex gap-2 justify-center">
+                            <button onclick="verDetalleCliente(${cliente.id})" class="text-blue-400 hover:text-blue-300" title="Ver Detalles">
+                                <i class="bx bx-show text-xl"></i>
+                            </button>
+                            <button onclick="abrirModalEditar(${cliente.id})" class="text-orange-400 hover:text-orange-300" title="Editar">
+                                <i class="bx bx-edit text-xl"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tabla.appendChild(fila);
+            });
+
+            actualizarPaginacion();
+        }
+
+        // Buscar clientes
+        function buscarClientes() {
+            const termino = document.getElementById('inputBuscarCliente').value.trim().toLowerCase();
+            
+            if (!termino) {
+                clientesFiltrados = [...clientes];
+            } else {
+                clientesFiltrados = clientes.filter(cliente => 
+                    cliente.nombre_completo.toLowerCase().includes(termino) ||
+                    cliente.email.toLowerCase().includes(termino) ||
+                    cliente.telefono.includes(termino)
+                );
+            }
+
+            paginaActual = 1;
+            cargarClientes();
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const estado = document.getElementById('selectEstado').value;
+            const termino = document.getElementById('inputBuscarCliente').value.trim().toLowerCase();
+
+            clientesFiltrados = clientes.filter(cliente => {
+                let cumple = true;
+
+                // Filtro por estado
+                if (estado) {
+                    if (estado === 'activo' && !cliente.activo) {
+                        cumple = false;
+                    } else if (estado === 'inactivo' && cliente.activo) {
+                        cumple = false;
+                    }
+                }
+
+                // Filtro por término de búsqueda
+                if (termino && !(
+                    cliente.nombre_completo.toLowerCase().includes(termino) ||
+                    cliente.email.toLowerCase().includes(termino) ||
+                    cliente.telefono.includes(termino)
+                )) {
+                    cumple = false;
+                }
+
+                return cumple;
+            });
+
+            paginaActual = 1;
+            cargarClientes();
+        }
+
+        // Limpiar filtros
+        function limpiarFiltros() {
+            document.getElementById('inputBuscarCliente').value = '';
+            document.getElementById('selectEstado').value = '';
+            
+            clientesFiltrados = [...clientes];
+            paginaActual = 1;
+            cargarClientes();
+        }
+
+        // Actualizar paginación
+        function actualizarPaginacion() {
+            const totalClientes = clientesFiltrados.length;
+            const totalPaginas = Math.ceil(totalClientes / clientesPorPagina);
+            const inicio = (paginaActual - 1) * clientesPorPagina + 1;
+            const fin = Math.min(paginaActual * clientesPorPagina, totalClientes);
+
+            document.getElementById('infoPaginacion').textContent = 
+                `Mostrando ${inicio}-${fin} de ${totalClientes} clientes`;
+
+            // Actualizar botones de paginación
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById(`pagina${i}`);
+                if (i <= totalPaginas) {
+                    btn.textContent = i;
+                    btn.style.display = 'block';
+                    btn.className = `px-3 py-1 ${i === paginaActual ? 'bg-orange-600 text-white' : 'bg-gray-700 hover:bg-gray-600'} rounded transition`;
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+        }
+
+        // Cambiar página
+        function cambiarPagina(direccion) {
+            const totalPaginas = Math.ceil(clientesFiltrados.length / clientesPorPagina);
+
+            if (direccion === 'siguiente' && paginaActual < totalPaginas) {
+                paginaActual++;
+            } else if (direccion === 'anterior' && paginaActual > 1) {
+                paginaActual--;
+            }
+
+            cargarClientes();
+        }
+
+        // Ver detalle del cliente
+        function verDetalleCliente(id) {
+            const cliente = clientes.find(c => c.id === id);
+            if (!cliente) return;
+
+            // Llenar modal con datos del cliente
+            document.getElementById('detalleNombre').textContent = cliente.nombre_completo;
+            document.getElementById('detalleEmail').textContent = cliente.email;
+            document.getElementById('detalleTelefono').textContent = cliente.telefono;
+            document.getElementById('detalleFechaRegistro').textContent = cliente.fecha_registro;
+            document.getElementById('detalleDireccion').textContent = cliente.direccion || 'No especificada';
+            document.getElementById('detalleEstado').innerHTML = cliente.activo ? 
+                '<span class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Activo</span>' : 
+                '<span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Inactivo</span>';
+
+            // Llenar vehículos del cliente
+            const listaVehiculos = document.getElementById('listaVehiculosCliente');
+            if (cliente.vehiculos.length === 0) {
+                listaVehiculos.innerHTML = `
+                    <div class="text-center py-4 text-gray-400">
+                        <i class="bx bx-car text-2xl mb-2 block"></i>
+                        <p>No hay vehículos registrados</p>
+                        <a href="/trabajador/altaVehiculosCliente.html" 
+                           class="inline-block mt-2 bg-blue-600 hover:bg-blue-500 transition px-3 py-1 rounded text-sm">
+                            Agregar primer vehículo
+                        </a>
+                    </div>
+                `;
+            } else {
+                listaVehiculos.innerHTML = cliente.vehiculos.map(vehiculo => `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                        <div>
+                            <p class="font-medium">${vehiculo.marca} ${vehiculo.modelo} ${vehiculo.anio}</p>
+                            <p class="text-gray-400 text-sm">Placas: ${vehiculo.placas}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="text-blue-400 hover:text-blue-300" title="Ver servicios">
+                                <i class="bx bx-wrench"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Llenar servicios del cliente
+            const listaServicios = document.getElementById('listaServiciosCliente');
+            if (cliente.servicios.length === 0) {
+                listaServicios.innerHTML = '<p class="text-gray-400 text-center">No hay servicios registrados</p>';
+            } else {
+                listaServicios.innerHTML = cliente.servicios.map(servicio => `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                        <div>
+                            <p class="font-medium">${servicio.folio}</p>
+                            <p class="text-gray-400 text-sm">${servicio.tipo} - ${servicio.fecha}</p>
+                        </div>
+                        <span class="text-green-400">$${servicio.costo.toFixed(2)}</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('modalDetalleCliente').classList.remove('hidden');
+        }
+
+        // Abrir modal para editar cliente
+        function abrirModalEditar(id) {
+            const cliente = clientes.find(c => c.id === id);
+            if (!cliente) return;
+
+            document.getElementById('clienteIdEditar').value = cliente.id;
+            document.getElementById('inputNombreEditar').value = cliente.nombre_completo;
+            document.getElementById('inputTelefonoEditar').value = cliente.telefono;
+            document.getElementById('inputEmailEditar').value = cliente.email;
+            document.getElementById('textareaDireccionEditar').value = cliente.direccion || '';
+
+            document.getElementById('modalEditarCliente').classList.remove('hidden');
+        }
+
+        // Actualizar cliente
+        function actualizarCliente() {
+            const id = parseInt(document.getElementById('clienteIdEditar').value);
+            const nombre = document.getElementById('inputNombreEditar').value;
+            const telefono = document.getElementById('inputTelefonoEditar').value;
+            const email = document.getElementById('inputEmailEditar').value;
+            const direccion = document.getElementById('textareaDireccionEditar').value;
+            const activo = document.getElementById('checkActivoEditar').checked;
+
+            // En una implementación real, aquí enviarías la actualización al servidor
+            const cliente = clientes.find(c => c.id === id);
+            if (cliente) {
+                cliente.nombre_completo = nombre;
+                cliente.telefono = telefono;
+                cliente.email = email;
+                cliente.direccion = direccion;
+                cliente.activo = activo;
+
+                alert(`Cliente ${cliente.nombre_completo} actualizado exitosamente`);
+            }
+
+            cerrarModalEditar();
+            cargarClientes();
+        }
+
+        // Cerrar modales
+        function cerrarModalDetalle() {
+            document.getElementById('modalDetalleCliente').classList.add('hidden');
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modalEditarCliente').classList.add('hidden');
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarModalDetalle();
+                cerrarModalEditar();
+            }
+        });
+    </script>
+</body>
+
+</html>

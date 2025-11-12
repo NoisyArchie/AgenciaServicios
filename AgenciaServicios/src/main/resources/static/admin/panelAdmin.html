@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Panel Administrador - Siscare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-[#0D0D0D] text-white min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+        <div>
+            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+                Siscare
+            </h2>
+
+            <nav class="flex flex-col gap-1">
+                <a href="/admin/panelAdmin.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                    <i class="bx bx-home text-xl"></i> Panel
+                </a>
+
+                <a href="/admin/servicios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-wrench text-xl"></i> Servicios
+                </a>
+
+                <a href="/admin/usuarios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-id-card text-xl"></i> Usuarios
+                </a>
+
+                <!-- Sección de Catálogos -->
+                <div>
+                    <button id="btnCatalogos"
+                        class="flex justify-between items-center w-full p-3 hover:bg-orange-500/20 rounded transition">
+                        <span class="flex items-center gap-3"><i class="bx bx-folder text-xl"></i> Catálogos</span>
+                        <i id="iconArrow" class="bx bx-chevron-down text-xl"></i>
+                    </button>
+
+                    <div id="submenuCatalogos" class="pl-10 mt-1 flex flex-col hidden">
+                        <a href="/admin/catalogoTiposServicio.html"
+                            class="block py-2 text-sm hover:text-orange-400">Tipos de Servicio</a>
+                        <a href="/admin/catalogoRefacciones.html"
+                            class="block py-2 text-sm hover:text-orange-400">Refacciones</a>
+                        <a href="/admin/catalogoMarcas.html" class="block py-2 text-sm hover:text-orange-400">Marcas</a>
+                        <a href="/admin/catalogoModelos.html"
+                            class="block py-2 text-sm hover:text-orange-400">Modelos</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="border-t border-gray-700 pt-4">
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+        <!-- NAVBAR SUPERIOR -->
+        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+            <div>
+                <h1 class="text-2xl font-bold">Dashboard Administrativo</h1>
+                <p class="text-gray-400 text-sm">Resumen general del sistema</p>
+            </div>
+
+            <!-- Icono de usuario y botón crear servicio -->
+            <div class="flex items-center gap-4">
+                <a href="/admin/crearServicio.html"
+                    class="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded shadow">
+                    <i class="bx bx-plus"></i> Crear Servicio
+                </a>
+                <div class="flex items-center gap-3">
+                    <span class="text-gray-300 text-sm">Administrador</span>
+                    <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                        <i class="bx bx-user text-white text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENIDO -->
+        <section class="p-8 flex-1 overflow-y-auto">
+            <!-- Estadísticas Principales -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Servicios -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 hover:border-orange-500/50 transition">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Servicios</p>
+                            <p id="totalServicios" class="text-3xl font-bold">-</p>
+                            <p class="text-gray-400 text-sm mt-1">Todos los tiempos</p>
+                        </div>
+                        <div class="bg-blue-500/20 p-4 rounded-full">
+                            <i class="bx bx-wrench text-blue-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Servicios Activos -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 hover:border-orange-500/50 transition">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Servicios Activos</p>
+                            <p id="serviciosActivos" class="text-3xl font-bold text-yellow-400">-</p>
+                            <p class="text-gray-400 text-sm mt-1">En proceso y pendientes</p>
+                        </div>
+                        <div class="bg-yellow-500/20 p-4 rounded-full">
+                            <i class="bx bx-time text-yellow-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ingresos del Mes -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 hover:border-orange-500/50 transition">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Ingresos del Mes</p>
+                            <p id="ingresosMes" class="text-3xl font-bold text-green-400">-</p>
+                            <p class="text-gray-400 text-sm mt-1">Mes actual</p>
+                        </div>
+                        <div class="bg-green-500/20 p-4 rounded-full">
+                            <i class="bx bx-dollar text-green-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clientes Activos -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 hover:border-orange-500/50 transition">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Clientes Activos</p>
+                            <p id="clientesActivos" class="text-3xl font-bold">-</p>
+                           
+                        </div>
+                        <div class="bg-purple-500/20 p-4 rounded-full">
+                            <i class="bx bx-user text-purple-400 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficas y Métricas -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Gráfica de Estatus de Servicios -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-orange-400">Estatus de Servicios</h2>
+                        <div class="flex gap-2">
+                            <select id="selectPeriodoGrafica" class="bg-black/30 border border-gray-700 text-white p-2 rounded text-sm">
+                                <option value="mes" selected>Este Mes</option>
+                                <option value="semana">Esta Semana</option>
+                                <option value="total">Total General</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="h-80">
+                        <canvas id="graficaEstatusServicios"></canvas>
+                    </div>
+                </div>
+
+                <!-- Servicios Recientes -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-orange-400">Servicios Recientes</h2>
+                        <a href="/admin/servicios.html" class="text-orange-400 hover:text-orange-300 text-sm">
+                            Ver todos <i class="bx bx-chevron-right"></i>
+                        </a>
+                    </div>
+                    <div id="listaServiciosRecientes" class="space-y-4">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="bx bx-loader-circle bx-spin text-2xl mb-2"></i>
+                            <p>Cargando servicios recientes...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Refacciones con Bajo Stock -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <h2 class="text-xl font-bold text-orange-400 mb-6">Refacciones con Bajo Stock</h2>
+                    <div id="listaRefaccionesBajoStock" class="space-y-3">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="bx bx-loader-circle bx-spin text-2xl mb-2"></i>
+                            <p>Cargando refacciones...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehículos por Marca -->
+                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                    <h2 class="text-xl font-bold text-orange-400 mb-6">Vehículos por Marca</h2>
+                    <div id="listaVehiculosPorMarca" class="space-y-3">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="bx bx-loader-circle bx-spin text-2xl mb-2"></i>
+                            <p>Cargando vehículos...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 140, 0, 0.1);
+        }
+    </style>
+
+    <script>
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            configurarEventos();
+            cargarDatosDashboard();
+        });
+
+        // Configurar eventos
+        function configurarEventos() {
+            // Submenú de Catálogos
+            const btnCatalogos = document.getElementById("btnCatalogos");
+            const submenu = document.getElementById("submenuCatalogos");
+            const iconArrow = document.getElementById("iconArrow");
+
+            btnCatalogos.addEventListener("click", () => {
+                submenu.classList.toggle("hidden");
+                iconArrow.classList.toggle("bx-chevron-down");
+                iconArrow.classList.toggle("bx-chevron-up");
+            });
+
+            // Cambio en período de gráfica
+            document.getElementById('selectPeriodoGrafica').addEventListener('change', function() {
+                cargarGraficaEstatusServicios(this.value);
+            });
+
+            // Agregar efecto hover a las cards
+            document.querySelectorAll('.bg-\\[#1A1A1A\\]').forEach(card => {
+                card.classList.add('card-hover');
+            });
+        }
+
+        // Función principal para cargar todos los datos del dashboard
+        async function cargarDatosDashboard() {
+            try {
+                // Cargar estadísticas principales
+                await cargarEstadisticasPrincipales();
+                
+                // Cargar gráfica de estatus
+                await cargarGraficaEstatusServicios('mes');
+                
+                // Cargar servicios recientes
+                await cargarServiciosRecientes();
+                
+                // Cargar refacciones con bajo stock
+                await cargarRefaccionesBajoStock();
+                
+                // Cargar vehículos por marca
+                await cargarVehiculosPorMarca();
+                
+            } catch (error) {
+                console.error('Error cargando datos del dashboard:', error);
+                mostrarError('Error al cargar los datos del dashboard');
+            }
+        }
+
+        // 1. Cargar estadísticas principales
+        async function cargarEstadisticasPrincipales() {
+            try {
+                // Total de servicios
+                const totalServicios = await fetch('/api/dashboard/total-servicios').then(r => r.json());
+                document.getElementById('totalServicios').textContent = totalServicios.total;
+                
+                // Servicios activos
+                const serviciosActivos = await fetch('/api/dashboard/servicios-activos').then(r => r.json());
+                document.getElementById('serviciosActivos').textContent = serviciosActivos.total;
+                
+                // Ingresos del mes
+                const ingresosMes = await fetch('/api/dashboard/ingresos-mes').then(r => r.json());
+                document.getElementById('ingresosMes').textContent = '$' + ingresosMes.total.toLocaleString();
+                
+                // Clientes activos
+                const clientesActivos = await fetch('/api/dashboard/clientes-activos').then(r => r.json());
+                document.getElementById('clientesActivos').textContent = clientesActivos.total;
+                
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+                document.getElementById('totalServicios').textContent = 'Error';
+                document.getElementById('serviciosActivos').textContent = 'Error';
+                document.getElementById('ingresosMes').textContent = 'Error';
+                document.getElementById('clientesActivos').textContent = 'Error';
+            }
+        }
+
+        // 2. Cargar gráfica de estatus de servicios
+        async function cargarGraficaEstatusServicios(periodo) {
+            try {
+                const datos = await fetch(`/api/dashboard/estatus-servicios?periodo=${periodo}`).then(r => r.json());
+                
+                // Destruir gráfica anterior si existe
+                if (window.graficaEstatus) {
+                    window.graficaEstatus.destroy();
+                }
+                
+                const ctx = document.getElementById('graficaEstatusServicios').getContext('2d');
+                window.graficaEstatus = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: datos.labels,
+                        datasets: [{
+                            data: datos.values,
+                            backgroundColor: [
+                                '#10B981', // Entregado
+                                '#F59E0B', // En Proceso
+                                '#3B82F6', // Pendiente
+                                '#059669', // Completado
+                                '#EF4444'  // Cancelado
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#0D0D0D'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#9CA3AF',
+                                    font: { size: 12 },
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: '#1F2937',
+                                titleColor: '#F9FAFB',
+                                bodyColor: '#D1D5DB',
+                                borderColor: '#374151',
+                                borderWidth: 1
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error cargando gráfica de estatus:', error);
+                document.getElementById('graficaEstatusServicios').innerHTML = 
+                    '<div class="text-center text-gray-400 py-8">Error al cargar la gráfica</div>';
+            }
+        }
+
+        // 3. Cargar servicios recientes
+        async function cargarServiciosRecientes() {
+            try {
+                const servicios = await fetch('/api/dashboard/servicios-recientes').then(r => r.json());
+                const container = document.getElementById('listaServiciosRecientes');
+                
+                if (servicios.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-400 py-8">No hay servicios recientes</div>';
+                    return;
+                }
+                
+                container.innerHTML = servicios.map(servicio => `
+                    <div class="flex justify-between items-center p-3 bg-black/30 rounded-lg border border-gray-700">
+                        <div>
+                            <p class="font-medium">${servicio.folio}</p>
+                            <p class="text-gray-400 text-sm">${servicio.vehiculo} - ${servicio.cliente}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="${obtenerClaseEstatus(servicio.estatus)} px-2 py-1 rounded-full text-xs">
+                                ${obtenerTextoEstatus(servicio.estatus)}
+                            </span>
+                            <p class="text-gray-400 text-sm mt-1">${formatearFecha(servicio.fecha_ingreso)}</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error cargando servicios recientes:', error);
+                document.getElementById('listaServiciosRecientes').innerHTML = 
+                    '<div class="text-center text-red-400 py-8">Error al cargar servicios</div>';
+            }
+        }
+
+        // 4. Cargar refacciones con bajo stock
+        async function cargarRefaccionesBajoStock() {
+            try {
+                const refacciones = await fetch('/api/dashboard/refacciones-bajo-stock').then(r => r.json());
+                const container = document.getElementById('listaRefaccionesBajoStock');
+                
+                if (refacciones.length === 0) {
+                    container.innerHTML = '<div class="text-center text-green-400 py-8">✅ Todo el stock en niveles óptimos</div>';
+                    return;
+                }
+                
+                container.innerHTML = refacciones.map(refaccion => `
+                    <div class="flex justify-between items-center p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                        <div>
+                            <p class="font-medium text-red-400">${refaccion.nombre_refaccion}</p>
+                            <p class="text-gray-400 text-sm">Stock actual: ${refaccion.stock} unidades</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="bg-red-500/20 text-red-400 px-2 py-1 rounded text-sm">¡Stock Bajo!</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error cargando refacciones con bajo stock:', error);
+                document.getElementById('listaRefaccionesBajoStock').innerHTML = 
+                    '<div class="text-center text-red-400 py-8">Error al cargar refacciones</div>';
+            }
+        }
+
+        // 5. Cargar vehículos por marca
+        async function cargarVehiculosPorMarca() {
+            try {
+                const marcas = await fetch('/api/dashboard/vehiculos-por-marca').then(r => r.json());
+                const container = document.getElementById('listaVehiculosPorMarca');
+                
+                if (marcas.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-400 py-8">No hay vehículos registrados</div>';
+                    return;
+                }
+                
+                container.innerHTML = marcas.map(marca => `
+                    <div class="flex justify-between items-center p-3 bg-black/30 rounded-lg border border-gray-700">
+                        <span class="text-gray-300">${marca.nombre_marca}</span>
+                        <span class="text-orange-400 font-medium">${marca.total_vehiculos} vehículos</span>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error cargando vehículos por marca:', error);
+                document.getElementById('listaVehiculosPorMarca').innerHTML = 
+                    '<div class="text-center text-red-400 py-8">Error al cargar vehículos</div>';
+            }
+        }
+
+        // Funciones auxiliares
+        function obtenerClaseEstatus(estatus) {
+            const clases = {
+                'entregado': 'bg-green-500/20 text-green-400',
+                'en_proceso': 'bg-yellow-500/20 text-yellow-400',
+                'pendiente': 'bg-blue-500/20 text-blue-400',
+                'completado': 'bg-green-500/20 text-green-400',
+                'cancelado': 'bg-red-500/20 text-red-400'
+            };
+            return clases[estatus] || 'bg-gray-500/20 text-gray-400';
+        }
+
+        function obtenerTextoEstatus(estatus) {
+            const textos = {
+                'entregado': 'Entregado',
+                'en_proceso': 'En Proceso',
+                'pendiente': 'Pendiente',
+                'completado': 'Completado',
+                'cancelado': 'Cancelado'
+            };
+            return textos[estatus] || estatus;
+        }
+
+        function formatearFecha(fechaString) {
+            const fecha = new Date(fechaString);
+            return fecha.toLocaleDateString('es-MX', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function mostrarError(mensaje) {
+            // Podrías implementar un sistema de notificaciones aquí
+            console.error(mensaje);
+        }
+
+        // Recargar datos cada 2 minutos
+        setInterval(() => {
+            cargarDatosDashboard();
+        }, 120000);
+    </script>
+</body>
+
+</html>

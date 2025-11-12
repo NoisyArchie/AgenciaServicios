@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Servicios - Siscare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-[#0D0D0D] text-white min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+        <div>
+            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+                Siscare
+            </h2>
+
+            <nav class="flex flex-col gap-1">
+                <a href="/admin/panelAdmin.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-home text-xl"></i> Panel
+                </a>
+
+                <a href="/admin/servicios.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                    <i class="bx bx-wrench text-xl"></i> Servicios
+                </a>
+
+                <a href="/admin/usuarios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-id-card text-xl"></i> Usuarios
+                </a>
+
+                <!-- Sección de Catálogos -->
+                <div>
+                    <button id="btnCatalogos"
+                        class="flex justify-between items-center w-full p-3 hover:bg-orange-500/20 rounded transition">
+                        <span class="flex items-center gap-3"><i class="bx bx-folder text-xl"></i> Catálogos</span>
+                        <i id="iconArrow" class="bx bx-chevron-down text-xl"></i>
+                    </button>
+
+                    <div id="submenuCatalogos" class="pl-10 mt-1 flex flex-col hidden">
+                        <a href="/admin/catalogoTiposServicio.html"
+                            class="block py-2 text-sm hover:text-orange-400">Tipos de Servicio</a>
+                        <a href="/admin/catalogoRefacciones.html"
+                            class="block py-2 text-sm hover:text-orange-400">Refacciones</a>
+                        <a href="/admin/catalogoMarcas.html" class="block py-2 text-sm hover:text-orange-400">Marcas</a>
+                        <a href="/admin/catalogoModelos.html"
+                            class="block py-2 text-sm hover:text-orange-400">Modelos</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="border-t border-gray-700 pt-4">
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+        <!-- NAVBAR SUPERIOR -->
+        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+            <!-- Icono de usuario -->
+            <div class="flex items-center gap-3">
+                <span class="text-gray-300 text-sm">Administrador</span>
+                <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                    <i class="bx bx-user text-white text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENIDO -->
+        <section class="p-8 flex-1 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold">Historial de Servicios</h1>
+                    <p class="text-gray-400 text-sm">
+                        Gestiona y consulta todos los servicios realizados
+                    </p>
+                </div>
+
+                <a href="/admin/crearServicio.html"
+                    class="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded shadow">
+                    <i class="bx bx-plus"></i> Nuevo Servicio
+                </a>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm text-gray-300 mb-2">Buscar por Folio</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="inputBuscarFolio" placeholder="Ej: SER-2024-001"
+                                class="flex-1 bg-black/30 border border-gray-700 text-white p-2 rounded-lg focus:border-orange-500">
+                            <button onclick="buscarPorFolio()" class="bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
+                                <i class="bx bx-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-300 mb-2">Buscar por Cliente</label>
+                        <input type="text" id="inputBuscarCliente" placeholder="Nombre del cliente"
+                            class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-300 mb-2">Estatus</label>
+                        <select id="selectEstatus" class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg">
+                            <option value="">Todos los estatus</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en_proceso">En Proceso</option>
+                            <option value="completado">Completado</option>
+                            <option value="entregado">Entregado</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4">
+                    <button onclick="aplicarFiltros()" class="bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
+                        Aplicar Filtros
+                    </button>
+                    <button onclick="limpiarFiltros()" class="bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded">
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estadísticas Rápidas -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Servicios</p>
+                            <p class="text-2xl font-bold">156</p>
+                        </div>
+                        <div class="bg-blue-500/20 p-3 rounded-full">
+                            <i class="bx bx-wrench text-blue-400 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">En Proceso</p>
+                            <p class="text-2xl font-bold text-yellow-400">12</p>
+                        </div>
+                        <div class="bg-yellow-500/20 p-3 rounded-full">
+                            <i class="bx bx-time text-yellow-400 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Completados</p>
+                            <p class="text-2xl font-bold text-green-400">142</p>
+                        </div>
+                        <div class="bg-green-500/20 p-3 rounded-full">
+                            <i class="bx bx-check-circle text-green-400 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Ingreso Total</p>
+                            <p class="text-2xl font-bold text-orange-400">$45,680</p>
+                        </div>
+                        <div class="bg-orange-500/20 p-3 rounded-full">
+                            <i class="bx bx-dollar text-orange-400 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Servicios -->
+            <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700">
+                <table class="w-full text-sm">
+                    <thead class="border-b border-gray-700 text-orange-400">
+                        <tr>
+                            <th class="py-3 text-left">Folio</th>
+                            <th class="text-left">Vehículo</th>
+                            <th class="text-left">Cliente</th>
+                            <th class="text-left">Fecha Ingreso</th>
+                            <th class="text-left">Entrega Estimada</th>
+                            <th class="text-left">Estatus</th>
+                            <th class="text-left">Costo Total</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tablaServicios">
+                        <!-- Los servicios se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-700">
+                    <div class="text-gray-400 text-sm" id="infoPaginacion">
+                        Mostrando 0 de 0 servicios
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="cambiarPagina('anterior')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <i class="bx bx-chevron-left"></i>
+                        </button>
+                        <button id="pagina1" class="px-3 py-1 bg-orange-600 text-white rounded">1</button>
+                        <button id="pagina2" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">2</button>
+                        <button id="pagina3" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">3</button>
+                        <button onclick="cambiarPagina('siguiente')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <i class="bx bx-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Detalle Servicio -->
+    <div id="modalDetalleServicio" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+        <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-full max-w-4xl animate-[zoomIn_.3s_ease] relative max-h-[90vh] overflow-y-auto">
+            <button onclick="cerrarModalDetalle()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl">
+                <i class="bx bx-x"></i>
+            </button>
+
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Detalle del Servicio <span id="folioServicio">SER-2024-001</span></h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Información del Vehículo -->
+                <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold text-orange-400 mb-3">Información del Vehículo</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Vehículo:</span>
+                            <span class="font-medium" id="detalleVehiculo">Toyota Corolla 2022</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Placas:</span>
+                            <span class="font-mono" id="detallePlacas">ABC-1234</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Color:</span>
+                            <span id="detalleColor">Blanco</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Kilometraje:</span>
+                            <span id="detalleKilometraje">45,000 km</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información del Cliente -->
+                <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold text-orange-400 mb-3">Información del Cliente</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Cliente:</span>
+                            <span class="font-medium" id="detalleCliente">Juan Pérez García</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Teléfono:</span>
+                            <span id="detalleTelefono">+52 555 123 4567</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Email:</span>
+                            <span id="detalleEmail">juan@email.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalles del Servicio -->
+            <div class="bg-black/30 p-4 rounded-lg border border-gray-700 mb-6">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">Detalles del Servicio</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Tipo de Mantenimiento:</span>
+                        <span class="font-medium" id="detalleTipoMantenimiento">Mantenimiento Mayor</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Fecha de Ingreso:</span>
+                        <span id="detalleFechaIngreso">2024-01-15</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Fecha Estimada de Entrega:</span>
+                        <span id="detalleFechaEstimada">2024-01-18</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Fecha de Entrega Real:</span>
+                        <span id="detalleFechaReal" class="text-green-400">2024-01-17</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Estatus:</span>
+                        <span id="detalleEstatus" class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Entregado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicios Realizados -->
+            <div class="bg-black/30 p-4 rounded-lg border border-gray-700 mb-6">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">Servicios Realizados</h3>
+                <div class="space-y-2" id="listaServiciosRealizados">
+                    <!-- Los servicios se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Total -->
+            <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+                <span class="text-xl font-bold">Total:</span>
+                <span class="text-2xl font-bold text-green-400" id="detalleTotal">$2,450.00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Estatus -->
+    <div id="modalCambiarEstatus" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50">
+        <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-[400px] animate-[zoomIn_.3s_ease] relative">
+            <button onclick="cerrarModalEstatus()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl">
+                <i class="bx bx-x"></i>
+            </button>
+
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Cambiar Estatus</h2>
+
+            <form id="formCambiarEstatus">
+                <input type="hidden" id="servicioIdEstatus">
+                
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-300 mb-2">Folio del Servicio</label>
+                    <input type="text" id="folioEstatus" class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg" readonly>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm text-gray-300 mb-2">Nuevo Estatus</label>
+                    <select id="selectNuevoEstatus" class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en_proceso">En Proceso</option>
+                        <option value="completado">Completado</option>
+                        <option value="entregado">Entregado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="cerrarModalEstatus()"
+                        class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="px-6 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg font-semibold">
+                        Actualizar Estatus
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        @keyframes zoomIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 140, 0, 0.05);
+            transform: scale(1.01);
+        }
+    </style>
+
+    <script>
+        // Datos de ejemplo para los servicios
+        const servicios = [
+            {
+                id: 1,
+                folio: "SER-2024-001",
+                vehiculo: "Toyota Corolla 2022",
+                placas: "ABC-1234",
+                color: "Blanco",
+                kilometraje: "45,000 km",
+                cliente: "Juan Pérez García",
+                telefono: "+52 555 123 4567",
+                email: "juan@email.com",
+                fechaIngreso: "2024-01-15",
+                fechaEstimada: "2024-01-18",
+                fechaReal: "2024-01-17",
+                tipoMantenimiento: "Mantenimiento Mayor",
+                estatus: "entregado",
+                costoTotal: 2450.00,
+                serviciosRealizados: [
+                    { nombre: "Cambio de Aceite y Filtro", descripcion: "Aceite sintético 5W-30", costo: 450.00 },
+                    { nombre: "Rotación de Llantas", descripcion: "Balanceo incluido", costo: 300.00 },
+                    { nombre: "Revisión General", descripcion: "Sistema de frenos y suspensión", costo: 700.00 }
+                ]
+            },
+            {
+                id: 2,
+                folio: "SER-2024-002",
+                vehiculo: "Honda Civic 2023",
+                placas: "DEF-5678",
+                color: "Negro",
+                kilometraje: "32,500 km",
+                cliente: "María López Hernández",
+                telefono: "+52 555 987 6543",
+                email: "maria@email.com",
+                fechaIngreso: "2024-01-16",
+                fechaEstimada: "2024-01-19",
+                fechaReal: null,
+                tipoMantenimiento: "Mantenimiento Básico",
+                estatus: "en_proceso",
+                costoTotal: 1850.00,
+                serviciosRealizados: [
+                    { nombre: "Cambio de Aceite", descripcion: "Aceite convencional", costo: 350.00 },
+                    { nombre: "Alineación", descripcion: "Alineación y balanceo", costo: 500.00 }
+                ]
+            },
+            {
+                id: 3,
+                folio: "SER-2024-003",
+                vehiculo: "Nissan Sentra 2021",
+                placas: "GHI-9012",
+                color: "Rojo",
+                kilometraje: "68,200 km",
+                cliente: "Carlos Rodríguez",
+                telefono: "+52 555 456 7890",
+                email: "carlos@email.com",
+                fechaIngreso: "2024-01-17",
+                fechaEstimada: "2024-01-20",
+                fechaReal: null,
+                tipoMantenimiento: "Reparación de Frenos",
+                estatus: "pendiente",
+                costoTotal: 0.00,
+                serviciosRealizados: []
+            },
+            {
+                id: 4,
+                folio: "SER-2024-004",
+                vehiculo: "Ford Focus 2020",
+                placas: "JKL-3456",
+                color: "Azul",
+                kilometraje: "89,100 km",
+                cliente: "Ana Martínez",
+                telefono: "+52 555 234 5678",
+                email: "ana@email.com",
+                fechaIngreso: "2024-01-18",
+                fechaEstimada: "2024-01-22",
+                fechaReal: null,
+                tipoMantenimiento: "Diagnóstico",
+                estatus: "cancelado",
+                costoTotal: 0.00,
+                serviciosRealizados: []
+            },
+            {
+                id: 5,
+                folio: "SER-2024-005",
+                vehiculo: "Chevrolet Aveo 2023",
+                placas: "MNO-7890",
+                color: "Gris",
+                kilometraje: "23,400 km",
+                cliente: "Roberto Sánchez",
+                telefono: "+52 555 345 6789",
+                email: "roberto@email.com",
+                fechaIngreso: "2024-01-19",
+                fechaEstimada: "2024-01-23",
+                fechaReal: "2024-01-22",
+                tipoMantenimiento: "Preventivo",
+                estatus: "entregado",
+                costoTotal: 3200.00,
+                serviciosRealizados: [
+                    { nombre: "Cambio de Aceite Sintético", descripcion: "Aceite 5W-30 full sintético", costo: 600.00 },
+                    { nombre: "Cambio de Filtros", descripcion: "Filtro de aire, aceite y gasolina", costo: 800.00 },
+                    { nombre: "Limpieza de Inyectores", descripcion: "Limpieza completa del sistema", costo: 900.00 }
+                ]
+            }
+        ];
+
+        // Variables globales
+        let serviciosFiltrados = [...servicios];
+        let paginaActual = 1;
+        const serviciosPorPagina = 5;
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarServicios();
+            configurarEventos();
+        });
+
+        // Configurar eventos
+        function configurarEventos() {
+            // Submenú de Catálogos
+            const btnCatalogos = document.getElementById("btnCatalogos");
+            const submenu = document.getElementById("submenuCatalogos");
+            const iconArrow = document.getElementById("iconArrow");
+
+            btnCatalogos.addEventListener("click", () => {
+                submenu.classList.toggle("hidden");
+                iconArrow.classList.toggle("bx-chevron-down");
+                iconArrow.classList.toggle("bx-chevron-up");
+            });
+
+            // Buscar por folio con Enter
+            document.getElementById('inputBuscarFolio').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    buscarPorFolio();
+                }
+            });
+
+            // Buscar por cliente con Enter
+            document.getElementById('inputBuscarCliente').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    aplicarFiltros();
+                }
+            });
+
+            // Formulario cambiar estatus
+            document.getElementById('formCambiarEstatus').addEventListener('submit', function(e) {
+                e.preventDefault();
+                actualizarEstatusServicio();
+            });
+        }
+
+        // Cargar servicios en la tabla
+        function cargarServicios() {
+            const tabla = document.getElementById('tablaServicios');
+            const inicio = (paginaActual - 1) * serviciosPorPagina;
+            const fin = inicio + serviciosPorPagina;
+            const serviciosPagina = serviciosFiltrados.slice(inicio, fin);
+
+            tabla.innerHTML = '';
+
+            if (serviciosPagina.length === 0) {
+                tabla.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-gray-400">
+                            No se encontraron servicios
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            serviciosPagina.forEach(servicio => {
+                const fila = document.createElement('tr');
+                fila.className = 'border-b border-gray-800 hover:bg-black/40 transition';
+                fila.innerHTML = `
+                    <td class="py-3 font-mono">${servicio.folio}</td>
+                    <td>
+                        <div>
+                            <p class="font-medium">${servicio.vehiculo}</p>
+                            <p class="text-gray-400 text-xs">${servicio.placas} • ${servicio.kilometraje}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="font-medium">${servicio.cliente}</p>
+                            <p class="text-gray-400 text-xs">${servicio.email}</p>
+                        </div>
+                    </td>
+                    <td>${servicio.fechaIngreso}</td>
+                    <td>${servicio.fechaEstimada}</td>
+                    <td>
+                        ${obtenerBadgeEstatus(servicio.estatus)}
+                    </td>
+                    <td class="${servicio.costoTotal > 0 ? 'text-green-400' : 'text-white'}">
+                        $${servicio.costoTotal.toFixed(2)}
+                    </td>
+                    <td class="text-center">
+                        <div class="flex gap-2 justify-center">
+                            <button onclick="verDetalleServicio(${servicio.id})" class="text-blue-400 hover:text-blue-300" title="Ver Detalles">
+                                <i class="bx bx-show text-xl"></i>
+                            </button>
+                            <button onclick="abrirModalEstatus(${servicio.id})" class="text-orange-400 hover:text-orange-300" title="Cambiar Estatus">
+                                <i class="bx bx-edit text-xl"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tabla.appendChild(fila);
+            });
+
+            actualizarPaginacion();
+        }
+
+        // Obtener badge de estatus con color
+        function obtenerBadgeEstatus(estatus) {
+            const estilos = {
+                pendiente: 'bg-blue-500/20 text-blue-400',
+                en_proceso: 'bg-yellow-500/20 text-yellow-400',
+                completado: 'bg-green-500/20 text-green-400',
+                entregado: 'bg-green-500/20 text-green-400',
+                cancelado: 'bg-red-500/20 text-red-400'
+            };
+
+            const textos = {
+                pendiente: 'Pendiente',
+                en_proceso: 'En Proceso',
+                completado: 'Completado',
+                entregado: 'Entregado',
+                cancelado: 'Cancelado'
+            };
+
+            return `<span class="${estilos[estatus]} px-2 py-1 rounded-full text-xs">${textos[estatus]}</span>`;
+        }
+
+        // Buscar servicio por folio
+        function buscarPorFolio() {
+            const folio = document.getElementById('inputBuscarFolio').value.trim().toUpperCase();
+            
+            if (!folio) {
+                serviciosFiltrados = [...servicios];
+            } else {
+                serviciosFiltrados = servicios.filter(servicio => 
+                    servicio.folio.includes(folio)
+                );
+            }
+
+            paginaActual = 1;
+            cargarServicios();
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const estatus = document.getElementById('selectEstatus').value;
+            const cliente = document.getElementById('inputBuscarCliente').value.trim().toLowerCase();
+
+            serviciosFiltrados = servicios.filter(servicio => {
+                let cumple = true;
+
+                // Filtro por estatus
+                if (estatus && servicio.estatus !== estatus) {
+                    cumple = false;
+                }
+
+                // Filtro por nombre de cliente
+                if (cliente && !servicio.cliente.toLowerCase().includes(cliente)) {
+                    cumple = false;
+                }
+
+                return cumple;
+            });
+
+            paginaActual = 1;
+            cargarServicios();
+        }
+
+        // Limpiar filtros
+        function limpiarFiltros() {
+            document.getElementById('inputBuscarFolio').value = '';
+            document.getElementById('inputBuscarCliente').value = '';
+            document.getElementById('selectEstatus').value = '';
+            
+            serviciosFiltrados = [...servicios];
+            paginaActual = 1;
+            cargarServicios();
+        }
+
+        // Actualizar paginación
+        function actualizarPaginacion() {
+            const totalServicios = serviciosFiltrados.length;
+            const totalPaginas = Math.ceil(totalServicios / serviciosPorPagina);
+            const inicio = (paginaActual - 1) * serviciosPorPagina + 1;
+            const fin = Math.min(paginaActual * serviciosPorPagina, totalServicios);
+
+            document.getElementById('infoPaginacion').textContent = 
+                `Mostrando ${inicio}-${fin} de ${totalServicios} servicios`;
+
+            // Actualizar botones de paginación
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById(`pagina${i}`);
+                if (i <= totalPaginas) {
+                    btn.textContent = i;
+                    btn.style.display = 'block';
+                    btn.className = `px-3 py-1 ${i === paginaActual ? 'bg-orange-600 text-white' : 'bg-gray-700 hover:bg-gray-600'} rounded transition`;
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+        }
+
+        // Cambiar página
+        function cambiarPagina(direccion) {
+            const totalPaginas = Math.ceil(serviciosFiltrados.length / serviciosPorPagina);
+
+            if (direccion === 'siguiente' && paginaActual < totalPaginas) {
+                paginaActual++;
+            } else if (direccion === 'anterior' && paginaActual > 1) {
+                paginaActual--;
+            }
+
+            cargarServicios();
+        }
+
+        // Ver detalle del servicio
+        function verDetalleServicio(id) {
+            const servicio = servicios.find(s => s.id === id);
+            if (!servicio) return;
+
+            // Llenar modal con datos del servicio
+            document.getElementById('folioServicio').textContent = servicio.folio;
+            document.getElementById('detalleVehiculo').textContent = servicio.vehiculo;
+            document.getElementById('detallePlacas').textContent = servicio.placas;
+            document.getElementById('detalleColor').textContent = servicio.color;
+            document.getElementById('detalleKilometraje').textContent = servicio.kilometraje;
+            document.getElementById('detalleCliente').textContent = servicio.cliente;
+            document.getElementById('detalleTelefono').textContent = servicio.telefono;
+            document.getElementById('detalleEmail').textContent = servicio.email;
+            document.getElementById('detalleTipoMantenimiento').textContent = servicio.tipoMantenimiento;
+            document.getElementById('detalleFechaIngreso').textContent = servicio.fechaIngreso;
+            document.getElementById('detalleFechaEstimada').textContent = servicio.fechaEstimada;
+            document.getElementById('detalleFechaReal').textContent = servicio.fechaReal || 'No entregado';
+            document.getElementById('detalleFechaReal').className = servicio.fechaReal ? 'text-green-400' : 'text-gray-400';
+            document.getElementById('detalleEstatus').innerHTML = obtenerBadgeEstatus(servicio.estatus);
+            document.getElementById('detalleTotal').textContent = `$${servicio.costoTotal.toFixed(2)}`;
+
+            // Llenar servicios realizados
+            const listaServicios = document.getElementById('listaServiciosRealizados');
+            listaServicios.innerHTML = '';
+
+            if (servicio.serviciosRealizados.length === 0) {
+                listaServicios.innerHTML = '<p class="text-gray-400 text-center">No hay servicios realizados</p>';
+            } else {
+                servicio.serviciosRealizados.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center py-2 border-b border-gray-700';
+                    div.innerHTML = `
+                        <div>
+                            <p class="font-medium">${item.nombre}</p>
+                            <p class="text-gray-400 text-sm">${item.descripcion}</p>
+                        </div>
+                        <span class="text-green-400">$${item.costo.toFixed(2)}</span>
+                    `;
+                    listaServicios.appendChild(div);
+                });
+            }
+
+            document.getElementById('modalDetalleServicio').classList.remove('hidden');
+        }
+
+        // Abrir modal para cambiar estatus
+        function abrirModalEstatus(id) {
+            const servicio = servicios.find(s => s.id === id);
+            if (!servicio) return;
+
+            document.getElementById('servicioIdEstatus').value = id;
+            document.getElementById('folioEstatus').value = servicio.folio;
+            document.getElementById('selectNuevoEstatus').value = servicio.estatus;
+
+            document.getElementById('modalCambiarEstatus').classList.remove('hidden');
+        }
+
+        // Actualizar estatus del servicio
+        function actualizarEstatusServicio() {
+            const id = parseInt(document.getElementById('servicioIdEstatus').value);
+            const nuevoEstatus = document.getElementById('selectNuevoEstatus').value;
+
+            // En una implementación real, aquí enviarías la actualización al servidor
+            const servicio = servicios.find(s => s.id === id);
+            if (servicio) {
+                servicio.estatus = nuevoEstatus;
+                
+                // Si el estatus es "entregado", establecer fecha real
+                if (nuevoEstatus === 'entregado' && !servicio.fechaReal) {
+                    servicio.fechaReal = new Date().toISOString().split('T')[0];
+                }
+
+                alert(`Estatus del servicio ${servicio.folio} actualizado a: ${nuevoEstatus}`);
+            }
+
+            cerrarModalEstatus();
+            cargarServicios();
+        }
+
+        // Cerrar modales
+        function cerrarModalDetalle() {
+            document.getElementById('modalDetalleServicio').classList.add('hidden');
+        }
+
+        function cerrarModalEstatus() {
+            document.getElementById('modalCambiarEstatus').classList.add('hidden');
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarModalDetalle();
+                cerrarModalEstatus();
+            }
+        });
+    </script>
+</body>
+
+</html>
