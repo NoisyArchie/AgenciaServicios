@@ -1,3 +1,4 @@
+// UsuarioRepository.java
 package com.agenciaservicios.repositories;
 
 import com.agenciaservicios.models.Usuario;
@@ -6,14 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-
     Optional<Usuario> findByUsername(String username);
-    Optional<Usuario> findByUsernameAndPassword(String username, String password);
     List<Usuario> findAllByActivo(Boolean activo);
     boolean existsByUsername(String username);
-
-
+    List<Usuario> findByNombreCompletoContainingIgnoreCaseOrEmailContainingIgnoreCase(
+            String nombreCompleto, String email);
 }

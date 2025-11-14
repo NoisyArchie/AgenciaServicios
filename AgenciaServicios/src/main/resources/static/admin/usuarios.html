@@ -176,34 +176,34 @@
 
             <form id="formEditarUsuario">
                 <input type="hidden" id="idUsuarioEditar" />
-                
+
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <label>
                         <span class="text-sm text-gray-300">Usuario</span>
                         <input id="inputUsuario" type="text"
                             class="mt-1 w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition" />
                     </label>
-                    
+
                     <label>
                         <span class="text-sm text-gray-300">Contraseña</span>
                         <input id="inputPassword" type="password"
-                            class="mt-1 w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition" 
+                            class="mt-1 w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
                             placeholder="Dejar en blanco para no cambiar"/>
                     </label>
                 </div>
-                
+
                 <label class="block mb-4">
                     <span class="text-sm text-gray-300">Nombre Completo</span>
                     <input id="inputNombre" type="text"
                         class="mt-1 w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition" />
                 </label>
-                
+
                 <label class="block mb-4">
                     <span class="text-sm text-gray-300">Email</span>
                     <input id="inputEmail" type="email"
                         class="mt-1 w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition" />
                 </label>
-                
+
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <label>
                         <span class="text-sm text-gray-300">Rol</span>
@@ -214,7 +214,7 @@
                             <option value="cliente">Cliente</option>
                         </select>
                     </label>
-                    
+
                     <label class="flex items-center gap-2 mt-6">
                         <input id="checkActivo" type="checkbox" class="accent-orange-500" />
                         <span class="text-gray-300 text-sm">Activo</span>
@@ -259,50 +259,197 @@
     </style>
 
     <script>
+        const API_URL = 'http://localhost:8080/api/usuarios';
+
         // Submenú de Catálogos
         const btnCatalogos = document.getElementById("btnCatalogos");
         const submenu = document.getElementById("submenuCatalogos");
         const iconArrow = document.getElementById("iconArrow");
 
-        btnCatalogos.addEventListener("click", () => {
-            submenu.classList.toggle("hidden");
-            iconArrow.classList.toggle("bx-chevron-down");
-            iconArrow.classList.toggle("bx-chevron-up");
-        });
-
-        // Funciones para la gestión de usuarios
-        function editarUsuario(id) {
-            // aquí cargarías los datos del usuario desde la BD
-            document.getElementById('idUsuarioEditar').value = id;
-            document.getElementById('inputUsuario').value = 'usuario' + id;
-            document.getElementById('inputNombre').value = 'Nombre del Usuario ' + id;
-            document.getElementById('inputEmail').value = 'usuario' + id + '@siscare.com';
-            document.getElementById('selectRol').value = 'trabajador';
-            document.getElementById('checkActivo').checked = true;
-            
-            document.getElementById('modalEditarUsuario').classList.remove('hidden');
+        if (btnCatalogos && submenu && iconArrow) {
+            btnCatalogos.addEventListener("click", () => {
+                submenu.classList.toggle("hidden");
+                iconArrow.classList.toggle("bx-chevron-down");
+                iconArrow.classList.toggle("bx-chevron-up");
+            });
         }
 
-        function eliminarUsuario(id) {
-            if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-                //aquí enviarías una solicitud para eliminar el usuario
-                alert('Usuario eliminado (simulación)');
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarUsuarios();
+        });
+
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error('Error al cargar usuarios');
+                }
+                const usuarios = await response.json();
+                mostrarUsuarios(usuarios);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar los usuarios: ' + error.message);
             }
+        }
+
+        function mostrarUsuarios(usuarios) {
+            const tbody = document.getElementById('tablaUsuarios');
+            tbody.innerHTML = '';
+
+            if (usuarios.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4">No hay usuarios registrados</td></tr>';
+                return;
+            }
+
+            usuarios.forEach(usuario => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-800 hover:bg-black/40';
+
+                // Formatear fecha
+                const fecha = usuario.fechaCreacion ? new Date(usuario.fechaCreacion).toLocaleDateString() : 'N/A';
+
+                // Determinar rol badge con colores
+                let rolBadge = '';
+                switch(usuario.rol) {
+                    case 'admin':
+                        rolBadge = '<span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Admin</span>';
+                        break;
+                    case 'trabajador':
+                        rolBadge = '<span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full text-xs">Trabajador</span>';
+                        break;
+                    case 'cliente':
+                        rolBadge = '<span class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Cliente</span>';
+                        break;
+                    default:
+                        rolBadge = '<span class="bg-gray-500/20 text-gray-400 px-2 py-1 rounded-full text-xs">Sin rol</span>';
+                }
+
+                tr.innerHTML = `
+                <td class="py-2">${usuario.idUsuario}</td>
+                <td>${usuario.username}</td>
+                <td>${usuario.nombreCompleto}</td>
+                <td>${usuario.email}</td>
+                <td>${rolBadge}</td>
+                <td>${fecha}</td>
+                <td class="${usuario.activo ? 'text-green-400' : 'text-red-400'}">${usuario.activo ? 'Sí' : 'No'}</td>
+                <td class="text-center flex gap-2 justify-center py-2">
+                    <button onclick="editarUsuario(${usuario.idUsuario})">
+                        <i class="bx bx-edit text-blue-400 text-xl"></i>
+                    </button>
+                    <button onclick="eliminarUsuario(${usuario.idUsuario})">
+                        <i class="bx bx-trash text-red-500 text-xl"></i>
+                    </button>
+                </td>
+            `;
+                tbody.appendChild(tr);
+            });
         }
 
         function cerrarModalEditar() {
             document.getElementById('modalEditarUsuario').classList.add('hidden');
+            document.getElementById('modalEditarUsuario').classList.remove('flex');
+            document.getElementById('formEditarUsuario').reset();
         }
 
-        // Manejo del formulario de edición
-        document.getElementById('formEditarUsuario').addEventListener('submit', function(e) {
+        async function editarUsuario(id) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`);
+                if (!response.ok) {
+                    throw new Error('Error al cargar usuario');
+                }
+                const usuario = await response.json();
+
+                document.getElementById('idUsuarioEditar').value = usuario.idUsuario;
+                document.getElementById('inputUsuario').value = usuario.username;
+                document.getElementById('inputNombre').value = usuario.nombreCompleto;
+                document.getElementById('inputEmail').value = usuario.email;
+                document.getElementById('inputPassword').value = '';
+                document.getElementById('selectRol').value = usuario.rol || 'cliente';
+                document.getElementById('checkActivo').checked = usuario.activo;
+
+                document.getElementById('modalEditarUsuario').classList.remove('hidden');
+                document.getElementById('modalEditarUsuario').classList.add('flex');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar el usuario: ' + error.message);
+            }
+        }
+
+        document.getElementById('formEditarUsuario').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            //  aquí enviarías los datos actualizados al servidor
-            alert('Usuario actualizado (simulación)');
-            cerrarModalEditar();
+
+            const id = document.getElementById('idUsuarioEditar').value;
+            const password = document.getElementById('inputPassword').value;
+
+            const usuario = {
+                idUsuario: parseInt(id),
+                username: document.getElementById('inputUsuario').value,
+                nombreCompleto: document.getElementById('inputNombre').value,
+                email: document.getElementById('inputEmail').value,
+                rol: document.getElementById('selectRol').value,
+                activo: document.getElementById('checkActivo').checked
+            };
+
+            // Solo incluir password si se ingresó uno nuevo
+            if (password && password.trim() !== '') {
+                usuario.password = password;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(usuario)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al actualizar usuario');
+                }
+
+                alert('Usuario actualizado correctamente');
+                cerrarModalEditar();
+                cargarUsuarios();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al actualizar usuario: ' + error.message);
+            }
         });
+
+        async function eliminarUsuario(id) {
+            if (!confirm('¿Está seguro de que desea eliminar este usuario?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al eliminar usuario');
+                }
+
+                alert('Usuario eliminado correctamente');
+                cargarUsuarios();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al eliminar usuario: ' + error.message);
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalEditarUsuario');
+            if (event.target === modal) {
+                cerrarModalEditar();
+            }
+        }
     </script>
+
 </body>
 
 </html>

@@ -1,49 +1,19 @@
 package com.agenciaservicios.services;
+// UsuarioService.java
 
 import com.agenciaservicios.models.Usuario;
 import com.agenciaservicios.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.security.MessageDigest;
 import java.util.List;
-import java.util.Optional;
-import java.security.NoSuchAlgorithmException;
 
 @Service
 public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-    //Login - valida credenciales
-    public Optional<Usuario> login(String username, String password) {
-        String passwordEncriptada=encriptarPassword(password);
-        return usuarioRepository.findByUsernameAndPassword(username, passwordEncriptada).filter(Usuario::getActivo);
-
-    }
-
-    //Obtener todos los usuarios activos
-    public List<Usuario> obtenerTodos(){
-        return usuarioRepository.findAllByActivo(true);
-    }
-
-    //Encriptar password con sha-256
-    private String encriptarPassword(String password){
-        try{
-            MessageDigest md=MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(password.getBytes());
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch(NoSuchAlgorithmException e){
-            throw new RuntimeException("Error al encriptar la contraseña", e);
-        }
-    }
 
     public Usuario autenticar(String username, String password) {
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -53,16 +23,82 @@ public class UsuarioService {
             throw new IllegalArgumentException("Usuario inactivo");
         }
 
-        // IMPORTANTE: Aquí comparamos la contraseña en texto plano
-        // En producción deberías usar BCrypt
         if (!usuario.getPassword().equals(password)) {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
 
-        // No devolver la contraseña al frontend
         usuario.setPassword(null);
-
         return usuario;
     }
 
+    public List<Usuario> obtenerTodos() {
+        return usuarioRepository.findAllByActivo(true);
+    }
+
+    public Usuario obtenerPorId(Integer id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public Usuario crear(Usuario usuario) {
+        validarUsuario(usuario);
+
+        if (usuarioRepository.existsByUsername(usuario.getUsername())) {
+            throw new RuntimeException("El username ya existe");
+        }
+
+        usuario.setActivo(true);
+        return usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public Usuario actualizar(Usuario usuario) {
+        Usuario usuarioExistente = usuarioRepository.findById(usuario.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        validarUsuario(usuario);
+
+        // Verificar si el username ya existe (excepto para el usuario actual)
+        if (!usuarioExistente.getUsername().equals(usuario.getUsername())
+                && usuarioRepository.existsByUsername(usuario.getUsername())) {
+            throw new RuntimeException("El username ya existe");
+        }
+
+        return usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void eliminar(Integer id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+        usuarioRepository.deleteById(id);
+    }
+
+    public List<Usuario> buscarUsuarios(String query) {
+        return usuarioRepository.findByNombreCompletoContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                query, query);
+    }
+
+    private void validarUsuario(Usuario usuario) {
+        if (usuario.getUsername() == null || usuario.getUsername().trim().isEmpty()) {
+            throw new RuntimeException("El username es obligatorio");
+        }
+        if (usuario.getPassword() == null || usuario.getPassword().trim().isEmpty()) {
+            throw new RuntimeException("La contraseña es obligatoria");
+        }
+        if (usuario.getNombreCompleto() == null || usuario.getNombreCompleto().trim().isEmpty()) {
+            throw new RuntimeException("El nombre completo es obligatorio");
+        }
+        if (usuario.getEmail() == null || usuario.getEmail().trim().isEmpty()) {
+            throw new RuntimeException("El email es obligatorio");
+        }
+        if (usuario.getRol() == null || usuario.getRol().trim().isEmpty()) {
+            throw new RuntimeException("El rol es obligatorio");
+        }
+        // Validar que el rol sea válido
+        if (!usuario.getRol().equals("admin") && !usuario.getRol().equals("trabajador") && !usuario.getRol().equals("cliente")) {
+            throw new RuntimeException("El rol debe ser admin, trabajador o cliente");
+        }
+    }
 }

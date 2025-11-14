@@ -1,53 +1,25 @@
 package com.agenciaservicios.controllers;
 
 
+// UsuarioController.java
 import com.agenciaservicios.models.Usuario;
 import com.agenciaservicios.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")
-
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    /**
-     * POST /api/usuarios/login
-     * Login de usuario
-     */
-   /* @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        return usuarioService.login(request.getUsername(), request.getPassword())
-                .map(usuario -> {
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("success", true);
-                    response.put("message", "Login exitoso");
-                    response.put("usuario", Map.of(
-                            "id", usuario.getIdUsuario(),
-                            "username", usuario.getUsername(),
-                            "nombreCompleto", usuario.getNombreCompleto(),
-                            "email", usuario.getEmail()
-                    ));
-                    return ResponseEntity.ok(response);
-                })
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("success", false, "message", "Credenciales inválidas")));
-    }
-
-    */
-    // ENDPOINT CRÍTICO PARA EL LOGIN
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         try {
@@ -65,21 +37,57 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * GET /api/usuarios
-     * Listar todos los usuarios
-     */
     @GetMapping
     public ResponseEntity<List<Usuario>> obtenerTodos() {
         return ResponseEntity.ok(usuarioService.obtenerTodos());
     }
-    static class LoginRequest {
-        private String username;
-        private String password;
 
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> obtenerPorId(@PathVariable Integer id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> crear(@RequestBody Usuario usuario) {
+        try {
+            Usuario nuevoUsuario = usuarioService.crear(usuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Usuario usuario) {
+        try {
+            usuario.setIdUsuario(id);
+            Usuario usuarioActualizado = usuarioService.actualizar(usuario);
+            return ResponseEntity.ok(usuarioActualizado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+        try {
+            usuarioService.eliminar(id);
+            return ResponseEntity.ok(Map.of("mensaje", "Usuario eliminado correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Usuario>> buscarUsuarios(@RequestParam String query) {
+        List<Usuario> usuarios = usuarioService.buscarUsuarios(query);
+        return ResponseEntity.ok(usuarios);
     }
 }

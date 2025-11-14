@@ -97,9 +97,9 @@
                                     <label for="username" class="block text-sm font-medium text-gray-300 mb-2">
                                         Nombre de Usuario *
                                     </label>
-                                    <input 
-                                        type="text" 
-                                        id="username" 
+                                    <input
+                                        type="text"
+                                        id="username"
                                         name="username"
                                         required
                                         class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
@@ -112,9 +112,9 @@
                                     <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
                                         Contraseña *
                                     </label>
-                                    <input 
-                                        type="password" 
-                                        id="password" 
+                                    <input
+                                        type="password"
+                                        id="password"
                                         name="password"
                                         required
                                         class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
@@ -127,9 +127,9 @@
                                     <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-2">
                                         Confirmar Contraseña *
                                     </label>
-                                    <input 
-                                        type="password" 
-                                        id="confirmPassword" 
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
                                         name="confirmPassword"
                                         required
                                         class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
@@ -144,9 +144,9 @@
                                     <label for="nombre_completo" class="block text-sm font-medium text-gray-300 mb-2">
                                         Nombre Completo *
                                     </label>
-                                    <input 
-                                        type="text" 
-                                        id="nombre_completo" 
+                                    <input
+                                        type="text"
+                                        id="nombre_completo"
                                         name="nombre_completo"
                                         required
                                         class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
@@ -158,9 +158,9 @@
                                     <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
                                         Correo Electrónico *
                                     </label>
-                                    <input 
-                                        type="email" 
-                                        id="email" 
+                                    <input
+                                        type="email"
+                                        id="email"
                                         name="email"
                                         required
                                         class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
@@ -172,8 +172,8 @@
                                     <label for="rol" class="block text-sm font-medium text-gray-300 mb-2">
                                         Rol del Usuario *
                                     </label>
-                                    <select 
-                                        id="rol" 
+                                    <select
+                                        id="rol"
                                         name="rol"
                                         required
                                         class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
@@ -189,9 +189,9 @@
 
                         <!-- Checkbox Activo -->
                         <div class="flex items-center gap-3 pt-4 border-t border-gray-700">
-                            <input 
-                                type="checkbox" 
-                                id="activo" 
+                            <input
+                                type="checkbox"
+                                id="activo"
                                 name="activo"
                                 checked
                                 class="w-4 h-4 accent-orange-500 bg-black/30 border-gray-700 rounded focus:ring-orange-500"
@@ -203,11 +203,11 @@
 
                         <!-- Botones de acción -->
                         <div class="flex justify-end gap-4 pt-6 border-t border-gray-700">
-                            <a href="/admin/usuarios.html" 
+                            <a href="/admin/usuarios.html"
                                class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition">
                                 Cancelar
                             </a>
-                            <button 
+                            <button
                                 type="submit"
                                 class="px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg font-medium transition flex items-center gap-2">
                                 <i class="bx bx-save"></i>
@@ -249,11 +249,11 @@
                 <h3 class="text-xl font-bold text-white mb-2">¡Usuario Creado!</h3>
                 <p class="text-gray-400 mb-6">El usuario ha sido registrado exitosamente en el sistema.</p>
                 <div class="flex gap-3 justify-center">
-                    <button onclick="cerrarModalConfirmacion()" 
+                    <button onclick="cerrarModalConfirmacion()"
                             class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
                         Crear Otro Usuario
                     </button>
-                    <a href="/admin/usuarios.html" 
+                    <a href="/admin/usuarios.html"
                        class="px-6 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg transition">
                         Ver Lista de Usuarios
                     </a>
@@ -281,6 +281,8 @@
     </style>
 
     <script>
+        const API_URL = 'http://localhost:8080/api/usuarios';
+
         // Submenú de Catálogos
         const btnCatalogos = document.getElementById("btnCatalogos");
         const submenu = document.getElementById("submenuCatalogos");
@@ -294,24 +296,24 @@
             });
         }
 
-        // Validación del formulario
-        document.getElementById('formAltaUsuario').addEventListener('submit', function(e) {
+        // Validación y envío del formulario
+        document.getElementById('formAltaUsuario').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             // Validar contraseñas
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             if (password !== confirmPassword) {
                 alert('Las contraseñas no coinciden');
                 return;
             }
-            
+
             if (password.length < 8) {
                 alert('La contraseña debe tener al menos 8 caracteres');
                 return;
             }
-            
+
             // Validar que todos los campos requeridos estén llenos
             const requiredFields = ['username', 'nombre_completo', 'email', 'rol'];
             for (let field of requiredFields) {
@@ -320,23 +322,43 @@
                     return;
                 }
             }
-            
-            // Simular envío exitoso (aquí iría la llamada a la API)
-            console.log('Datos del formulario:', {
+
+            // Crear objeto usuario
+            const usuario = {
                 username: document.getElementById('username').value,
-                password: document.getElementById('password').value,
-                nombre_completo: document.getElementById('nombre_completo').value,
+                password: password,
+                nombreCompleto: document.getElementById('nombre_completo').value,
                 email: document.getElementById('email').value,
                 rol: document.getElementById('rol').value,
                 activo: document.getElementById('activo').checked
-            });
-            
-            // Mostrar modal de confirmación
-            document.getElementById('modalConfirmacion').classList.remove('hidden');
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(usuario)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al crear usuario');
+                }
+
+                // Mostrar modal de confirmación
+                document.getElementById('modalConfirmacion').classList.remove('hidden');
+                document.getElementById('modalConfirmacion').classList.add('flex');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al crear usuario: ' + error.message);
+            }
         });
 
         function cerrarModalConfirmacion() {
             document.getElementById('modalConfirmacion').classList.add('hidden');
+            document.getElementById('modalConfirmacion').classList.remove('flex');
             // Limpiar formulario
             document.getElementById('formAltaUsuario').reset();
         }
@@ -345,7 +367,7 @@
         document.getElementById('confirmPassword').addEventListener('input', function() {
             const password = document.getElementById('password').value;
             const confirmPassword = this.value;
-            
+
             if (confirmPassword && password !== confirmPassword) {
                 this.classList.add('border-red-500');
                 this.classList.remove('border-gray-700');

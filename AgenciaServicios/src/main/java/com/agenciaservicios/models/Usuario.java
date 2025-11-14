@@ -33,6 +33,9 @@ public class Usuario {
     @Column(length = 100)
     private String email;
 
+    @Column(length = 20)
+    private String rol;
+
     @Column(name="fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
