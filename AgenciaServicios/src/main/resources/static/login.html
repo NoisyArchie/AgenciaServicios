@@ -151,9 +151,23 @@
                 document.getElementById('successText').textContent = '¡Bienvenido! Redirigiendo...';
                 successMessage.classList.remove('hidden');
 
-                // ✅ REDIRIGIR A CATÁLOGO DE MARCAS
+                // Redirigir según el rol del usuario
                 setTimeout(() => {
-                    window.location.href = '/admin/catalogoMarcas.html';
+                    switch(usuario.rol) {
+                        case 'admin':
+                            window.location.href = '/admin/panelAdmin.html';
+                            break;
+                        case 'trabajador':
+                            window.location.href = '/trabajador/panelTrabajador.html';
+                            break;
+                        case 'cliente':
+                            window.location.href = '/cliente/home.html';
+                            break;
+                        default:
+                            // Si no tiene rol definido, redirigir a catálogo de marcas por defecto
+                            window.location.href = '/admin/catalogoMarcas.html';
+                            break;
+                    }
                 }, 1000);
 
             } else {
@@ -176,10 +190,24 @@
 
     // Verificar si ya hay sesión iniciada
     window.addEventListener('DOMContentLoaded', () => {
-        const usuario = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
-        if (usuario) {
-            // Si ya hay sesión, redirigir directo a catálogo de marcas
-            window.location.href = '/admin/catalogoMarcas.html';
+        const usuarioStorage = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
+        if (usuarioStorage) {
+            const usuario = JSON.parse(usuarioStorage);
+            // Redirigir según el rol del usuario guardado
+            switch(usuario.rol) {
+                case 'admin':
+                    window.location.href = '/admin/panelAdmin.html';
+                    break;
+                case 'trabajador':
+                    window.location.href = '/trabajador/panelTrabajador.html';
+                    break;
+                case 'cliente':
+                    window.location.href = '/cliente/home.html';
+                    break;
+                default:
+                    window.location.href = '/admin/catalogoMarcas.html';
+                    break;
+            }
         }
     });
 </script>
