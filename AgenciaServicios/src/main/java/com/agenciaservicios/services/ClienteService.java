@@ -29,8 +29,8 @@ public class ClienteService {
         return clienteRepository.findById(idCliente);
     }
 
-    public List<Cliente> obtenerTodos(){
-        return clienteRepository.findByActivoTrue();
+    public List<Cliente> obtenerTodos() {
+        return clienteRepository.findAll(); 
     }
 
     @Transactional
@@ -46,8 +46,9 @@ public class ClienteService {
         });
     }
 
-    public List<Cliente> buscar(String criterio){
-        return clienteRepository.buscarPorCriterio(criterio);
+    public List<Cliente> buscar(String termino) {
+        return clienteRepository.findByNombreCompletoContainingIgnoreCaseOrTelefonoContainingOrEmailContainingIgnoreCase(
+                termino, termino, termino);
     }
 
     private void validarCliente(Cliente cliente){

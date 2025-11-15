@@ -32,6 +32,10 @@ public class Cliente {
     @Column(columnDefinition = "TEXT")
     private String direccion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", nullable = true)
+    private Usuario usuario;
+
     @Column(name="fecha_registro", updatable = false)
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 

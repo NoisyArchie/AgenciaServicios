@@ -23,4 +23,14 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "OR c.email LIKE CONCAT('%', :criterio, '%')) " +
             "AND c.activo = true")
     List<Cliente> buscarPorCriterio(@Param("criterio") String criterio);
+
+    List<Cliente> findByNombreCompletoContainingIgnoreCaseOrTelefonoContainingOrEmailContainingIgnoreCase(
+            String nombreCompleto, String telefono, String email);
+
+    // Para vincular clientes con usuarios
+    @Query("SELECT c FROM Cliente c WHERE c.usuario.idUsuario = :usuarioId")
+    Optional<Cliente> findByUsuarioIdUsuario(@Param("usuarioId") Integer usuarioId);
+    //Optional<Cliente> findByUsuarioIdUsuario(Integer idUsuario);
+
+
 }

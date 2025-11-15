@@ -66,7 +66,8 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Cliente>> buscar(@RequestParam String criterio){
-        return ResponseEntity.ok(clienteService.buscar(criterio));
+    public ResponseEntity<List<Cliente>> buscar(@RequestParam String termino) {
+        List<Cliente> resultados = clienteService.buscar(termino);
+        return ResponseEntity.ok(resultados);
     }
 }
