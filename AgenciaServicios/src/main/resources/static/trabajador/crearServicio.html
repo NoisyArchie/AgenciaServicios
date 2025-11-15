@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Crear Servicio - Siscare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-[#0D0D0D] text-white min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+        <div>
+            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+                Siscare
+            </h2>
+
+            <nav class="flex flex-col gap-1">
+                <a href="/trabjador/panelTrabajador.html"
+                    class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-home text-xl"></i> Panel
+                </a>
+
+                <a href="/trabjador/servicios.html"
+                    class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                    <i class="bx bx-wrench text-xl"></i> Servicios
+                </a>
+
+                <a href="/trabajador/clientes.html"
+                    class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                    <i class="bx bx-id-card text-xl"></i> Usuarios
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="border-t border-gray-700 pt-4">
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+        <!-- NAVBAR SUPERIOR -->
+        <header
+            class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+            <div class="flex items-center gap-3">
+                <span class="text-gray-300 text-sm">Trabjador</span>
+                <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                    <i class="bx bx-user text-white text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENIDO -->
+        <section class="p-8 flex-1 overflow-y-auto">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-3xl font-bold">Crear Nuevo Servicio</h1>
+                        <p class="text-gray-400 text-sm">
+                            Registra un nuevo servicio en el sistema
+                        </p>
+                    </div>
+
+                    <a href="/trabajador/servicios.html"
+                        class="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded shadow">
+                        <i class="bx bx-arrow-back"></i> Volver a Servicios
+                    </a>
+                </div>
+
+                <!-- Formulario de Servicio -->
+                <form id="formCrearServicio" class="space-y-8">
+                    <!-- Sección 1: Información del Vehículo y Cliente -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-car"></i>
+                            Información del Vehículo y Cliente
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Columna Izquierda - Vehículo -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-300 mb-3">Datos del Vehículo</h3>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                                        Seleccionar Vehículo Existente *
+                                    </label>
+                                    <select id="selectVehiculo" required
+                                        class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                                        <option value="">Cargando vehículos...</option>
+                                    </select>
+                                </div>
+
+                                <div class="text-center text-gray-400 text-sm my-2">--- O ---</div>
+
+                                <div>
+                                    <button type="button" onclick="abrirModalVehiculo()"
+                                        class="w-full bg-blue-600 hover:bg-blue-500 transition p-3 rounded-lg border border-dashed border-blue-400">
+                                        <i class="bx bx-plus-circle"></i> Registrar Vehículo Nuevo
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                                            Kilometraje Actual *
+                                        </label>
+                                        <input type="number" id="inputKilometraje" required
+                                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                                            placeholder="Ej: 45000">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                                            Próximo Servicio (KM)
+                                        </label>
+                                        <input type="number" id="inputProximoServicioKm"
+                                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                                            placeholder="Ej: 50000">
+                                    </div>
+                                </div>
+
+                                <!-- Checkbox para persona que lleva el vehículo -->
+                                <div class="mt-4 pt-4 border-t border-gray-700">
+                                    <label class="flex items-center gap-3 mb-3">
+                                        <input type="checkbox" id="checkLlevadoPorOtro"
+                                            class="accent-orange-500 w-4 h-4">
+                                        <span class="text-sm text-gray-300">El vehículo lo trae otra persona (no el
+                                            propietario)</span>
+                                    </label>
+
+                                    <div id="divPersonaEntrega" class="hidden space-y-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                                                Nombre de quien entrega *
+                                            </label>
+                                            <input type="text" id="inputQuienEntrego"
+                                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                                                placeholder="Nombre completo">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                                                Teléfono de quien entrega *
+                                            </label>
+                                            <input type="tel" id="inputTelefonoQuienEntrego"
+                                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                                                placeholder="10 dígitos">
+                                        </div>
+                                        <!-- Mensaje de advertencia agregado -->
+                                        <div class="bg-orange-500/10 border border-orange-500/30 rounded-lg p-3">
+                                            <p class="text-xs text-orange-400 text-center">
+                                                ⚠️ Verifica cuidadosamente los datos de la persona que entrega el
+                                                vehículo
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha - Cliente -->
+                            <div id="infoCliente" class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-300 mb-3">Información del Cliente</h3>
+                                <div class="bg-black/20 p-4 rounded-lg border border-gray-700">
+                                    <p class="text-gray-400 text-sm text-center">
+                                        Selecciona un vehículo para ver la información del cliente
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 2: Detalles del Servicio -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-wrench"></i>
+                            Detalles del Servicio
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Tipo de Mantenimiento *
+                                </label>
+                                <select id="selectTipoMantenimiento" required
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                                    <option value="">Selecciona el tipo</option>
+                                    <option value="Preventivo">Preventivo</option>
+                                    <option value="Correctivo">Correctivo</option>
+                                    <option value="Garantía">Garantía</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Fecha Estimada de Entrega *
+                                </label>
+                                <input type="date" id="inputFechaEstimada" required
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Fecha Próximo Servicio
+                                </label>
+                                <input type="date" id="inputFechaProximoServicio"
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Observaciones
+                                </label>
+                                <textarea id="textareaObservaciones" rows="3"
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                                    placeholder="Notas adicionales sobre el servicio..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 3: Servicios a Realizar -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-list-check"></i>
+                            Servicios a Realizar
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Tipo de Servicio
+                                </label>
+                                <select id="selectServicio"
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                                    <option value="">Cargando servicios...</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    &nbsp;
+                                </label>
+                                <button type="button" onclick="agregarServicio()"
+                                    class="w-full bg-orange-600 hover:bg-orange-500 transition p-3 rounded-lg">
+                                    <i class="bx bx-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lista de servicios agregados -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-black/50">
+                                    <tr>
+                                        <th class="text-left p-3 text-sm font-semibold text-gray-300">Servicio</th>
+                                        <th class="text-left p-3 text-sm font-semibold text-gray-300">Costo</th>
+                                        <th class="text-left p-3 text-sm font-semibold text-gray-300">Notas</th>
+                                        <th class="text-center p-3 text-sm font-semibold text-gray-300">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaServicios">
+                                    <tr>
+                                        <td colspan="4" class="text-center p-4 text-gray-400">
+                                            No hay servicios agregados
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Sección 4: Refacciones -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-cog"></i>
+                            Refacciones
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Refacción
+                                </label>
+                                <select id="selectRefaccion"
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                                    <option value="">Cargando refacciones...</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Cantidad
+                                </label>
+                                <input type="number" id="inputCantidadRefaccion" min="1" value="1"
+                                    class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    &nbsp;
+                                </label>
+                                <button type="button" onclick="agregarRefaccion()"
+                                    class="w-full bg-orange-600 hover:bg-orange-500 transition p-3 rounded-lg">
+                                    <i class="bx bx-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lista de refacciones agregadas -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-black/50">
+                                    <tr>
+                                        <th class="text-left p-3 text-sm font-semibold text-gray-300">Refacción</th>
+                                        <th class="text-center p-3 text-sm font-semibold text-gray-300">Cantidad</th>
+                                        <th class="text-right p-3 text-sm font-semibold text-gray-300">Precio Unit.</th>
+                                        <th class="text-right p-3 text-sm font-semibold text-gray-300">Subtotal</th>
+                                        <th class="text-center p-3 text-sm font-semibold text-gray-300">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaRefacciones">
+                                    <tr>
+                                        <td colspan="5" class="text-center p-4 text-gray-400">
+                                            No hay refacciones agregadas
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Sección 5: Resumen y Totales -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-dollar"></i>
+                            Resumen de Costos
+                        </h2>
+
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-300">Subtotal Servicios:</span>
+                                <span id="subtotalServicios" class="text-xl font-bold">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-300">Subtotal Refacciones:</span>
+                                <span id="subtotalRefacciones" class="text-xl font-bold">$0.00</span>
+                            </div>
+                            <div class="border-t border-gray-700 pt-3 flex justify-between items-center">
+                                <span class="text-lg font-semibold text-gray-200">Total General:</span>
+                                <span id="totalGeneral" class="text-3xl font-bold text-green-400">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="flex gap-4 justify-end">
+                        <button type="button" onclick="window.location.href='/trabajador/servicios.html'"
+                            class="px-6 py-3 bg-gray-700 hover:bg-gray-600 transition rounded-lg">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                            class="px-6 py-3 bg-orange-600 hover:bg-orange-500 transition rounded-lg flex items-center gap-2">
+                            <i class="bx bx-save"></i>
+                            Guardar Servicio
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Estilos adicionales para inputs de fecha -->
+    <style>
+        /* Fix para inputs de fecha en navegadores oscuros */
+        input[type="date"] {
+            position: relative;
+            color-scheme: dark;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        input[type="date"]::-webkit-datetime-edit {
+            color: white;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            color: white;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-text {
+            color: white;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-month-field,
+        input[type="date"]::-webkit-datetime-edit-day-field,
+        input[type="date"]::-webkit-datetime-edit-year-field {
+            color: white;
+        }
+
+        /* Firefox */
+        input[type="date"] {
+            color: white;
+        }
+    </style>
+
+    <!-- Modal para Crear Vehículo Nuevo -->
+    <div id="modalVehiculo"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-[#1A1A1A] border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center gap-2">
+                    <i class="bx bx-car text-orange-500"></i>
+                    Registrar Vehículo Nuevo
+                </h3>
+                <button onclick="cerrarModalVehiculo()" class="text-gray-400 hover:text-white">
+                    <i class="bx bx-x text-3xl"></i>
+                </button>
+            </div>
+
+            <form id="formVehiculo" class="p-6 space-y-6">
+                <!-- Sección Cliente -->
+                <div class="bg-black/20 p-4 rounded-lg border border-gray-700">
+                    <h4 class="text-lg font-semibold text-orange-400 mb-4">Cliente del Vehículo</h4>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Seleccionar Cliente Existente *
+                        </label>
+                        <select id="selectClienteVehiculo" required
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                            <option value="">Cargando clientes...</option>
+                        </select>
+                        <p class="mt-1 text-xs text-gray-400">
+                            <i class="bx bx-info-circle"></i>
+                            El vehículo será asignado a este cliente
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Datos del Vehículo -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Placas *
+                        </label>
+                        <input type="text" id="inputPlacasModal" required
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="Ej: ABC-1234">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Número de Serie *
+                        </label>
+                        <input type="text" id="inputNumeroSerie" required
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="17 caracteres">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Marca *
+                        </label>
+                        <select id="selectMarcaModal" required onchange="cargarModelosModal(this.value)"
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                            <option value="">Cargando marcas...</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Modelo *
+                        </label>
+                        <select id="selectModeloModal" required
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500">
+                            <option value="">Primero selecciona una marca</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Año *
+                        </label>
+                        <input type="number" id="inputAnioModal" required min="1900" max="2030"
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="Ej: 2023">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Color
+                        </label>
+                        <input type="text" id="inputColorModal"
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="Ej: Blanco">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Kilometraje Actual *
+                        </label>
+                        <input type="number" id="inputKilometrajeModal" required min="0"
+                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500"
+                            placeholder="Ej: 45000">
+                    </div>
+                </div>
+
+                <!-- Botones del Modal -->
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+                    <button type="button" onclick="cerrarModalVehiculo()"
+                        class="px-6 py-3 bg-gray-700 hover:bg-gray-600 transition rounded-lg">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-3 bg-blue-600 hover:bg-blue-500 transition rounded-lg flex items-center gap-2">
+                        <i class="bx bx-save"></i>
+                        Guardar Vehículo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle menú de catálogos
+        document.getElementById('btnCatalogos').addEventListener('click', function () {
+            const submenu = document.getElementById('submenuCatalogos');
+            const icon = document.getElementById('iconArrow');
+
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('bx-chevron-down');
+            icon.classList.toggle('bx-chevron-up');
+        });
+
+        // Toggle persona que entrega
+        document.getElementById('checkLlevadoPorOtro').addEventListener('change', function () {
+            const div = document.getElementById('divPersonaEntrega');
+            if (this.checked) {
+                div.classList.remove('hidden');
+                document.getElementById('inputQuienEntrego').required = true;
+                document.getElementById('inputTelefonoQuienEntrego').required = true;
+            } else {
+                div.classList.add('hidden');
+                document.getElementById('inputQuienEntrego').required = false;
+                document.getElementById('inputTelefonoQuienEntrego').required = false;
+            }
+        });
+
+        // URLs de la API
+        const API_BASE = '/api';
+
+        // Variables globales
+        let vehiculos = [];
+        let tiposServicio = [];
+        let refacciones = [];
+        let serviciosAgregados = [];
+        let refaccionesAgregadas = [];
+        let usuarioActual = 1; // Por ahora hardcodeado
+
+        // Cargar datos al iniciar
+        window.addEventListener('DOMContentLoaded', async function () {
+            await cargarVehiculos();
+            await cargarTiposServicio();
+            await cargarRefacciones();
+
+            // Establecer fecha mínima de entrega (hoy)
+            const today = new Date();
+            document.getElementById('inputFechaEstimada').min = today.toISOString().split('T')[0];
+        });
+
+        // Cargar vehículos desde la API
+        async function cargarVehiculos() {
+            try {
+                const response = await fetch(`${API_BASE}/vehiculos`);
+                if (!response.ok) throw new Error('Error al cargar vehículos');
+
+                vehiculos = await response.json();
+                const select = document.getElementById('selectVehiculo');
+                select.innerHTML = '<option value="">Selecciona un vehículo</option>';
+
+                vehiculos.forEach(vehiculo => {
+                    const option = document.createElement('option');
+                    option.value = vehiculo.idVehiculo;
+                    option.setAttribute('data-kilometraje', vehiculo.kilometraje || 0);
+                    option.textContent = `${vehiculo.placas || 'S/P'} - ${vehiculo.modelo.marca.nombreMarca} ${vehiculo.modelo.nombreModelo} ${vehiculo.anio} - ${vehiculo.cliente.nombreCompleto}`;
+                    select.appendChild(option);
+                });
+
+                // Evento para actualizar info del cliente
+                select.addEventListener('change', function () {
+                    actualizarInfoCliente(this.value);
+                    actualizarKilometrajeDesdeSelect(this.value);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar los vehículos. Por favor, recarga la página.');
+            }
+        }
+
+        // Actualizar información del cliente
+        function actualizarInfoCliente(vehiculoId) {
+            const vehiculo = vehiculos.find(v => v.idVehiculo == vehiculoId);
+            const infoDiv = document.getElementById('infoCliente');
+
+            if (!vehiculo) {
+                infoDiv.innerHTML = `
+                    <h3 class="text-lg font-semibold text-gray-300 mb-3">Información del Cliente</h3>
+                    <div class="bg-black/20 p-4 rounded-lg border border-gray-700">
+                        <p class="text-gray-400 text-sm text-center">
+                            Selecciona un vehículo para ver la información del cliente
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            const cliente = vehiculo.cliente;
+            infoDiv.innerHTML = `
+                <h3 class="text-lg font-semibold text-gray-300 mb-3">Información del Cliente</h3>
+                <div class="bg-black/20 p-4 rounded-lg border border-gray-700 space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-400">Nombre</p>
+                        <p class="text-white font-medium">${cliente.nombreCompleto}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Teléfono</p>
+                        <p class="text-white">${cliente.telefono || 'No disponible'}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Email</p>
+                        <p class="text-white">${cliente.email || 'No disponible'}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Dirección</p>
+                        <p class="text-white text-sm">${cliente.direccion || 'No disponible'}</p>
+                    </div>
+                </div>
+                <div class="mt-4 bg-blue-500/10 border border-blue-500/30 p-3 rounded-lg">
+                    <p class="text-xs text-blue-300">
+                        <i class="bx bx-info-circle"></i>
+                        Vehículo: ${vehiculo.modelo.marca.nombreMarca} ${vehiculo.modelo.nombreModelo} ${vehiculo.anio}
+                    </p>
+                    <p class="text-xs text-blue-300 mt-1">
+                        Placas: ${vehiculo.placas || 'Sin placas'} | Color: ${vehiculo.color || 'No especificado'}
+                    </p>
+                </div>
+            `;
+        }
+
+        // Actualizar kilometraje desde select
+        function actualizarKilometrajeDesdeSelect(vehiculoId) {
+            const select = document.getElementById('selectVehiculo');
+            const option = select.querySelector(`option[value="${vehiculoId}"]`);
+            if (option) {
+                const km = option.getAttribute('data-kilometraje');
+                document.getElementById('inputKilometraje').value = km;
+            }
+        }
+
+        // Cargar tipos de servicio
+        async function cargarTiposServicio() {
+            try {
+                const response = await fetch(`${API_BASE}/tipos-servicio/activos`);
+                if (!response.ok) throw new Error('Error al cargar tipos de servicio');
+
+                tiposServicio = await response.json();
+                const select = document.getElementById('selectServicio');
+                select.innerHTML = '<option value="">Selecciona un servicio</option>';
+
+                tiposServicio.forEach(servicio => {
+                    const option = document.createElement('option');
+                    option.value = servicio.idTipoServicio;
+                    option.setAttribute('data-costo', servicio.costoBase || 0);
+                    option.textContent = `${servicio.nombreServicio} - $${parseFloat(servicio.costoBase || 0).toFixed(2)}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar los tipos de servicio.');
+            }
+        }
+
+        // Cargar refacciones
+        async function cargarRefacciones() {
+            try {
+                const response = await fetch(`${API_BASE}/refacciones/disponibles`);
+                if (!response.ok) throw new Error('Error al cargar refacciones');
+
+                refacciones = await response.json();
+                const select = document.getElementById('selectRefaccion');
+                select.innerHTML = '<option value="">Selecciona una refacción</option>';
+
+                refacciones.forEach(refaccion => {
+                    const option = document.createElement('option');
+                    option.value = refaccion.idRefaccion;
+                    option.setAttribute('data-precio', refaccion.precioUnitario);
+                    option.setAttribute('data-stock', refaccion.stock);
+                    option.textContent = `${refaccion.nombreRefaccion} - $${parseFloat(refaccion.precioUnitario).toFixed(2)} (Stock: ${refaccion.stock})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar las refacciones.');
+            }
+        }
+
+        // Agregar servicio a la lista
+        function agregarServicio() {
+            const select = document.getElementById('selectServicio');
+            const servicioId = select.value;
+
+            if (!servicioId) {
+                alert('Por favor selecciona un servicio');
+                return;
+            }
+
+            const servicio = tiposServicio.find(s => s.idTipoServicio == servicioId);
+
+            // Verificar si ya está agregado
+            if (serviciosAgregados.some(s => s.id === servicio.idTipoServicio)) {
+                alert('Este servicio ya está agregado');
+                return;
+            }
+
+            serviciosAgregados.push({
+                id: servicio.idTipoServicio,
+                nombre: servicio.nombreServicio,
+                costo: parseFloat(servicio.costoBase || 0),
+                notas: ''
+            });
+
+            actualizarListaServicios();
+            actualizarTotales();
+            select.value = '';
+        }
+
+        // Actualizar lista de servicios
+        function actualizarListaServicios() {
+            const tbody = document.getElementById('tablaServicios');
+            tbody.innerHTML = '';
+
+            if (serviciosAgregados.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center p-4 text-gray-400">
+                            No hay servicios agregados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            serviciosAgregados.forEach((servicio, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-800';
+                tr.innerHTML = `
+                    <td class="p-3">${servicio.nombre}</td>
+                    <td class="p-3 text-green-400">$${servicio.costo.toFixed(2)}</td>
+                    <td class="p-3">
+                        <input type="text"
+                            class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded text-sm focus:border-orange-500"
+                            placeholder="Notas opcionales"
+                            value="${servicio.notas}"
+                            onchange="actualizarNotasServicio(${index}, this.value)">
+                    </td>
+                    <td class="p-3 text-center">
+                        <button type="button" onclick="eliminarServicio(${index})"
+                            class="bg-red-600 hover:bg-red-500 transition p-2 rounded">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Agregar refacción a la lista
+        function agregarRefaccion() {
+            const select = document.getElementById('selectRefaccion');
+            const refaccionId = select.value;
+            const cantidad = parseInt(document.getElementById('inputCantidadRefaccion').value);
+
+            if (!refaccionId) {
+                alert('Por favor selecciona una refacción');
+                return;
+            }
+
+            if (cantidad < 1) {
+                alert('La cantidad debe ser mayor a 0');
+                return;
+            }
+
+            const refaccion = refacciones.find(r => r.idRefaccion == refaccionId);
+
+            // Verificar stock disponible
+            if (cantidad > refaccion.stock) {
+                alert(`Stock insuficiente. Disponible: ${refaccion.stock}`);
+                return;
+            }
+
+            // Verificar si ya está agregada
+            const existe = refaccionesAgregadas.find(r => r.id === refaccion.idRefaccion);
+            if (existe) {
+                existe.cantidad += cantidad;
+                if (existe.cantidad > refaccion.stock) {
+                    alert(`Stock insuficiente. Disponible: ${refaccion.stock}`);
+                    existe.cantidad -= cantidad;
+                    return;
+                }
+                existe.subtotal = existe.cantidad * existe.precio;
+            } else {
+                refaccionesAgregadas.push({
+                    id: refaccion.idRefaccion,
+                    nombre: refaccion.nombreRefaccion,
+                    cantidad: cantidad,
+                    precio: parseFloat(refaccion.precioUnitario),
+                    subtotal: cantidad * parseFloat(refaccion.precioUnitario)
+                });
+            }
+
+            actualizarListaRefacciones();
+            actualizarTotales();
+            select.value = '';
+            document.getElementById('inputCantidadRefaccion').value = 1;
+        }
+
+        // Actualizar lista de refacciones
+        function actualizarListaRefacciones() {
+            const tbody = document.getElementById('tablaRefacciones');
+            tbody.innerHTML = '';
+
+            if (refaccionesAgregadas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center p-4 text-gray-400">
+                            No hay refacciones agregadas
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            refaccionesAgregadas.forEach((refaccion, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-800';
+                tr.innerHTML = `
+                    <td class="p-3">${refaccion.nombre}</td>
+                    <td class="p-3 text-center">${refaccion.cantidad}</td>
+                    <td class="p-3 text-right">$${refaccion.precio.toFixed(2)}</td>
+                    <td class="p-3 text-right text-green-400 font-bold">$${refaccion.subtotal.toFixed(2)}</td>
+                    <td class="p-3 text-center">
+                        <button type="button" onclick="eliminarRefaccion(${index})"
+                            class="bg-red-600 hover:bg-red-500 transition p-2 rounded">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Actualizar totales
+        function actualizarTotales() {
+            const subtotalServicios = serviciosAgregados.reduce((sum, servicio) => sum + servicio.costo, 0);
+            const subtotalRefacciones = refaccionesAgregadas.reduce((sum, refaccion) => sum + refaccion.subtotal, 0);
+            const total = subtotalServicios + subtotalRefacciones;
+
+            document.getElementById('subtotalServicios').textContent = '$' + subtotalServicios.toFixed(2);
+            document.getElementById('subtotalRefacciones').textContent = '$' + subtotalRefacciones.toFixed(2);
+            document.getElementById('totalGeneral').textContent = '$' + total.toFixed(2);
+        }
+
+        // Eliminar servicio
+        function eliminarServicio(index) {
+            serviciosAgregados.splice(index, 1);
+            actualizarListaServicios();
+            actualizarTotales();
+        }
+
+        // Eliminar refacción
+        function eliminarRefaccion(index) {
+            refaccionesAgregadas.splice(index, 1);
+            actualizarListaRefacciones();
+            actualizarTotales();
+        }
+
+        // Actualizar notas del servicio
+        function actualizarNotasServicio(index, notas) {
+            serviciosAgregados[index].notas = notas;
+        }
+
+        // Guardar servicio
+        document.getElementById('formCrearServicio').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Validaciones
+            const vehiculoId = document.getElementById('selectVehiculo').value;
+            const kilometraje = document.getElementById('inputKilometraje').value;
+            const tipoMantenimiento = document.getElementById('selectTipoMantenimiento').value;
+            const fechaEstimada = document.getElementById('inputFechaEstimada').value;
+
+            if (!vehiculoId || !kilometraje || !tipoMantenimiento || !fechaEstimada) {
+                alert('Por favor completa todos los campos requeridos (*)');
+                return;
+            }
+
+            if (serviciosAgregados.length === 0 && refaccionesAgregadas.length === 0) {
+                alert('Debes agregar al menos un servicio o refacción');
+                return;
+            }
+
+            // Validar persona que entrega
+            const llevadoPorOtro = document.getElementById('checkLlevadoPorOtro').checked;
+            let quienEntrego = '';
+            let telefonoQuienEntrego = '';
+
+            if (llevadoPorOtro) {
+                quienEntrego = document.getElementById('inputQuienEntrego').value.trim();
+                telefonoQuienEntrego = document.getElementById('inputTelefonoQuienEntrego').value.trim();
+
+                if (!quienEntrego || !telefonoQuienEntrego) {
+                    alert('Por favor completa los datos de la persona que entrega el vehículo');
+                    return;
+                }
+            } else {
+                // Si no es otra persona, usar datos del cliente
+                const vehiculo = vehiculos.find(v => v.idVehiculo == vehiculoId);
+                if (vehiculo) {
+                    quienEntrego = vehiculo.cliente.nombreCompleto;
+                    telefonoQuienEntrego = vehiculo.cliente.telefono || '';
+                }
+            }
+
+            // Preparar datos del servicio
+            const servicioData = {
+                vehiculo: { idVehiculo: parseInt(vehiculoId) },
+                usuario: { idUsuario: usuarioActual },
+                fechaIngreso: new Date().toISOString(),
+                fechaEstimadaEntrega: fechaEstimada,
+                tipoMantenimiento: tipoMantenimiento,
+                estatus: 'PENDIENTE',
+                kilometrajeActual: parseInt(kilometraje),
+                proximoServicioKm: document.getElementById('inputProximoServicioKm').value ? parseInt(document.getElementById('inputProximoServicioKm').value) : null,
+                fechaProximoServicio: document.getElementById('inputFechaProximoServicio').value || null,
+                observaciones: document.getElementById('textareaObservaciones').value.trim() || null,
+                costoTotal: parseFloat(document.getElementById('totalGeneral').textContent.replace('$', '')),
+                quienEntrego: quienEntrego,
+                telefonoQuienEntrego: telefonoQuienEntrego
+            };
+
+            try {
+                // Crear el servicio
+                const response = await fetch(`${API_BASE}/servicios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(servicioData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+
+                const servicioCreado = await response.json();
+                const folioServicio = servicioCreado.folioServicio;
+
+                // Guardar detalles de servicios
+                for (const servicio of serviciosAgregados) {
+                    const detalleData = {
+                        servicio: { folioServicio: folioServicio },
+                        tipoServicio: { idTipoServicio: servicio.id },
+                        costo: servicio.costo,
+                        notas: servicio.notas || null
+                    };
+
+                    await fetch(`${API_BASE}/servicio-detalle`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(detalleData)
+                    });
+                }
+
+                // Guardar refacciones
+                for (const refaccion of refaccionesAgregadas) {
+                    const refaccionData = {
+                        servicio: { folioServicio: folioServicio },
+                        refaccion: { idRefaccion: refaccion.id },
+                        cantidad: refaccion.cantidad,
+                        precioAplicado: refaccion.precio
+                    };
+
+                    await fetch(`${API_BASE}/servicio-refacciones`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(refaccionData)
+                    });
+                }
+
+                alert('✅ Servicio creado exitosamente\nFolio: SER-' + String(folioServicio).padStart(6, '0'));
+                window.location.href = '/trabajador/servicios.html';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al crear el servicio:\n' + error.message);
+            }
+        });
+
+        // ========== FUNCIONES DEL MODAL DE VEHÍCULO ==========
+
+        let clientes = [];
+        let marcas = [];
+        let modelosPorMarca = {};
+
+        // Abrir modal de vehículo
+        function abrirModalVehiculo() {
+            document.getElementById('modalVehiculo').classList.remove('hidden');
+            cargarClientesModal();
+            cargarMarcasModal();
+        }
+
+        // Cerrar modal de vehículo
+        function cerrarModalVehiculo() {
+            document.getElementById('modalVehiculo').classList.add('hidden');
+            document.getElementById('formVehiculo').reset();
+        }
+
+        // Cargar clientes para el modal
+        async function cargarClientesModal() {
+            try {
+                const response = await fetch(`${API_BASE}/clientes`);
+                if (!response.ok) throw new Error('Error al cargar clientes');
+
+                clientes = await response.json();
+                const select = document.getElementById('selectClienteVehiculo');
+                select.innerHTML = '<option value="">Selecciona un cliente</option>';
+
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.idCliente;
+                    option.textContent = `${cliente.nombreCompleto} - ${cliente.email || 'Sin email'}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar los clientes.');
+            }
+        }
+
+        // Cargar marcas para el modal
+        async function cargarMarcasModal() {
+            try {
+                const response = await fetch(`${API_BASE}/marcas`);
+                if (!response.ok) throw new Error('Error al cargar marcas');
+
+                marcas = await response.json();
+                const select = document.getElementById('selectMarcaModal');
+                select.innerHTML = '<option value="">Selecciona una marca</option>';
+
+                marcas.forEach(marca => {
+                    const option = document.createElement('option');
+                    option.value = marca.idMarca;
+                    option.textContent = marca.nombreMarca;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar las marcas.');
+            }
+        }
+
+        // Cargar modelos según la marca seleccionada
+        async function cargarModelosModal(marcaId) {
+            const selectModelo = document.getElementById('selectModeloModal');
+            selectModelo.innerHTML = '<option value="">Cargando modelos...</option>';
+            selectModelo.disabled = true;
+
+            if (!marcaId) {
+                selectModelo.innerHTML = '<option value="">Primero selecciona una marca</option>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/modelos/marca/${marcaId}`);
+                if (!response.ok) throw new Error('Error al cargar modelos');
+
+                const modelos = await response.json();
+                selectModelo.innerHTML = '<option value="">Selecciona un modelo</option>';
+
+                modelos.forEach(modelo => {
+                    const option = document.createElement('option');
+                    option.value = modelo.idModelo;
+                    option.textContent = modelo.nombreModelo;
+                    selectModelo.appendChild(option);
+                });
+
+                selectModelo.disabled = false;
+            } catch (error) {
+                console.error('Error:', error);
+                selectModelo.innerHTML = '<option value="">Error al cargar modelos</option>';
+                alert('Error al cargar los modelos.');
+            }
+        }
+
+        // Guardar vehículo nuevo
+        document.getElementById('formVehiculo').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const vehiculoData = {
+                cliente: { idCliente: parseInt(document.getElementById('selectClienteVehiculo').value) },
+                modelo: { idModelo: parseInt(document.getElementById('selectModeloModal').value) },
+                placas: document.getElementById('inputPlacasModal').value.trim().toUpperCase(),
+                numeroSerie: document.getElementById('inputNumeroSerie').value.trim().toUpperCase(),
+                anio: parseInt(document.getElementById('inputAnioModal').value),
+                color: document.getElementById('inputColorModal').value.trim() || null,
+                kilometraje: parseInt(document.getElementById('inputKilometrajeModal').value),
+                fechaRegistro: new Date().toISOString().split('T')[0]
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/vehiculos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(vehiculoData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+
+                const vehiculoCreado = await response.json();
+
+                alert('✅ Vehículo registrado exitosamente');
+
+                // Recargar la lista de vehículos
+                await cargarVehiculos();
+
+                // Seleccionar el vehículo recién creado
+                document.getElementById('selectVehiculo').value = vehiculoCreado.idVehiculo;
+                actualizarInfoCliente(vehiculoCreado.idVehiculo);
+                actualizarKilometrajeDesdeSelect(vehiculoCreado.idVehiculo);
+
+                // Cerrar modal
+                cerrarModalVehiculo();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al registrar el vehículo:\n' + error.message);
+            }
+        });
+
+        // Cerrar modales con ESC
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                cerrarModalVehiculo();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Servicios - Siscare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-[#0D0D0D] text-white min-h-screen flex">
+<!-- SIDEBAR -->
+<aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+    <div>
+        <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+            Siscare
+        </h2>
+
+        <nav class="flex flex-col gap-1">
+            <a href="/trabjador/panelTrabajador.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-home text-xl"></i> Panel
+            </a>
+
+            <a href="/trabjador/servicios.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                <i class="bx bx-wrench text-xl"></i> Servicios
+            </a>
+
+            <a href="/trabajador/clientes.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-id-card text-xl"></i> Usuarios
+            </a>
+            
+        </nav>
+    </div>
+
+    <div class="border-t border-gray-700 pt-4">
+        <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+            <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+        </a>
+    </div>
+</aside>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="flex-1 flex flex-col">
+    <!-- NAVBAR SUPERIOR -->
+    <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+        <!-- Icono de usuario -->
+        <div class="flex items-center gap-3">
+            <span class="text-gray-300 text-sm">Trabajador</span>
+            <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                <i class="bx bx-user text-white text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <section class="p-8 flex-1 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold">Historial de Servicios</h1>
+                <p class="text-gray-400 text-sm">
+                    Gestiona y consulta todos los servicios realizados
+                </p>
+            </div>
+
+            <a href="/admin/crearServicio.html"
+               class="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded shadow">
+                <i class="bx bx-plus"></i> Nuevo Servicio
+            </a>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-[#1A1A1A] p-4 rounded-xl border border-gray-700 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm text-gray-300 mb-2">Buscar por Folio</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="inputBuscarFolio" placeholder="Ej: SER-000001"
+                               class="flex-1 bg-black/30 border border-gray-700 text-white p-2 rounded-lg focus:border-orange-500">
+                        <button onclick="buscarPorFolio()" class="bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
+                            <i class="bx bx-search"></i> Buscar
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-2">Buscar por Cliente</label>
+                    <input type="text" id="inputBuscarCliente" placeholder="Nombre del cliente"
+                           class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg focus:border-orange-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-2">Estatus</label>
+                    <select id="selectEstatus" class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg">
+                        <option value="">Todos los estatus</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="EN_PROCESO">En Proceso</option>
+                        <option value="COMPLETADO">Completado</option>
+                        <option value="ENTREGADO">Entregado</option>
+                        <option value="CANCELADO">Cancelado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button onclick="aplicarFiltros()" class="bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
+                    Aplicar Filtros
+                </button>
+                <button onclick="limpiarFiltros()" class="bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+
+    
+        <!-- Tabla de Servicios -->
+        <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-black/50">
+                    <tr>
+                        <th class="text-left p-4 text-sm font-semibold text-gray-300">Folio</th>
+                        <th class="text-left p-4 text-sm font-semibold text-gray-300">Vehículo</th>
+                        <th class="text-left p-4 text-sm font-semibold text-gray-300">Cliente</th>
+                        <th class="text-left p-4 text-sm font-semibold text-gray-300">Fecha Ingreso</th>
+                        <th class="text-left p-4 text-sm font-semibold text-gray-300">Estatus</th>
+                        <th class="text-center p-4 text-sm font-semibold text-gray-300">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaServicios">
+                    <!-- Los servicios se cargarán dinámicamente aquí -->
+                    <tr>
+                        <td colspan="6" class="text-center p-8 text-gray-400">
+                            <i class="bx bx-loader-alt bx-spin text-3xl"></i>
+                            <p class="mt-2">Cargando servicios...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="bg-black/30 px-6 py-4 flex justify-between items-center border-t border-gray-700">
+                <p id="infoPaginacion" class="text-gray-400 text-sm">Mostrando 0-0 de 0 servicios</p>
+                <div class="flex gap-2">
+                    <button onclick="cambiarPagina('anterior')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        Anterior
+                    </button>
+                    <button id="pagina1" onclick="irAPagina(1)" class="px-3 py-1 bg-orange-600 text-white rounded transition">1</button>
+                    <button id="pagina2" onclick="irAPagina(2)" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">2</button>
+                    <button id="pagina3" onclick="irAPagina(3)" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">3</button>
+                    <button onclick="cambiarPagina('siguiente')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Modal Detalle Servicio -->
+<div id="modalDetalleServicio" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-[#1A1A1A] border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+            <h3 class="text-xl font-bold">Detalle del Servicio</h3>
+            <button onclick="cerrarModalDetalle()" class="text-gray-400 hover:text-white">
+                <i class="bx bx-x text-3xl"></i>
+            </button>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <!-- Información del Servicio -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h4 class="text-sm text-gray-400 mb-1">Folio</h4>
+                    <p id="folioServicio" class="text-lg font-bold text-orange-500">-</p>
+                </div>
+                <div>
+                    <h4 class="text-sm text-gray-400 mb-1">Estatus</h4>
+                    <p id="detalleEstatus">-</p>
+                </div>
+            </div>
+
+            <!-- Información del Vehículo -->
+            <div class="border-t border-gray-700 pt-4">
+                <h4 class="text-lg font-semibold mb-3">Información del Vehículo</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Vehículo</p>
+                        <p id="detalleVehiculo" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Placas</p>
+                        <p id="detallePlacas" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Color</p>
+                        <p id="detalleColor" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Kilometraje</p>
+                        <p id="detalleKilometraje" class="text-white">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Cliente -->
+            <div class="border-t border-gray-700 pt-4">
+                <h4 class="text-lg font-semibold mb-3">Información del Cliente</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Nombre</p>
+                        <p id="detalleCliente" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Teléfono</p>
+                        <p id="detalleTelefono" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Email</p>
+                        <p id="detalleEmail" class="text-white">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Servicio -->
+            <div class="border-t border-gray-700 pt-4">
+                <h4 class="text-lg font-semibold mb-3">Detalles del Servicio</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Tipo de Mantenimiento</p>
+                        <p id="detalleTipoMantenimiento" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Fecha de Ingreso</p>
+                        <p id="detalleFechaIngreso" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Fecha Estimada</p>
+                        <p id="detalleFechaEstimada" class="text-white">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Fecha Real</p>
+                        <p id="detalleFechaReal" class="text-white">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicios Realizados -->
+            <div class="border-t border-gray-700 pt-4">
+                <h4 class="text-lg font-semibold mb-3">Servicios Realizados</h4>
+                <div id="listaServiciosRealizados" class="space-y-2">
+                    <!-- Se llenarán dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Total -->
+            <div class="border-t border-gray-700 pt-4">
+                <div class="flex justify-between items-center">
+                    <h4 class="text-lg font-semibold">Costo Total</h4>
+                    <p id="detalleTotal" class="text-2xl font-bold text-green-400">$0.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cambiar Estatus -->
+<div id="modalCambiarEstatus" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 w-full max-w-md">
+        <div class="border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+            <h3 class="text-xl font-bold">Cambiar Estatus</h3>
+            <button onclick="cerrarModalEstatus()" class="text-gray-400 hover:text-white">
+                <i class="bx bx-x text-3xl"></i>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <input type="hidden" id="servicioIdEstatus">
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">Folio</label>
+                <input type="text" id="folioEstatus" disabled class="w-full bg-black/30 border border-gray-700 text-gray-400 p-2 rounded-lg">
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm text-gray-300 mb-2">Nuevo Estatus</label>
+                <select id="selectNuevoEstatus" disabled class="w-full bg-black/30 border border-gray-700 text-gray-400 p-2 rounded-lg cursor-not-allowed">
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="EN_PROCESO">En Proceso</option>
+                    <option value="COMPLETADO">Completado</option>
+                    <option value="ENTREGADO">Entregado</option>
+                    <option value="CANCELADO">Cancelado</option>
+                </select>
+                <p class="mt-2 text-sm text-orange-400 text-center">
+                    Por favor, solicita al administrador que realice esta tarea
+                </p>
+            </div>
+
+            <div class="flex gap-3">
+                <button disabled class="flex-1 bg-gray-600 text-gray-400 px-4 py-2 rounded cursor-not-allowed">
+                    Actualizar
+                </button>
+                <button onclick="cerrarModalEstatus()" class="flex-1 bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animación para las filas */
+    tbody tr {
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    tbody tr:hover {
+        background-color: rgba(255, 140, 0, 0.05);
+        transform: scale(1.01);
+    }
+</style>
+
+<script>
+    // Toggle menú de catálogos
+    document.getElementById('btnCatalogos').addEventListener('click', function () {
+        const submenu = document.getElementById('submenuCatalogos');
+        const icon = document.getElementById('iconArrow');
+
+        submenu.classList.toggle('hidden');
+        icon.classList.toggle('bx-chevron-down');
+        icon.classList.toggle('bx-chevron-up');
+    });
+
+    // URL base de la API
+    const API_URL = '/api/servicios';
+
+    // Variables globales
+    let servicios = [];
+    let serviciosFiltrados = [];
+    let paginaActual = 1;
+    const serviciosPorPagina = 10;
+
+    // Cargar servicios desde la API al inicio
+    async function cargarServiciosDesdeAPI() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error('Error al cargar los servicios');
+            }
+            const data = await response.json();
+
+            // Transformar los datos de la API al formato esperado por el frontend
+            servicios = data.map(servicio => ({
+                id: servicio.folioServicio,
+                folio: `SER-${String(servicio.folioServicio).padStart(6, '0')}`,
+                vehiculo: `${servicio.vehiculo.modelo.marca.nombreMarca} ${servicio.vehiculo.modelo.nombreModelo} ${servicio.vehiculo.anio}`,
+                placas: servicio.vehiculo.placas || 'N/A',
+                color: servicio.vehiculo.color || 'N/A',
+                kilometraje: `${(servicio.kilometrajeActual || 0).toLocaleString()} km`,
+                cliente: servicio.vehiculo.cliente.nombreCompleto,
+                telefono: servicio.vehiculo.cliente.telefono || 'N/A',
+                email: servicio.vehiculo.cliente.email || 'N/A',
+                tipoMantenimiento: servicio.tipoMantenimiento || 'N/A',
+                estatus: servicio.estatus,
+                fechaIngreso: new Date(servicio.fechaIngreso).toLocaleDateString('es-MX'),
+                fechaEstimada: servicio.fechaEstimadaEntrega ? new Date(servicio.fechaEstimadaEntrega).toLocaleDateString('es-MX') : 'N/A',
+                fechaReal: servicio.fechaEntregaReal ? new Date(servicio.fechaEntregaReal).toLocaleDateString('es-MX') : null,
+                costoTotal: parseFloat(servicio.costoTotal || 0),
+                observaciones: servicio.observaciones || '',
+                quienEntrego: servicio.quienEntrego || '',
+                telefonoQuienEntrego: servicio.telefonoQuienEntrego || '',
+                serviciosRealizados: []
+            }));
+
+            serviciosFiltrados = [...servicios];
+            await cargarEstadisticas();
+            cargarServicios();
+        } catch (error) {
+            console.error('Error al cargar servicios:', error);
+            const tbody = document.getElementById('tablaServicios');
+            tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center p-8 text-red-400">
+                            <i class="bx bx-error text-3xl"></i>
+                            <p class="mt-2">Error al cargar los servicios. Por favor, intenta de nuevo.</p>
+                        </td>
+                    </tr>
+                `;
+        }
+    }
+
+
+    // Cargar y mostrar servicios en la tabla
+    function cargarServicios() {
+        const tbody = document.getElementById('tablaServicios');
+        tbody.innerHTML = '';
+
+        const inicio = (paginaActual - 1) * serviciosPorPagina;
+        const fin = inicio + serviciosPorPagina;
+        const serviciosPagina = serviciosFiltrados.slice(inicio, fin);
+
+        if (serviciosPagina.length === 0) {
+            tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center p-8 text-gray-400">
+                            <i class="bx bx-search-alt text-3xl"></i>
+                            <p class="mt-2">No se encontraron servicios</p>
+                        </td>
+                    </tr>
+                `;
+            return;
+        }
+
+        serviciosPagina.forEach(servicio => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-gray-800';
+            tr.innerHTML = `
+                    <td class="p-4">
+                        <span class="font-mono text-orange-400">${servicio.folio}</span>
+                    </td>
+                    <td class="p-4">
+                        <p class="font-medium">${servicio.vehiculo}</p>
+                        <p class="text-xs text-gray-400">${servicio.placas}</p>
+                    </td>
+                    <td class="p-4">
+                        <p class="font-medium">${servicio.cliente}</p>
+                        <p class="text-xs text-gray-400">${servicio.telefono}</p>
+                    </td>
+                    <td class="p-4 text-gray-300">${servicio.fechaIngreso}</td>
+                    <td class="p-4">${obtenerBadgeEstatus(servicio.estatus)}</td>
+                    <td class="p-4">
+                        <div class="flex justify-center gap-2">
+                            <button onclick="verDetalleServicio(${servicio.id})" class="bg-blue-600 hover:bg-blue-500 transition p-2 rounded" title="Ver detalle">
+                                <i class="bx bx-show"></i>
+                            </button>
+                            <button onclick="abrirModalEstatus(${servicio.id})" class="bg-yellow-600 hover:bg-yellow-500 transition p-2 rounded" title="Cambiar estatus">
+                                <i class="bx bx-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+            tbody.appendChild(tr);
+        });
+
+        actualizarPaginacion();
+    }
+
+    // Obtener badge de estatus con colores
+    function obtenerBadgeEstatus(estatus) {
+        const badges = {
+            'PENDIENTE': '<span class="px-3 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">Pendiente</span>',
+            'EN_PROCESO': '<span class="px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">En Proceso</span>',
+            'COMPLETADO': '<span class="px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">Completado</span>',
+            'ENTREGADO': '<span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">Entregado</span>',
+            'CANCELADO': '<span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-400 border border-gray-500/30">Cancelado</span>'
+        };
+        return badges[estatus] || badges['PENDIENTE'];
+    }
+
+    // Buscar por folio
+    function buscarPorFolio() {
+        const folio = document.getElementById('inputBuscarFolio').value.trim().toUpperCase();
+
+        if (!folio) {
+            limpiarFiltros();
+            return;
+        }
+
+        serviciosFiltrados = servicios.filter(s => s.folio.includes(folio));
+        paginaActual = 1;
+        cargarServicios();
+    }
+
+    // Aplicar filtros
+    function aplicarFiltros() {
+        const folio = document.getElementById('inputBuscarFolio').value.trim().toUpperCase();
+        const cliente = document.getElementById('inputBuscarCliente').value.trim().toLowerCase();
+        const estatus = document.getElementById('selectEstatus').value;
+
+        serviciosFiltrados = servicios.filter(servicio => {
+            let cumple = true;
+
+            // Filtro por folio
+            if (folio && !servicio.folio.includes(folio)) {
+                cumple = false;
+            }
+
+            // Filtro por estatus
+            if (estatus && servicio.estatus !== estatus) {
+                cumple = false;
+            }
+
+            // Filtro por nombre de cliente
+            if (cliente && !servicio.cliente.toLowerCase().includes(cliente)) {
+                cumple = false;
+            }
+
+            return cumple;
+        });
+
+        paginaActual = 1;
+        cargarServicios();
+    }
+
+    // Limpiar filtros
+    function limpiarFiltros() {
+        document.getElementById('inputBuscarFolio').value = '';
+        document.getElementById('inputBuscarCliente').value = '';
+        document.getElementById('selectEstatus').value = '';
+
+        serviciosFiltrados = [...servicios];
+        paginaActual = 1;
+        cargarServicios();
+    }
+
+    // Actualizar paginación
+    function actualizarPaginacion() {
+        const totalServicios = serviciosFiltrados.length;
+        const totalPaginas = Math.ceil(totalServicios / serviciosPorPagina);
+        const inicio = (paginaActual - 1) * serviciosPorPagina + 1;
+        const fin = Math.min(paginaActual * serviciosPorPagina, totalServicios);
+
+        document.getElementById('infoPaginacion').textContent =
+            `Mostrando ${inicio}-${fin} de ${totalServicios} servicios`;
+
+        // Actualizar botones de paginación
+        for (let i = 1; i <= 3; i++) {
+            const btn = document.getElementById(`pagina${i}`);
+            if (i <= totalPaginas) {
+                btn.textContent = i;
+                btn.style.display = 'block';
+                btn.className = `px-3 py-1 ${i === paginaActual ? 'bg-orange-600 text-white' : 'bg-gray-700 hover:bg-gray-600'} rounded transition`;
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+    }
+
+    // Cambiar página
+    function cambiarPagina(direccion) {
+        const totalPaginas = Math.ceil(serviciosFiltrados.length / serviciosPorPagina);
+
+        if (direccion === 'siguiente' && paginaActual < totalPaginas) {
+            paginaActual++;
+        } else if (direccion === 'anterior' && paginaActual > 1) {
+            paginaActual--;
+        }
+
+        cargarServicios();
+    }
+
+    // Ir a página específica
+    function irAPagina(pagina) {
+        paginaActual = pagina;
+        cargarServicios();
+    }
+
+    // Ver detalle del servicio
+    function verDetalleServicio(id) {
+        const servicio = servicios.find(s => s.id === id);
+        if (!servicio) return;
+
+        // Llenar modal con datos del servicio
+        document.getElementById('folioServicio').textContent = servicio.folio;
+        document.getElementById('detalleVehiculo').textContent = servicio.vehiculo;
+        document.getElementById('detallePlacas').textContent = servicio.placas;
+        document.getElementById('detalleColor').textContent = servicio.color;
+        document.getElementById('detalleKilometraje').textContent = servicio.kilometraje;
+        document.getElementById('detalleCliente').textContent = servicio.cliente;
+        document.getElementById('detalleTelefono').textContent = servicio.telefono;
+        document.getElementById('detalleEmail').textContent = servicio.email;
+        document.getElementById('detalleTipoMantenimiento').textContent = servicio.tipoMantenimiento;
+        document.getElementById('detalleFechaIngreso').textContent = servicio.fechaIngreso;
+        document.getElementById('detalleFechaEstimada').textContent = servicio.fechaEstimada;
+        document.getElementById('detalleFechaReal').textContent = servicio.fechaReal || 'No entregado';
+        document.getElementById('detalleFechaReal').className = servicio.fechaReal ? 'text-green-400' : 'text-gray-400';
+        document.getElementById('detalleEstatus').innerHTML = obtenerBadgeEstatus(servicio.estatus);
+        document.getElementById('detalleTotal').textContent = `$${servicio.costoTotal.toFixed(2)}`;
+
+        // Llenar servicios realizados
+        const listaServicios = document.getElementById('listaServiciosRealizados');
+        listaServicios.innerHTML = '';
+
+        if (servicio.serviciosRealizados.length === 0) {
+            listaServicios.innerHTML = '<p class="text-gray-400 text-center">No hay servicios realizados registrados</p>';
+        } else {
+            servicio.serviciosRealizados.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center py-2 border-b border-gray-700';
+                div.innerHTML = `
+                        <div>
+                            <p class="font-medium">${item.nombre}</p>
+                            <p class="text-gray-400 text-sm">${item.descripcion}</p>
+                        </div>
+                        <span class="text-green-400">$${item.costo.toFixed(2)}</span>
+                    `;
+                listaServicios.appendChild(div);
+            });
+        }
+
+        document.getElementById('modalDetalleServicio').classList.remove('hidden');
+    }
+
+    // Abrir modal para cambiar estatus
+    function abrirModalEstatus(id) {
+        const servicio = servicios.find(s => s.id === id);
+        if (!servicio) return;
+
+        document.getElementById('servicioIdEstatus').value = id;
+        document.getElementById('folioEstatus').value = servicio.folio;
+        document.getElementById('selectNuevoEstatus').value = servicio.estatus;
+
+        document.getElementById('modalCambiarEstatus').classList.remove('hidden');
+    }
+
+    // Actualizar estatus del servicio
+    async function actualizarEstatusServicio() {
+        const id = parseInt(document.getElementById('servicioIdEstatus').value);
+        const nuevoEstatus = document.getElementById('selectNuevoEstatus').value;
+
+        try {
+            const response = await fetch(`${API_URL}/${id}/estatus`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ estatus: nuevoEstatus })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al actualizar el estatus');
+            }
+
+            // Actualizar el servicio localmente
+            const servicio = servicios.find(s => s.id === id);
+            if (servicio) {
+                servicio.estatus = nuevoEstatus;
+
+                // Si el estatus es "ENTREGADO", establecer fecha real
+                if (nuevoEstatus === 'ENTREGADO' && !servicio.fechaReal) {
+                    servicio.fechaReal = new Date().toLocaleDateString('es-MX');
+                }
+
+                alert(`Estatus del servicio ${servicio.folio} actualizado correctamente`);
+            }
+
+            cerrarModalEstatus();
+            aplicarFiltros();
+            cargarEstadisticas();
+        } catch (error) {
+            console.error('Error al actualizar estatus:', error);
+            alert('Error al actualizar el estatus. Por favor, intenta de nuevo.');
+        }
+    }
+
+    // Cerrar modales
+    function cerrarModalDetalle() {
+        document.getElementById('modalDetalleServicio').classList.add('hidden');
+    }
+
+    function cerrarModalEstatus() {
+        document.getElementById('modalCambiarEstatus').classList.add('hidden');
+    }
+
+    // Cerrar modal con ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarModalDetalle();
+            cerrarModalEstatus();
+        }
+    });
+
+    // Cargar servicios al cargar la página
+    window.addEventListener('DOMContentLoaded', cargarServiciosDesdeAPI);
+</script>
+</body>
+
+</html>

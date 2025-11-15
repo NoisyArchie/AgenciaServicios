@@ -18,11 +18,13 @@
             </h2>
 
             <nav class="flex flex-col gap-1">
-                <a href="/admin/panelAdmin.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <a href="/admin/panelAdmin.html"
+                    class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
                     <i class="bx bx-home text-xl"></i> Panel
                 </a>
 
-                <a href="/admin/servicios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <a href="/admin/servicios.html"
+                    class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
                     <i class="bx bx-wrench text-xl"></i> Servicios
                 </a>
 
@@ -79,14 +81,21 @@
                 <div>
                     <h1 class="text-3xl font-bold">Gestión de Usuarios</h1>
                     <p class="text-gray-400 text-sm">
-                        Administra los usuarios del sistema
+                        Administra los usuarios del sistema (Clientes, trabajadores y administradores)
                     </p>
                 </div>
 
-                <a href="/admin/altaUsuarios.html"
-                    class="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded shadow">
-                    <i class="bx bx-plus"></i> Agregar Usuario
-                </a>
+                <div class="flex gap-3">
+                    <a href="/admin/altaUsuarios.html"
+                        class="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded shadow">
+                        <i class="bx bx-user-plus"></i> Nuevo Usuario
+                    </a>
+
+                    <a href="/admin/altaClientes.html"
+                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 transition px-4 py-2 rounded shadow">
+                        <i class="bx bx-user-circle"></i> Nuevo Cliente
+                    </a>
+                </div>
             </div>
 
             <!-- Tabla -->
@@ -112,7 +121,8 @@
                             <td>admin</td>
                             <td>Administrador Principal</td>
                             <td>admin@siscare.com</td>
-                            <td><span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Admin</span></td>
+                            <td><span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Admin</span>
+                            </td>
                             <td>2023-10-15</td>
                             <td class="text-green-400">Sí</td>
                             <td class="text-center flex gap-2 justify-center py-2">
@@ -129,7 +139,9 @@
                             <td>juan.perez</td>
                             <td>Juan Pérez García</td>
                             <td>juan.perez@siscare.com</td>
-                            <td><span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full text-xs">Trabajador</span></td>
+                            <td><span
+                                    class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full text-xs">Trabajador</span>
+                            </td>
                             <td>2023-11-20</td>
                             <td class="text-green-400">Sí</td>
                             <td class="text-center flex gap-2 justify-center py-2">
@@ -146,7 +158,9 @@
                             <td>maria.lopez</td>
                             <td>María López Hernández</td>
                             <td>maria.lopez@cliente.com</td>
-                            <td><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Cliente</span></td>
+                            <td><span
+                                    class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Cliente</span>
+                            </td>
                             <td>2024-01-05</td>
                             <td class="text-green-400">Sí</td>
                             <td class="text-center flex gap-2 justify-center py-2">
@@ -165,7 +179,8 @@
     </main>
 
     <!-- Modal de Edición -->
-    <div id="modalEditarUsuario" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden flex justify-center items-center z-50">
+    <div id="modalEditarUsuario"
+        class="fixed inset-0 bg-black/70 backdrop-blur-md hidden flex justify-center items-center z-50">
         <div
             class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-[500px] animate-[zoomIn_.3s_ease] relative">
             <button onclick="cerrarModalEditar()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl">
@@ -188,7 +203,7 @@
                         <span class="text-sm text-gray-300">Contraseña</span>
                         <input id="inputPassword" type="password"
                             class="mt-1 w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                            placeholder="Dejar en blanco para no cambiar"/>
+                            placeholder="Dejar en blanco para no cambiar" />
                     </label>
                 </div>
 
@@ -310,7 +325,7 @@
 
                 // Determinar rol badge con colores
                 let rolBadge = '';
-                switch(usuario.rol) {
+                switch (usuario.rol) {
                     case 'admin':
                         rolBadge = '<span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Admin</span>';
                         break;
@@ -375,7 +390,7 @@
             }
         }
 
-        document.getElementById('formEditarUsuario').addEventListener('submit', async function(e) {
+        document.getElementById('formEditarUsuario').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const id = document.getElementById('idUsuarioEditar').value;
@@ -442,7 +457,7 @@
         }
 
         // Cerrar modal al hacer clic fuera de él
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('modalEditarUsuario');
             if (event.target === modal) {
                 cerrarModalEditar();
