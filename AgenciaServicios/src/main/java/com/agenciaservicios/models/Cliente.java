@@ -32,7 +32,7 @@ public class Cliente {
     @Column(columnDefinition = "TEXT")
     private String direccion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_usuario", nullable = true)
     private Usuario usuario;
 
