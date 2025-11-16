@@ -592,12 +592,8 @@
                 '<span class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">Activo</span>' :
                 '<span class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs">Inactivo</span>';
 
-            document.getElementById('listaVehiculosCliente').innerHTML = `
-            <div class="text-center py-4 text-gray-400">
-                <i class="bx bx-car text-2xl mb-2 block"></i>
-                <p>No hay vehículos registrados</p>
-            </div>
-        `;
+            // Cargar vehículos del cliente
+            await cargarVehiculosCliente(id);
 
             document.getElementById('listaServiciosCliente').innerHTML =
                 '<p class="text-gray-400 text-center">No hay servicios registrados</p>';
@@ -607,6 +603,63 @@
         } catch (error) {
             console.error('Error:', error);
             mostrarToast('Error al cargar el detalle del cliente', 'error');
+        }
+    }
+
+    async function cargarVehiculosCliente(clienteId) {
+        const contenedor = document.getElementById('listaVehiculosCliente');
+        contenedor.innerHTML = '<p class="text-gray-400 text-center">Cargando vehículos...</p>';
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/vehiculos/cliente/${clienteId}`);
+            if (!response.ok) throw new Error('Error al cargar vehículos');
+
+            const vehiculos = await response.json();
+            console.log('Vehículos cargados:', vehiculos);
+
+            if (vehiculos.length === 0) {
+                contenedor.innerHTML = `
+                <div class="text-center py-4 text-gray-400">
+                    <i class="bx bx-car text-2xl mb-2 block"></i>
+                    <p>No hay vehículos registrados</p>
+                    <a href="/trabajador/altaVehiculoCliente.html"
+                       class="inline-block mt-2 bg-blue-600 hover:bg-blue-500 transition px-3 py-1 rounded text-sm">
+                        Agregar primer vehículo
+                    </a>
+                </div>
+            `;
+                return;
+            }
+
+            contenedor.innerHTML = vehiculos.map(vehiculo => `
+            <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                <div>
+                    <p class="font-medium">
+                        ${vehiculo.modelo?.marca?.nombreMarca || 'N/A'}
+                        ${vehiculo.modelo?.nombreModelo || 'N/A'}
+                        ${vehiculo.anio}
+                    </p>
+                    <p class="text-gray-400 text-sm">
+                        Placas: ${vehiculo.placas || 'N/A'} |
+                        Color: ${vehiculo.color || 'N/A'} |
+                        ${vehiculo.kilometraje ? vehiculo.kilometraje + ' km' : 'N/A'}
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="text-blue-400 hover:text-blue-300" title="Ver servicios">
+                        <i class="bx bx-wrench"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        } catch (error) {
+            console.error('Error al cargar vehículos:', error);
+            contenedor.innerHTML = `
+            <div class="text-center py-4 text-red-400">
+                <i class="bx bx-error text-2xl mb-2 block"></i>
+                <p>Error al cargar vehículos</p>
+            </div>
+        `;
         }
     }
 
