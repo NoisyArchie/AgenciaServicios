@@ -17,11 +17,11 @@
         </h2>
 
         <nav class="flex flex-col gap-1">
-            <a href="/trabjador/panelTrabajador.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+            <a href="/trabajador/panelTrabajador.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
                 <i class="bx bx-home text-xl"></i> Panel
             </a>
 
-            <a href="/trabjador/servicios.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+            <a href="/trabajador/servicios.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
                 <i class="bx bx-wrench text-xl"></i> Servicios
             </a>
 
@@ -262,6 +262,7 @@
 </div>
 
 <!-- Modal Cambiar Estatus -->
+<!-- Modal Cambiar Estatus -->
 <div id="modalCambiarEstatus" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
     <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 w-full max-w-md">
         <div class="border-b border-gray-700 px-6 py-4 flex justify-between items-center">
@@ -279,24 +280,21 @@
             </div>
             <div class="mb-6">
                 <label class="block text-sm text-gray-300 mb-2">Nuevo Estatus</label>
-                <select id="selectNuevoEstatus" disabled class="w-full bg-black/30 border border-gray-700 text-gray-400 p-2 rounded-lg cursor-not-allowed">
+                <select id="selectNuevoEstatus" class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg">
                     <option value="PENDIENTE">Pendiente</option>
                     <option value="EN_PROCESO">En Proceso</option>
                     <option value="COMPLETADO">Completado</option>
                     <option value="ENTREGADO">Entregado</option>
                     <option value="CANCELADO">Cancelado</option>
                 </select>
-                <p class="mt-2 text-sm text-orange-400 text-center">
-                    Por favor, solicita al administrador que realice esta tarea
-                </p>
             </div>
 
             <div class="flex gap-3">
-                <button disabled class="flex-1 bg-gray-600 text-gray-400 px-4 py-2 rounded cursor-not-allowed">
+                <button onclick="actualizarEstatusServicio()" class="flex-1 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
                     Actualizar
                 </button>
                 <button onclick="cerrarModalEstatus()" class="flex-1 bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded">
-                    Cerrar
+                    Cancelar
                 </button>
             </div>
         </div>
@@ -316,16 +314,6 @@
 </style>
 
 <script>
-    // Toggle menú de catálogos
-    document.getElementById('btnCatalogos').addEventListener('click', function () {
-        const submenu = document.getElementById('submenuCatalogos');
-        const icon = document.getElementById('iconArrow');
-
-        submenu.classList.toggle('hidden');
-        icon.classList.toggle('bx-chevron-down');
-        icon.classList.toggle('bx-chevron-up');
-    });
-
     // URL base de la API
     const API_URL = '/api/servicios';
 
@@ -338,11 +326,13 @@
     // Cargar servicios desde la API al inicio
     async function cargarServiciosDesdeAPI() {
         try {
+            console.log('Cargando servicios...');
             const response = await fetch(API_URL);
             if (!response.ok) {
                 throw new Error('Error al cargar los servicios');
             }
             const data = await response.json();
+            console.log('Servicios recibidos:', data);
 
             // Transformar los datos de la API al formato esperado por el frontend
             servicios = data.map(servicio => ({
@@ -368,22 +358,22 @@
             }));
 
             serviciosFiltrados = [...servicios];
-            await cargarEstadisticas();
             cargarServicios();
+            console.log('Servicios cargados correctamente');
         } catch (error) {
             console.error('Error al cargar servicios:', error);
             const tbody = document.getElementById('tablaServicios');
             tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center p-8 text-red-400">
-                            <i class="bx bx-error text-3xl"></i>
-                            <p class="mt-2">Error al cargar los servicios. Por favor, intenta de nuevo.</p>
-                        </td>
-                    </tr>
-                `;
+                <tr>
+                    <td colspan="6" class="text-center p-8 text-red-400">
+                        <i class="bx bx-error text-3xl"></i>
+                        <p class="mt-2">Error al cargar los servicios. Por favor, intenta de nuevo.</p>
+                        <p class="text-sm mt-2">${error.message}</p>
+                    </td>
+                </tr>
+            `;
         }
     }
-
 
     // Cargar y mostrar servicios en la tabla
     function cargarServicios() {
@@ -396,13 +386,13 @@
 
         if (serviciosPagina.length === 0) {
             tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center p-8 text-gray-400">
-                            <i class="bx bx-search-alt text-3xl"></i>
-                            <p class="mt-2">No se encontraron servicios</p>
-                        </td>
-                    </tr>
-                `;
+                <tr>
+                    <td colspan="6" class="text-center p-8 text-gray-400">
+                        <i class="bx bx-search-alt text-3xl"></i>
+                        <p class="mt-2">No se encontraron servicios</p>
+                    </td>
+                </tr>
+            `;
             return;
         }
 
@@ -410,34 +400,71 @@
             const tr = document.createElement('tr');
             tr.className = 'border-b border-gray-800';
             tr.innerHTML = `
-                    <td class="p-4">
-                        <span class="font-mono text-orange-400">${servicio.folio}</span>
-                    </td>
-                    <td class="p-4">
-                        <p class="font-medium">${servicio.vehiculo}</p>
-                        <p class="text-xs text-gray-400">${servicio.placas}</p>
-                    </td>
-                    <td class="p-4">
-                        <p class="font-medium">${servicio.cliente}</p>
-                        <p class="text-xs text-gray-400">${servicio.telefono}</p>
-                    </td>
-                    <td class="p-4 text-gray-300">${servicio.fechaIngreso}</td>
-                    <td class="p-4">${obtenerBadgeEstatus(servicio.estatus)}</td>
-                    <td class="p-4">
-                        <div class="flex justify-center gap-2">
-                            <button onclick="verDetalleServicio(${servicio.id})" class="bg-blue-600 hover:bg-blue-500 transition p-2 rounded" title="Ver detalle">
-                                <i class="bx bx-show"></i>
-                            </button>
-                            <button onclick="abrirModalEstatus(${servicio.id})" class="bg-yellow-600 hover:bg-yellow-500 transition p-2 rounded" title="Cambiar estatus">
+                <td class="p-4">
+                    <span class="font-mono text-orange-400">${servicio.folio}</span>
+                </td>
+                <td class="p-4">
+                    <p class="font-medium">${servicio.vehiculo}</p>
+                    <p class="text-xs text-gray-400">${servicio.placas}</p>
+                </td>
+                <td class="p-4">
+                    <p class="font-medium">${servicio.cliente}</p>
+                    <p class="text-xs text-gray-400">${servicio.telefono}</p>
+                </td>
+                <td class="p-4 text-gray-300">${servicio.fechaIngreso}</td>
+                <td class="p-4">${obtenerBadgeEstatus(servicio.estatus)}</td>
+                <td class="p-4">
+                    <div class="flex justify-center gap-2">
+                        <button onclick="verDetalleServicio(${servicio.id})" class="bg-blue-600 hover:bg-blue-500 transition p-2 rounded" title="Ver detalle">
+                            <i class="bx bx-show"></i>
+                        </button>
+                        <button onclick="abrirModalEstatus(${servicio.id})" class="bg-yellow-600 hover:bg-yellow-500 transition p-2 rounded" title="Cambiar estatus">
                                 <i class="bx bx-edit"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
+                        </button>
+                    </div>
+                </td>
+            `;
             tbody.appendChild(tr);
         });
 
         actualizarPaginacion();
+    }
+    async function actualizarEstatusServicio() {
+        const id = parseInt(document.getElementById('servicioIdEstatus').value);
+        const nuevoEstatus = document.getElementById('selectNuevoEstatus').value;
+
+        try {
+            const response = await fetch(`${API_URL}/${id}/estatus`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ estatus: nuevoEstatus })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al actualizar el estatus');
+            }
+
+            // Actualizar el servicio localmente
+            const servicio = servicios.find(s => s.id === id);
+            if (servicio) {
+                servicio.estatus = nuevoEstatus;
+
+                // Si el estatus es "ENTREGADO", establecer fecha real
+                if (nuevoEstatus === 'ENTREGADO' && !servicio.fechaReal) {
+                    servicio.fechaReal = new Date().toLocaleDateString('es-MX');
+                }
+
+                alert(`Estatus del servicio ${servicio.folio} actualizado correctamente`);
+            }
+
+            cerrarModalEstatus();
+            aplicarFiltros();
+        } catch (error) {
+            console.error('Error al actualizar estatus:', error);
+            alert('Error al actualizar el estatus. Por favor, intenta de nuevo.');
+        }
     }
 
     // Obtener badge de estatus con colores
@@ -475,17 +502,14 @@
         serviciosFiltrados = servicios.filter(servicio => {
             let cumple = true;
 
-            // Filtro por folio
             if (folio && !servicio.folio.includes(folio)) {
                 cumple = false;
             }
 
-            // Filtro por estatus
             if (estatus && servicio.estatus !== estatus) {
                 cumple = false;
             }
 
-            // Filtro por nombre de cliente
             if (cliente && !servicio.cliente.toLowerCase().includes(cliente)) {
                 cumple = false;
             }
@@ -518,7 +542,6 @@
         document.getElementById('infoPaginacion').textContent =
             `Mostrando ${inicio}-${fin} de ${totalServicios} servicios`;
 
-        // Actualizar botones de paginación
         for (let i = 1; i <= 3; i++) {
             const btn = document.getElementById(`pagina${i}`);
             if (i <= totalPaginas) {
@@ -555,7 +578,6 @@
         const servicio = servicios.find(s => s.id === id);
         if (!servicio) return;
 
-        // Llenar modal con datos del servicio
         document.getElementById('folioServicio').textContent = servicio.folio;
         document.getElementById('detalleVehiculo').textContent = servicio.vehiculo;
         document.getElementById('detallePlacas').textContent = servicio.placas;
@@ -572,7 +594,6 @@
         document.getElementById('detalleEstatus').innerHTML = obtenerBadgeEstatus(servicio.estatus);
         document.getElementById('detalleTotal').textContent = `$${servicio.costoTotal.toFixed(2)}`;
 
-        // Llenar servicios realizados
         const listaServicios = document.getElementById('listaServiciosRealizados');
         listaServicios.innerHTML = '';
 
@@ -583,12 +604,12 @@
                 const div = document.createElement('div');
                 div.className = 'flex justify-between items-center py-2 border-b border-gray-700';
                 div.innerHTML = `
-                        <div>
-                            <p class="font-medium">${item.nombre}</p>
-                            <p class="text-gray-400 text-sm">${item.descripcion}</p>
-                        </div>
-                        <span class="text-green-400">$${item.costo.toFixed(2)}</span>
-                    `;
+                    <div>
+                        <p class="font-medium">${item.nombre}</p>
+                        <p class="text-gray-400 text-sm">${item.descripcion}</p>
+                    </div>
+                    <span class="text-green-400">$${item.costo.toFixed(2)}</span>
+                `;
                 listaServicios.appendChild(div);
             });
         }
@@ -596,7 +617,7 @@
         document.getElementById('modalDetalleServicio').classList.remove('hidden');
     }
 
-    // Abrir modal para cambiar estatus
+    // Abrir modal para ver estatus (solo lectura para trabajador)
     function abrirModalEstatus(id) {
         const servicio = servicios.find(s => s.id === id);
         if (!servicio) return;
@@ -606,46 +627,6 @@
         document.getElementById('selectNuevoEstatus').value = servicio.estatus;
 
         document.getElementById('modalCambiarEstatus').classList.remove('hidden');
-    }
-
-    // Actualizar estatus del servicio
-    async function actualizarEstatusServicio() {
-        const id = parseInt(document.getElementById('servicioIdEstatus').value);
-        const nuevoEstatus = document.getElementById('selectNuevoEstatus').value;
-
-        try {
-            const response = await fetch(`${API_URL}/${id}/estatus`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ estatus: nuevoEstatus })
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al actualizar el estatus');
-            }
-
-            // Actualizar el servicio localmente
-            const servicio = servicios.find(s => s.id === id);
-            if (servicio) {
-                servicio.estatus = nuevoEstatus;
-
-                // Si el estatus es "ENTREGADO", establecer fecha real
-                if (nuevoEstatus === 'ENTREGADO' && !servicio.fechaReal) {
-                    servicio.fechaReal = new Date().toLocaleDateString('es-MX');
-                }
-
-                alert(`Estatus del servicio ${servicio.folio} actualizado correctamente`);
-            }
-
-            cerrarModalEstatus();
-            aplicarFiltros();
-            cargarEstadisticas();
-        } catch (error) {
-            console.error('Error al actualizar estatus:', error);
-            alert('Error al actualizar el estatus. Por favor, intenta de nuevo.');
-        }
     }
 
     // Cerrar modales
