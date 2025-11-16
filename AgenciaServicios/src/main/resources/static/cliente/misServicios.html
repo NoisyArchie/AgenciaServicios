@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8" />
@@ -9,527 +9,511 @@
 </head>
 
 <body class="bg-[#0D0D0D] text-white min-h-screen flex">
-    <!-- SIDEBAR -->
-    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
-        <div>
-            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
-                Siscare
-            </h2>
+<!-- SIDEBAR -->
+<aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+    <div>
+        <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+            Siscare
+        </h2>
 
-            <nav class="flex flex-col gap-1">
-                <a href="/cliente/home.html" 
-                   class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                    <i class="bx bx-home text-xl"></i> Inicio
-                </a>
-
-                <a href="/cliente/misServicios.html" 
-                   class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
-                    <i class="bx bx-wrench text-xl text-orange-400"></i> Mis Servicios
-                </a>
-
-                <a href="/cliente/misVehiculos.html" 
-                   class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                    <i class="bx bx-car text-xl"></i> Mis Vehículos
-                </a>
-
-                <a href="/cliente/miPerfil.html" 
-                   class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                    <i class="bx bx-user text-xl"></i> Mi Perfil
-                </a>
-            </nav>
-        </div>
-
-        <div class="border-t border-gray-700 pt-4">
-            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
-                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+        <nav class="flex flex-col gap-1">
+            <a href="/cliente/home.html"
+               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-home text-xl"></i> Inicio
             </a>
-        </div>
-    </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="flex-1 flex flex-col">
-        <!-- NAVBAR SUPERIOR -->
-        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
-            <!-- Icono de usuario -->
-            <div class="flex items-center gap-3">
-                <span class="text-gray-300 text-sm" id="headerNombre">Juan Pérez García</span>
-                <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
-                    <i class="bx bx-user text-white text-xl"></i>
-                </button>
-            </div>
-        </header>
+            <a href="/cliente/misServicios.html"
+               class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                <i class="bx bx-wrench text-xl text-orange-400"></i> Mis Servicios
+            </a>
 
-        <!-- CONTENIDO -->
-        <section class="p-8 flex-1 overflow-y-auto">
-            <div class="max-w-7xl mx-auto">
-                <!-- Encabezado -->
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold">Mis Servicios</h1>
-                    <p class="text-gray-400 text-sm">
-                        Consulta el historial de servicios realizados a tus vehículos
-                    </p>
-                </div>
+            <a href="/cliente/misVehiculos.html"
+               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-car text-xl"></i> Mis Vehículos
+            </a>
 
-                <!-- Filtros -->
-                <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 mb-6">
-                    <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
-                        <i class="bx bx-filter-alt"></i>
-                        Filtros de Búsqueda
-                    </h2>
-                    
-                    <form id="formFiltros" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <!-- Folio -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Folio de Servicio
-                            </label>
-                            <input type="text" id="inputFolio"
-                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                placeholder="Ej: SVC-001">
-                        </div>
-
-                        <!-- Fecha Inicio -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Fecha Inicio
-                            </label>
-                            <input type="date" id="inputFechaInicio"
-                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
-                        </div>
-
-                        <!-- Fecha Fin -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Fecha Fin
-                            </label>
-                            <input type="date" id="inputFechaFin"
-                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
-                        </div>
-
-                        <!-- Vehículo -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Vehículo
-                            </label>
-                            <select id="selectVehiculo"
-                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
-                                <option value="">Todos los vehículos</option>
-                                <option value="1">Toyota Corolla - ABC123</option>
-                                <option value="2">Honda Civic - XYZ789</option>
-                            </select>
-                        </div>
-
-                        <!-- Botones de Filtro -->
-                        <div class="md:col-span-4 flex justify-end gap-3 pt-2">
-                            <button type="button" onclick="limpiarFiltros()"
-                                class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                                Limpiar Filtros
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2">
-                                <i class="bx bx-search"></i>
-                                Buscar Servicios
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Lista de Servicios -->
-                <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 overflow-hidden">
-                    <div class="p-6 border-b border-gray-700">
-                        <h2 class="text-xl font-bold text-orange-400 flex items-center gap-2">
-                            <i class="bx bx-list-ul"></i>
-                            Historial de Servicios
-                        </h2>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-black/30 border-b border-gray-700 text-orange-400">
-                                <tr>
-                                    <th class="py-4 px-6 text-left">Folio</th>
-                                    <th class="py-4 px-6 text-left">Vehículo</th>
-                                    <th class="py-4 px-6 text-left">Fecha Ingreso</th>
-                                    <th class="py-4 px-6 text-left">Fecha Entrega</th>
-                                    <th class="py-4 px-6 text-left">Tipo Servicio</th>
-                                    <th class="py-4 px-6 text-left">Estatus</th>
-                                    <th class="py-4 px-6 text-left">Costo</th>
-                                    <th class="py-4 px-6 text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyServicios">
-                                <!-- Los servicios se cargarán dinámicamente aquí -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Paginación -->
-                    <div class="p-6 border-t border-gray-700 flex justify-between items-center">
-                        <div class="text-gray-400 text-sm">
-                            Mostrando <span id="textoMostrando">1-5</span> de <span id="textoTotal">15</span> servicios
-                        </div>
-                        <div class="flex gap-2">
-                            <button id="btnAnterior" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i class="bx bx-chevron-left"></i>
-                            </button>
-                            <button id="btnSiguiente" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i class="bx bx-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Modal de Detalles del Servicio -->
-    <div id="modalDetalles" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50 p-4">
-        <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-[zoomIn_.3s_ease]">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-orange-400" id="modalTitulo">Detalles del Servicio</h2>
-                <button onclick="cerrarModalDetalles()" class="text-gray-400 hover:text-white text-xl">
-                    <i class="bx bx-x"></i>
-                </button>
-            </div>
-
-            <div id="contenidoDetalles">
-                <!-- Los detalles se cargarán dinámicamente aquí -->
-            </div>
-        </div>
+            <a href="/cliente/miPerfil.html"
+               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-user text-xl"></i> Mi Perfil
+            </a>
+        </nav>
     </div>
 
-    <style>
-        @keyframes zoomIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.85);
+    <div class="border-t border-gray-700 pt-4">
+        <button onclick="cerrarSesion()" class="w-full flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+            <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+        </button>
+    </div>
+</aside>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="flex-1 flex flex-col">
+    <!-- NAVBAR SUPERIOR -->
+    <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+            <span class="text-gray-300 text-sm" id="headerNombre">Cargando...</span>
+            <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                <i class="bx bx-user text-white text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <section class="p-8 flex-1 overflow-y-auto">
+        <div class="max-w-7xl mx-auto">
+            <!-- Encabezado -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold">Mis Servicios</h1>
+                <p class="text-gray-400 text-sm">
+                    Consulta el historial de servicios realizados a tus vehículos
+                </p>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 mb-6">
+                <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                    <i class="bx bx-filter-alt"></i>
+                    Filtros de Búsqueda
+                </h2>
+
+                <form id="formFiltros" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Folio -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Folio de Servicio
+                        </label>
+                        <input type="text" id="inputFolio"
+                               class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                               placeholder="Ej: SER-000001">
+                    </div>
+
+                    <!-- Fecha Inicio -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Fecha Inicio
+                        </label>
+                        <input type="date" id="inputFechaInicio"
+                               class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
+                    </div>
+
+                    <!-- Fecha Fin -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Fecha Fin
+                        </label>
+                        <input type="date" id="inputFechaFin"
+                               class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
+                    </div>
+
+                    <!-- Vehículo -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Vehículo
+                        </label>
+                        <select id="selectVehiculo"
+                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
+                            <option value="">Todos los vehículos</option>
+                        </select>
+                    </div>
+
+                    <!-- Botones de Filtro -->
+                    <div class="md:col-span-4 flex justify-end gap-3 pt-2">
+                        <button type="button" onclick="limpiarFiltros()"
+                                class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
+                            Limpiar Filtros
+                        </button>
+                        <button type="submit"
+                                class="px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2">
+                            <i class="bx bx-search"></i>
+                            Buscar Servicios
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Lista de Servicios -->
+            <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 overflow-hidden">
+                <div class="p-6 border-b border-gray-700">
+                    <h2 class="text-xl font-bold text-orange-400 flex items-center gap-2">
+                        <i class="bx bx-list-ul"></i>
+                        Historial de Servicios
+                    </h2>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-black/30 border-b border-gray-700 text-orange-400">
+                        <tr>
+                            <th class="py-4 px-6 text-left">Folio</th>
+                            <th class="py-4 px-6 text-left">Vehículo</th>
+                            <th class="py-4 px-6 text-left">Fecha Ingreso</th>
+                            <th class="py-4 px-6 text-left">Fecha Entrega</th>
+                            <th class="py-4 px-6 text-left">Tipo Servicio</th>
+                            <th class="py-4 px-6 text-left">Estatus</th>
+                            <th class="py-4 px-6 text-left">Costo</th>
+                            <th class="py-4 px-6 text-center">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbodyServicios">
+                        <tr>
+                            <td colspan="8" class="text-center py-8 text-gray-400">
+                                <i class="bx bx-loader-alt bx-spin text-3xl"></i>
+                                <p class="mt-2">Cargando servicios...</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="p-6 border-t border-gray-700 flex justify-between items-center">
+                    <div class="text-gray-400 text-sm">
+                        Mostrando <span id="textoMostrando">0-0</span> de <span id="textoTotal">0</span> servicios
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btnAnterior" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="bx bx-chevron-left"></i>
+                        </button>
+                        <button id="btnSiguiente" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="bx bx-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Modal de Detalles -->
+<div id="modalDetalles" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+    <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-[zoomIn_.3s_ease]">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-400" id="modalTitulo">Detalles del Servicio</h2>
+            <button onclick="cerrarModalDetalles()" class="text-gray-400 hover:text-white text-xl">
+                <i class="bx bx-x"></i>
+            </button>
+        </div>
+
+        <div id="contenidoDetalles">
+            <!-- Los detalles se cargarán dinámicamente -->
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes zoomIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.85);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
+    }
+
+    tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+        background-color: rgba(255, 140, 0, 0.05);
+    }
+</style>
+
+<script>
+    const API_URL_CLIENTES = 'http://localhost:8080/api/clientes';
+    const API_URL_VEHICULOS = 'http://localhost:8080/api/vehiculos';
+    const API_URL_SERVICIOS = 'http://localhost:8080/api/servicios';
+
+    let clienteData = null;
+    let vehiculosCliente = [];
+    let serviciosData = [];
+    let serviciosFiltrados = [];
+    let paginaActual = 1;
+    const serviciosPorPagina = 5;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        verificarSesion();
+        cargarDatosCliente();
+        configurarEventos();
+    });
+
+    function verificarSesion() {
+        const usuario = sessionStorage.getItem('usuario');
+        if (!usuario) {
+            window.location.href = '../login.html';
+            return;
+        }
+
+        try {
+            const userData = JSON.parse(usuario);
+            if (userData.rol !== 'cliente') {
+                alert('Acceso denegado. Esta página es solo para clientes.');
+                window.location.href = '../login.html';
+                return;
             }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            clienteData = userData;
+            document.getElementById('headerNombre').textContent = userData.nombreCompleto || 'Cliente';
+        } catch (error) {
+            console.error('Error al parsear usuario:', error);
+            window.location.href = '../login.html';
         }
+    }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
+    function cerrarSesion() {
+        if (confirm('¿Está seguro de cerrar sesión?')) {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = '../login.html';
         }
+    }
 
-        tbody tr {
-            transition: background-color 0.2s ease;
-        }
+    async function cargarDatosCliente() {
+        try {
+            // 1. Obtener cliente
+            const responseClientes = await fetch(API_URL_CLIENTES);
+            if (!responseClientes.ok) throw new Error('Error al cargar clientes');
 
-        tbody tr:hover {
-            background-color: rgba(255, 140, 0, 0.05);
-        }
-    </style>
+            const clientes = await responseClientes.json();
+            const cliente = clientes.find(c => c.usuario?.idUsuario === clienteData.idUsuario);
 
-    <script>
-        // Datos de ejemplo (en producción vendrían de una API)
-        const serviciosData = [
-            {
-                folio: "SVC-2024-001",
-                id_vehiculo: 1,
-                vehiculo: "Toyota Corolla - ABC123",
-                fecha_ingreso: "2024-01-15",
-                fecha_entrega_real: "2024-01-17",
-                tipo_mantenimiento: "Mantenimiento General",
-                estatus: "completado",
-                costo_total: 1250.00,
-                kilometraje_actual: 45000,
-                observaciones: "Cambio de aceite y filtros. Revisión general del vehículo.",
-                servicios_detalle: [
-                    { nombre: "Cambio de aceite", costo: 450.00 },
-                    { nombre: "Cambio de filtro de aire", costo: 250.00 },
-                    { nombre: "Revisión general", costo: 550.00 }
-                ],
-                refacciones: [
-                    { nombre: "Aceite sintético 5W-30", cantidad: 1, precio: 350.00 },
-                    { nombre: "Filtro de aire", cantidad: 1, precio: 200.00 }
-                ]
-            },
-            {
-                folio: "SVC-2024-002",
-                id_vehiculo: 2,
-                vehiculo: "Honda Civic - XYZ789",
-                fecha_ingreso: "2024-01-20",
-                fecha_entrega_real: "2024-01-22",
-                tipo_mantenimiento: "Reparación de frenos",
-                estatus: "completado",
-                costo_total: 3200.00,
-                kilometraje_actual: 32000,
-                observaciones: "Cambio de pastillas y discos de freno delanteros.",
-                servicios_detalle: [
-                    { nombre: "Cambio de pastillas de freno", costo: 800.00 },
-                    { nombre: "Cambio de discos de freno", costo: 1800.00 },
-                    { nombre: "Líquido de frenos", costo: 600.00 }
-                ],
-                refacciones: [
-                    { nombre: "Pastillas de freno delanteras", cantidad: 2, precio: 600.00 },
-                    { nombre: "Discos de freno delanteros", cantidad: 2, precio: 1200.00 },
-                    { nombre: "Líquido de frenos DOT4", cantidad: 1, precio: 400.00 }
-                ]
-            },
-            {
-                folio: "SVC-2024-003",
-                id_vehiculo: 1,
-                vehiculo: "Toyota Corolla - ABC123",
-                fecha_ingreso: "2024-02-10",
-                fecha_entrega_real: null,
-                tipo_mantenimiento: "Afinación mayor",
-                estatus: "en_proceso",
-                costo_total: 4000.00,
-                kilometraje_actual: 48000,
-                observaciones: "Afinación mayor programada. En espera de refacciones.",
-                servicios_detalle: [
-                    { nombre: "Afinación mayor", costo: 2500.00 },
-                    { nombre: "Cambio de bujías", costo: 1500.00 }
-                ],
-                refacciones: [
-                    { nombre: "Juego de bujías", cantidad: 1, precio: 800.00 },
-                    { nombre: "Filtro de combustible", cantidad: 1, precio: 400.00 },
-                    { nombre: "Filtro de aire", cantidad: 1, precio: 300.00 }
-                ]
-            },
-            {
-                folio: "SVC-2023-015",
-                id_vehiculo: 1,
-                vehiculo: "Toyota Corolla - ABC123",
-                fecha_ingreso: "2023-11-05",
-                fecha_entrega_real: "2023-11-07",
-                tipo_mantenimiento: "Cambio de llantas",
-                estatus: "completado",
-                costo_total: 2800.00,
-                kilometraje_actual: 42000,
-                observaciones: "Cambio completo de las 4 llantas por desgaste normal.",
-                servicios_detalle: [
-                    { nombre: "Cambio de llantas", costo: 800.00 },
-                    { nombre: "Balanceo y alineación", costo: 600.00 }
-                ],
-                refacciones: [
-                    { nombre: "Llanta 185/65R15", cantidad: 4, precio: 1400.00 }
-                ]
-            },
-            {
-                folio: "SVC-2023-012",
-                id_vehiculo: 2,
-                vehiculo: "Honda Civic - XYZ789",
-                fecha_ingreso: "2023-09-18",
-                fecha_entrega_real: "2023-09-20",
-                tipo_mantenimiento: "Mantenimiento preventivo",
-                estatus: "completado",
-                costo_total: 950.00,
-                kilometraje_actual: 28000,
-                observaciones: "Mantenimiento preventivo de 30,000 km realizado satisfactoriamente.",
-                servicios_detalle: [
-                    { nombre: "Cambio de aceite y filtro", costo: 450.00 },
-                    { nombre: "Revisión de sistemas", costo: 500.00 }
-                ],
-                refacciones: [
-                    { nombre: "Aceite sintético 0W-20", cantidad: 1, precio: 350.00 },
-                    { nombre: "Filtro de aceite", cantidad: 1, precio: 150.00 }
-                ]
-            }
-        ];
+            if (!cliente) throw new Error('Cliente no encontrado');
 
-        let serviciosFiltrados = [...serviciosData];
-        let paginaActual = 1;
-        const serviciosPorPagina = 5;
+            // 2. Obtener vehículos del cliente
+            const responseVehiculos = await fetch(`${API_URL_VEHICULOS}/cliente/${cliente.idCliente}`);
+            if (!responseVehiculos.ok) throw new Error('Error al cargar vehículos');
 
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', function() {
+            vehiculosCliente = await responseVehiculos.json();
+            console.log('Vehículos del cliente:', vehiculosCliente);
+
+            // Cargar select de vehículos
+            const selectVehiculo = document.getElementById('selectVehiculo');
+            selectVehiculo.innerHTML = '<option value="">Todos los vehículos</option>';
+            vehiculosCliente.forEach(vehiculo => {
+                const option = document.createElement('option');
+                option.value = vehiculo.idVehiculo;
+                option.textContent = `${vehiculo.modelo?.marca?.nombreMarca || 'N/A'} ${vehiculo.modelo?.nombreModelo || 'N/A'} - ${vehiculo.placas}`;
+                selectVehiculo.appendChild(option);
+            });
+
+            // 3. Obtener servicios
+            const responseServicios = await fetch(API_URL_SERVICIOS);
+            if (!responseServicios.ok) throw new Error('Error al cargar servicios');
+
+            const todosServicios = await responseServicios.json();
+
+            // Filtrar servicios de los vehículos del cliente
+            const idsVehiculos = vehiculosCliente.map(v => v.idVehiculo);
+            serviciosData = todosServicios.filter(s =>
+                idsVehiculos.includes(s.vehiculo?.idVehiculo)
+            );
+
+            // Ordenar por fecha de ingreso (más reciente primero)
+            serviciosData.sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso));
+
+            console.log('Servicios del cliente:', serviciosData);
+            serviciosFiltrados = [...serviciosData];
             cargarServicios();
-            configurarEventos();
+
+        } catch (error) {
+            console.error('Error:', error);
+            const tbody = document.getElementById('tbodyServicios');
+            tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-8 text-red-400">
+                            <i class="bx bx-error text-3xl"></i>
+                            <p class="mt-2">Error al cargar servicios: ${error.message}</p>
+                        </td>
+                    </tr>
+                `;
+        }
+    }
+
+    function configurarEventos() {
+        document.getElementById('formFiltros').addEventListener('submit', function(e) {
+            e.preventDefault();
+            aplicarFiltros();
         });
 
-        // Configurar eventos
-        function configurarEventos() {
-            // Formulario de filtros
-            document.getElementById('formFiltros').addEventListener('submit', function(e) {
-                e.preventDefault();
-                aplicarFiltros();
-            });
+        document.getElementById('btnAnterior').addEventListener('click', function() {
+            if (paginaActual > 1) {
+                paginaActual--;
+                cargarServicios();
+            }
+        });
 
-            // Botones de paginación
-            document.getElementById('btnAnterior').addEventListener('click', function() {
-                if (paginaActual > 1) {
-                    paginaActual--;
-                    cargarServicios();
-                }
-            });
+        document.getElementById('btnSiguiente').addEventListener('click', function() {
+            const totalPaginas = Math.ceil(serviciosFiltrados.length / serviciosPorPagina);
+            if (paginaActual < totalPaginas) {
+                paginaActual++;
+                cargarServicios();
+            }
+        });
+    }
 
-            document.getElementById('btnSiguiente').addEventListener('click', function() {
-                const totalPaginas = Math.ceil(serviciosFiltrados.length / serviciosPorPagina);
-                if (paginaActual < totalPaginas) {
-                    paginaActual++;
-                    cargarServicios();
-                }
-            });
+    function aplicarFiltros() {
+        const folio = document.getElementById('inputFolio').value.toLowerCase().trim();
+        const fechaInicio = document.getElementById('inputFechaInicio').value;
+        const fechaFin = document.getElementById('inputFechaFin').value;
+        const vehiculo = document.getElementById('selectVehiculo').value;
+
+        serviciosFiltrados = serviciosData.filter(servicio => {
+            // Filtro por folio
+            const folioServicio = `SER-${String(servicio.folioServicio).padStart(6, '0')}`;
+            if (folio && !folioServicio.toLowerCase().includes(folio)) {
+                return false;
+            }
+
+            // Filtro por vehículo
+            if (vehiculo && servicio.vehiculo?.idVehiculo != vehiculo) {
+                return false;
+            }
+
+            // Filtro por fechas
+            const fechaServicio = servicio.fechaIngreso.split('T')[0];
+            if (fechaInicio && fechaServicio < fechaInicio) {
+                return false;
+            }
+
+            if (fechaFin && fechaServicio > fechaFin) {
+                return false;
+            }
+
+            return true;
+        });
+
+        paginaActual = 1;
+        cargarServicios();
+    }
+
+    function limpiarFiltros() {
+        document.getElementById('inputFolio').value = '';
+        document.getElementById('inputFechaInicio').value = '';
+        document.getElementById('inputFechaFin').value = '';
+        document.getElementById('selectVehiculo').value = '';
+
+        serviciosFiltrados = [...serviciosData];
+        paginaActual = 1;
+        cargarServicios();
+    }
+
+    function cargarServicios() {
+        const tbody = document.getElementById('tbodyServicios');
+        tbody.innerHTML = '';
+
+        if (serviciosFiltrados.length === 0) {
+            tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-8 text-gray-400">
+                            <i class="bx bx-search-alt text-3xl"></i>
+                            <p class="mt-2">No se encontraron servicios</p>
+                        </td>
+                    </tr>
+                `;
+            actualizarPaginacion();
+            return;
         }
 
-        // Aplicar filtros
-        function aplicarFiltros() {
-            const folio = document.getElementById('inputFolio').value.toLowerCase();
-            const fechaInicio = document.getElementById('inputFechaInicio').value;
-            const fechaFin = document.getElementById('inputFechaFin').value;
-            const vehiculo = document.getElementById('selectVehiculo').value;
+        const inicio = (paginaActual - 1) * serviciosPorPagina;
+        const fin = inicio + serviciosPorPagina;
+        const serviciosPagina = serviciosFiltrados.slice(inicio, fin);
 
-            serviciosFiltrados = serviciosData.filter(servicio => {
-                // Filtro por folio
-                if (folio && !servicio.folio.toLowerCase().includes(folio)) {
-                    return false;
-                }
+        serviciosPagina.forEach(servicio => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-gray-800 hover:bg-black/40';
 
-                // Filtro por vehículo
-                if (vehiculo && servicio.id_vehiculo != vehiculo) {
-                    return false;
-                }
-
-                // Filtro por fechas
-                if (fechaInicio && servicio.fecha_ingreso < fechaInicio) {
-                    return false;
-                }
-
-                if (fechaFin && servicio.fecha_ingreso > fechaFin) {
-                    return false;
-                }
-
-                return true;
-            });
-
-            paginaActual = 1;
-            cargarServicios();
-        }
-
-        // Limpiar filtros
-        function limpiarFiltros() {
-            document.getElementById('inputFolio').value = '';
-            document.getElementById('inputFechaInicio').value = '';
-            document.getElementById('inputFechaFin').value = '';
-            document.getElementById('selectVehiculo').value = '';
-
-            serviciosFiltrados = [...serviciosData];
-            paginaActual = 1;
-            cargarServicios();
-        }
-
-        // Cargar servicios en la tabla
-        function cargarServicios() {
-            const tbody = document.getElementById('tbodyServicios');
-            tbody.innerHTML = '';
-
-            const inicio = (paginaActual - 1) * serviciosPorPagina;
-            const fin = inicio + serviciosPorPagina;
-            const serviciosPagina = serviciosFiltrados.slice(inicio, fin);
-
-            serviciosPagina.forEach(servicio => {
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-gray-800 hover:bg-black/40';
-                
-                // Formatear fechas
-                const fechaIngreso = new Date(servicio.fecha_ingreso).toLocaleDateString('es-MX');
-                const fechaEntrega = servicio.fecha_entrega_real 
-                    ? new Date(servicio.fecha_entrega_real).toLocaleDateString('es-MX')
+            const folio = `SER-${String(servicio.folioServicio).padStart(6, '0')}`;
+            const vehiculo = `${servicio.vehiculo?.modelo?.marca?.nombreMarca || 'N/A'} ${servicio.vehiculo?.modelo?.nombreModelo || 'N/A'} - ${servicio.vehiculo?.placas || 'N/A'}`;
+            const fechaIngreso = new Date(servicio.fechaIngreso).toLocaleDateString('es-MX');
+            const fechaEntrega = servicio.fechaEntregaReal
+                ? new Date(servicio.fechaEntregaReal).toLocaleDateString('es-MX')
+                : servicio.fechaEstimadaEntrega
+                    ? `Est: ${new Date(servicio.fechaEstimadaEntrega).toLocaleDateString('es-MX')}`
                     : 'En proceso';
 
-                // Estatus con colores
-                let estatusClass = '';
-                let estatusText = '';
-                switch(servicio.estatus) {
-                    case 'completado':
-                        estatusClass = 'text-green-400';
-                        estatusText = 'Completado';
-                        break;
-                    case 'en_proceso':
-                        estatusClass = 'text-orange-400';
-                        estatusText = 'En Proceso';
-                        break;
-                    case 'cancelado':
-                        estatusClass = 'text-red-400';
-                        estatusText = 'Cancelado';
-                        break;
-                    default:
-                        estatusClass = 'text-gray-400';
-                        estatusText = servicio.estatus;
-                }
+            const estatusInfo = obtenerEstatusInfo(servicio.estatus);
 
-                tr.innerHTML = `
-                    <td class="py-4 px-6 font-mono text-orange-400">${servicio.folio}</td>
-                    <td class="py-4 px-6">${servicio.vehiculo}</td>
+            tr.innerHTML = `
+                    <td class="py-4 px-6 font-mono text-orange-400">${folio}</td>
+                    <td class="py-4 px-6">${vehiculo}</td>
                     <td class="py-4 px-6">${fechaIngreso}</td>
                     <td class="py-4 px-6">${fechaEntrega}</td>
-                    <td class="py-4 px-6">${servicio.tipo_mantenimiento}</td>
-                    <td class="py-4 px-6"><span class="${estatusClass} font-medium">${estatusText}</span></td>
-                    <td class="py-4 px-6 font-semibold">$${servicio.costo_total.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
+                    <td class="py-4 px-6">${servicio.tipoMantenimiento || 'N/A'}</td>
+                    <td class="py-4 px-6"><span class="${estatusInfo.class} font-medium">${estatusInfo.text}</span></td>
+                    <td class="py-4 px-6 font-semibold">$${(servicio.costoTotal || 0).toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
                     <td class="py-4 px-6 text-center">
-                        <button onclick="verDetalles('${servicio.folio}')" 
+                        <button onclick="verDetalles(${servicio.folioServicio})"
                                 class="bg-orange-600 hover:bg-orange-500 transition px-3 py-2 rounded-lg text-sm">
                             <i class="bx bx-show"></i> Ver Detalles
                         </button>
                     </td>
                 `;
-                
-                tbody.appendChild(tr);
-            });
 
-            // Actualizar paginación
-            actualizarPaginacion();
-        }
+            tbody.appendChild(tr);
+        });
 
-        // Actualizar paginación
-        function actualizarPaginacion() {
-            const totalServicios = serviciosFiltrados.length;
-            const inicio = (paginaActual - 1) * serviciosPorPagina + 1;
-            const fin = Math.min(paginaActual * serviciosPorPagina, totalServicios);
+        actualizarPaginacion();
+    }
 
-            document.getElementById('textoMostrando').textContent = `${inicio}-${fin}`;
-            document.getElementById('textoTotal').textContent = totalServicios;
+    function obtenerEstatusInfo(estatus) {
+        const estatusMap = {
+            'PENDIENTE': { class: 'text-yellow-400', text: 'Pendiente' },
+            'EN_PROCESO': { class: 'text-blue-400', text: 'En Proceso' },
+            'COMPLETADO': { class: 'text-green-400', text: 'Completado' },
+            'ENTREGADO': { class: 'text-purple-400', text: 'Entregado' },
+            'CANCELADO': { class: 'text-red-400', text: 'Cancelado' }
+        };
+        return estatusMap[estatus] || { class: 'text-gray-400', text: estatus };
+    }
 
-            const btnAnterior = document.getElementById('btnAnterior');
-            const btnSiguiente = document.getElementById('btnSiguiente');
+    function actualizarPaginacion() {
+        const totalServicios = serviciosFiltrados.length;
+        const inicio = totalServicios > 0 ? (paginaActual - 1) * serviciosPorPagina + 1 : 0;
+        const fin = Math.min(paginaActual * serviciosPorPagina, totalServicios);
 
-            btnAnterior.disabled = paginaActual === 1;
-            btnSiguiente.disabled = paginaActual === Math.ceil(totalServicios / serviciosPorPagina);
-        }
+        document.getElementById('textoMostrando').textContent = `${inicio}-${fin}`;
+        document.getElementById('textoTotal').textContent = totalServicios;
 
-        // Ver detalles del servicio
-        function verDetalles(folio) {
-            const servicio = serviciosData.find(s => s.folio === folio);
-            if (!servicio) return;
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnSiguiente = document.getElementById('btnSiguiente');
 
-            document.getElementById('modalTitulo').textContent = `Detalles del Servicio - ${servicio.folio}`;
-            
-            const contenido = document.getElementById('contenidoDetalles');
-            contenido.innerHTML = generarContenidoDetalles(servicio);
-            
-            document.getElementById('modalDetalles').classList.remove('hidden');
-        }
+        btnAnterior.disabled = paginaActual === 1;
+        btnSiguiente.disabled = paginaActual === Math.ceil(totalServicios / serviciosPorPagina) || totalServicios === 0;
+    }
 
-        // Generar contenido de detalles
-        function generarContenidoDetalles(servicio) {
-            const fechaIngreso = new Date(servicio.fecha_ingreso).toLocaleDateString('es-MX');
-            const fechaEntrega = servicio.fecha_entrega_real 
-                ? new Date(servicio.fecha_entrega_real).toLocaleDateString('es-MX')
+    async function verDetalles(folioServicio) {
+        const servicio = serviciosData.find(s => s.folioServicio === folioServicio);
+        if (!servicio) return;
+
+        const folio = `SER-${String(servicio.folioServicio).padStart(6, '0')}`;
+        document.getElementById('modalTitulo').textContent = `Detalles del Servicio - ${folio}`;
+
+        const contenido = document.getElementById('contenidoDetalles');
+        contenido.innerHTML = generarContenidoDetalles(servicio);
+
+        document.getElementById('modalDetalles').classList.remove('hidden');
+        document.getElementById('modalDetalles').classList.add('flex');
+    }
+
+    function generarContenidoDetalles(servicio) {
+        const folio = `SER-${String(servicio.folioServicio).padStart(6, '0')}`;
+        const vehiculo = `${servicio.vehiculo?.modelo?.marca?.nombreMarca || 'N/A'} ${servicio.vehiculo?.modelo?.nombreModelo || 'N/A'} ${servicio.vehiculo?.anio || ''}`;
+        const fechaIngreso = new Date(servicio.fechaIngreso).toLocaleDateString('es-MX');
+        const fechaEntrega = servicio.fechaEntregaReal
+            ? new Date(servicio.fechaEntregaReal).toLocaleDateString('es-MX')
+            : servicio.fechaEstimadaEntrega
+                ? `Estimada: ${new Date(servicio.fechaEstimadaEntrega).toLocaleDateString('es-MX')}`
                 : 'En proceso';
 
-            let estatusClass = '';
-            let estatusText = '';
-            switch(servicio.estatus) {
-                case 'completado':
-                    estatusClass = 'bg-green-500/20 text-green-400 border-green-500/30';
-                    estatusText = 'Completado';
-                    break;
-                case 'en_proceso':
-                    estatusClass = 'bg-orange-500/20 text-orange-400 border-orange-500/30';
-                    estatusText = 'En Proceso';
-                    break;
-                case 'cancelado':
-                    estatusClass = 'bg-red-500/20 text-red-400 border-red-500/30';
-                    estatusText = 'Cancelado';
-                    break;
-            }
+        const estatusInfo = obtenerEstatusInfo(servicio.estatus);
 
-            return `
+        return `
                 <div class="space-y-6">
                     <!-- Información General -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -538,21 +522,25 @@
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-gray-400">Folio:</span>
-                                    <span class="font-mono">${servicio.folio}</span>
+                                    <span class="font-mono">${folio}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-400">Vehículo:</span>
-                                    <span>${servicio.vehiculo}</span>
+                                    <span>${vehiculo}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Placas:</span>
+                                    <span>${servicio.vehiculo?.placas || 'N/A'}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-400">Kilometraje:</span>
-                                    <span>${servicio.kilometraje_actual.toLocaleString()} km</span>
+                                    <span>${(servicio.kilometrajeActual || 0).toLocaleString()} km</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
-                            <h3 class="font-semibold text-orange-400 mb-3">Fechas</h3>
+                            <h3 class="font-semibold text-orange-400 mb-3">Fechas y Estatus</h3>
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-gray-400">Fecha Ingreso:</span>
@@ -563,75 +551,66 @@
                                     <span>${fechaEntrega}</span>
                                 </div>
                                 <div class="flex justify-between">
+                                    <span class="text-gray-400">Tipo:</span>
+                                    <span>${servicio.tipoMantenimiento || 'N/A'}</span>
+                                </div>
+                                <div class="flex justify-between">
                                     <span class="text-gray-400">Estatus:</span>
-                                    <span class="px-2 py-1 rounded text-xs ${estatusClass}">${estatusText}</span>
+                                    <span class="${estatusInfo.class} font-medium">${estatusInfo.text}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Servicios Realizados -->
+                    <!-- Observaciones -->
+                    ${servicio.observaciones ? `
                     <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
-                        <h3 class="font-semibold text-orange-400 mb-3">Servicios Realizados</h3>
-                        <div class="space-y-2">
-                            ${servicio.servicios_detalle.map(detalle => `
-                                <div class="flex justify-between items-center p-2 bg-black/20 rounded">
-                                    <span>${detalle.nombre}</span>
-                                    <span class="font-semibold">$${detalle.costo.toLocaleString('es-MX', {minimumFractionDigits: 2})}</span>
-                                </div>
-                            `).join('')}
-                        </div>
+                        <h3 class="font-semibold text-orange-400 mb-3">Observaciones</h3>
+                        <p class="text-sm text-gray-300">${servicio.observaciones}</p>
                     </div>
+                    ` : ''}
 
-                    <!-- Refacciones Utilizadas -->
+                    <!-- Información de Entrega -->
+                    ${servicio.quienEntrego ? `
                     <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
-                        <h3 class="font-semibold text-orange-400 mb-3">Refacciones Utilizadas</h3>
-                        <div class="space-y-2">
-                            ${servicio.refacciones.map(refaccion => `
-                                <div class="flex justify-between items-center p-2 bg-black/20 rounded">
-                                    <div>
-                                        <span>${refaccion.nombre}</span>
-                                        <span class="text-gray-400 text-sm ml-2">x${refaccion.cantidad}</span>
-                                    </div>
-                                    <span class="font-semibold">$${(refaccion.precio * refaccion.cantidad).toLocaleString('es-MX', {minimumFractionDigits: 2})}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-
-                    <!-- Observaciones y Total -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
-                            <h3 class="font-semibold text-orange-400 mb-3">Observaciones</h3>
-                            <p class="text-sm text-gray-300">${servicio.observaciones}</p>
-                        </div>
-
-                        <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
-                            <h3 class="font-semibold text-orange-400 mb-3">Resumen de Costos</h3>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between border-t border-gray-600 pt-2">
-                                    <span class="text-gray-400 font-semibold">Total:</span>
-                                    <span class="font-bold text-lg text-orange-400">$${servicio.costo_total.toLocaleString('es-MX', {minimumFractionDigits: 2})}</span>
-                                </div>
+                        <h3 class="font-semibold text-orange-400 mb-3">Información de Entrega</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-400">Recibió:</span>
+                                <p>${servicio.quienEntrego}</p>
                             </div>
+                            ${servicio.telefonoQuienEntrego ? `
+                            <div>
+                                <span class="text-gray-400">Teléfono:</span>
+                                <p>${servicio.telefonoQuienEntrego}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <!-- Total -->
+                    <div class="bg-black/30 p-4 rounded-lg border border-gray-700">
+                        <div class="flex justify-between items-center border-t border-gray-600 pt-2">
+                            <span class="text-gray-400 font-semibold text-lg">Costo Total:</span>
+                            <span class="font-bold text-2xl text-orange-400">$${(servicio.costoTotal || 0).toLocaleString('es-MX', {minimumFractionDigits: 2})}</span>
                         </div>
                     </div>
                 </div>
             `;
-        }
+    }
 
-        // Cerrar modal de detalles
-        function cerrarModalDetalles() {
-            document.getElementById('modalDetalles').classList.add('hidden');
-        }
+    function cerrarModalDetalles() {
+        document.getElementById('modalDetalles').classList.add('hidden');
+        document.getElementById('modalDetalles').classList.remove('flex');
+    }
 
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                cerrarModalDetalles();
-            }
-        });
-    </script>
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarModalDetalles();
+        }
+    });
+</script>
 </body>
 
 </html>
