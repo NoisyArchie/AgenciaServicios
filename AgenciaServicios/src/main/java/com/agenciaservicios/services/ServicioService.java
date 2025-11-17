@@ -1,7 +1,10 @@
 package com.agenciaservicios.services;
 
 import com.agenciaservicios.models.Servicio;
+import com.agenciaservicios.models.Vehiculo;
 import com.agenciaservicios.repositories.ServicioRepository;
+import com.agenciaservicios.repositories.VehiculoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -14,6 +17,64 @@ public class ServicioService {
 
     @Autowired
     private ServicioRepository servicioRepository;
+
+    @Autowired
+    private VehiculoRepository vehiculoRepository;
+
+
+    @Transactional
+    public Servicio crearServicio(Servicio servicio) {
+        // 1. Guardar el servicio
+        Servicio servicioGuardado = servicioRepository.save(servicio);
+
+        // 2. ⚠️ ACTUALIZAR EL KILOMETRAJE DEL VEHÍCULO
+        if (servicio.getVehiculo() != null && servicio.getKilometrajeActual() != null) {
+            // Obtener el vehículo actual de la BD
+            Optional<Vehiculo> vehiculoOpt = vehiculoRepository.findById(servicio.getVehiculo().getIdVehiculo());
+
+            if (vehiculoOpt.isPresent()) {
+                Vehiculo vehiculo = vehiculoOpt.get();
+
+                // Actualizar solo si el nuevo kilometraje es mayor (para evitar sobreescribir con valores viejos)
+                if (vehiculo.getKilometraje() == null ||
+                        servicio.getKilometrajeActual() > vehiculo.getKilometraje()) {
+                    vehiculo.setKilometraje(servicio.getKilometrajeActual());
+                    vehiculoRepository.save(vehiculo);
+                }
+            }
+        }
+
+        return servicioGuardado;
+    }
+
+    @Transactional
+    public Servicio actualizarServicio(int folioServicio, Servicio servicioActualizado) {
+        return servicioRepository.findById(folioServicio).map(servicio -> {
+            servicio.setEstatus(servicioActualizado.getEstatus());
+            servicio.setFechaEstimadaEntrega(servicioActualizado.getFechaEstimadaEntrega());
+            servicio.setFechaEntregaReal(servicioActualizado.getFechaEntregaReal());
+            servicio.setObservaciones(servicioActualizado.getObservaciones());
+            servicio.setCostoTotal(servicioActualizado.getCostoTotal());
+
+            // ✅ Si se actualiza el kilometraje, también actualizar el vehículo
+            if (servicioActualizado.getKilometrajeActual() != null) {
+                servicio.setKilometrajeActual(servicioActualizado.getKilometrajeActual());
+
+                // Actualizar el vehículo
+                Optional<Vehiculo> vehiculoOpt = vehiculoRepository.findById(servicio.getVehiculo().getIdVehiculo());
+                if (vehiculoOpt.isPresent()) {
+                    Vehiculo vehiculo = vehiculoOpt.get();
+                    if (vehiculo.getKilometraje() == null ||
+                            servicioActualizado.getKilometrajeActual() > vehiculo.getKilometraje()) {
+                        vehiculo.setKilometraje(servicioActualizado.getKilometrajeActual());
+                        vehiculoRepository.save(vehiculo);
+                    }
+                }
+            }
+
+            return servicioRepository.save(servicio);
+        }).orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+    }
 
     private void validarServicio(Servicio servicio) {
         if (servicio == null) {
@@ -88,11 +149,35 @@ public class ServicioService {
         return servicioRepository.findByEstatusAndFechaEstimadaEntregaBefore("PENDIENTE", LocalDate.now());
     }
 
+    // ✅ MÉTODO CORREGIDO - Ahora también actualiza el kilometraje del vehículo
+    @Transactional
     public Servicio guardar(Servicio servicio) {
         validarServicio(servicio);
-        return servicioRepository.save(servicio);
+
+        // 1. Guardar el servicio
+        Servicio servicioGuardado = servicioRepository.save(servicio);
+
+        // 2. ⚠️ ACTUALIZAR EL KILOMETRAJE DEL VEHÍCULO
+        if (servicio.getVehiculo() != null && servicio.getKilometrajeActual() != null) {
+            Optional<Vehiculo> vehiculoOpt = vehiculoRepository.findById(servicio.getVehiculo().getIdVehiculo());
+
+            if (vehiculoOpt.isPresent()) {
+                Vehiculo vehiculo = vehiculoOpt.get();
+
+                // Actualizar solo si el nuevo kilometraje es mayor
+                if (vehiculo.getKilometraje() == null ||
+                        servicio.getKilometrajeActual() > vehiculo.getKilometraje()) {
+                    vehiculo.setKilometraje(servicio.getKilometrajeActual());
+                    vehiculoRepository.save(vehiculo);
+                }
+            }
+        }
+
+        return servicioGuardado;
     }
 
+    // ✅ MÉTODO CORREGIDO - Ahora también actualiza el kilometraje del vehículo
+    @Transactional
     public Servicio actualizar(Servicio servicio) {
         if (servicio.getFolioServicio() == null) {
             throw new IllegalArgumentException("El folio del servicio es requerido para actualizar");
@@ -103,7 +188,27 @@ public class ServicioService {
         }
 
         validarServicio(servicio);
-        return servicioRepository.save(servicio);
+
+        // 1. Guardar el servicio actualizado
+        Servicio servicioGuardado = servicioRepository.save(servicio);
+
+        // 2. ⚠️ ACTUALIZAR EL KILOMETRAJE DEL VEHÍCULO si cambió
+        if (servicio.getVehiculo() != null && servicio.getKilometrajeActual() != null) {
+            Optional<Vehiculo> vehiculoOpt = vehiculoRepository.findById(servicio.getVehiculo().getIdVehiculo());
+
+            if (vehiculoOpt.isPresent()) {
+                Vehiculo vehiculo = vehiculoOpt.get();
+
+                // Actualizar solo si el nuevo kilometraje es mayor
+                if (vehiculo.getKilometraje() == null ||
+                        servicio.getKilometrajeActual() > vehiculo.getKilometraje()) {
+                    vehiculo.setKilometraje(servicio.getKilometrajeActual());
+                    vehiculoRepository.save(vehiculo);
+                }
+            }
+        }
+
+        return servicioGuardado;
     }
 
     public void eliminar(Integer id) {
@@ -113,6 +218,7 @@ public class ServicioService {
         servicioRepository.deleteById(id);
     }
 
+    @Transactional
     public Servicio cambiarEstatus(Integer id, String nuevoEstatus) {
         return servicioRepository.findById(id)
                 .map(servicio -> {
@@ -143,4 +249,5 @@ public class ServicioService {
     public Servicio cancelarServicio(Integer id) {
         return cambiarEstatus(id, "CANCELADO");
     }
+
 }
