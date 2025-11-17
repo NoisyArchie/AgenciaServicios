@@ -17,12 +17,12 @@
             </h2>
 
             <nav class="flex flex-col gap-1">
-                <a href="/trabjador/panelTrabajador.html"
+                <a href="/trabajador/panelTrabajador.html"
                     class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
                     <i class="bx bx-home text-xl"></i> Panel
                 </a>
 
-                <a href="/trabjador/servicios.html"
+                <a href="/trabajador/servicios.html"
                     class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
                     <i class="bx bx-wrench text-xl"></i> Servicios
                 </a>
@@ -524,18 +524,10 @@
     </div>
 
     <script>
-        // Toggle menú de catálogos
-        document.getElementById('btnCatalogos').addEventListener('click', function () {
-            const submenu = document.getElementById('submenuCatalogos');
-            const icon = document.getElementById('iconArrow');
 
-            submenu.classList.toggle('hidden');
-            icon.classList.toggle('bx-chevron-down');
-            icon.classList.toggle('bx-chevron-up');
-        });
 
         // Toggle persona que entrega
-        document.getElementById('checkLlevadoPorOtro').addEventListener('change', function () {
+        document.getElementById('checkLlevadoPorOtro').addEventListener('change', function() {
             const div = document.getElementById('divPersonaEntrega');
             if (this.checked) {
                 div.classList.remove('hidden');
@@ -549,7 +541,7 @@
         });
 
         // URLs de la API
-        const API_BASE = '/api';
+        const API_BASE = 'http://localhost:8080/api';
 
         // Variables globales
         let vehiculos = [];
@@ -560,7 +552,7 @@
         let usuarioActual = 1; // Por ahora hardcodeado
 
         // Cargar datos al iniciar
-        window.addEventListener('DOMContentLoaded', async function () {
+        window.addEventListener('DOMContentLoaded', async function() {
             await cargarVehiculos();
             await cargarTiposServicio();
             await cargarRefacciones();
@@ -589,7 +581,7 @@
                 });
 
                 // Evento para actualizar info del cliente
-                select.addEventListener('change', function () {
+                select.addEventListener('change', function() {
                     actualizarInfoCliente(this.value);
                     actualizarKilometrajeDesdeSelect(this.value);
                 });
@@ -892,7 +884,7 @@
         }
 
         // Guardar servicio
-        document.getElementById('formCrearServicio').addEventListener('submit', async function (e) {
+        document.getElementById('formCrearServicio').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             // Validaciones
@@ -999,7 +991,7 @@
                 }
 
                 alert('✅ Servicio creado exitosamente\nFolio: SER-' + String(folioServicio).padStart(6, '0'));
-                window.location.href = '/trabajador/servicios.html';
+                window.location.href = '/admin/servicios.html';
 
             } catch (error) {
                 console.error('Error:', error);
@@ -1104,7 +1096,7 @@
         }
 
         // Guardar vehículo nuevo
-        document.getElementById('formVehiculo').addEventListener('submit', async function (e) {
+        document.getElementById('formVehiculo').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const vehiculoData = {
@@ -1152,7 +1144,7 @@
         });
 
         // Cerrar modales con ESC
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 cerrarModalVehiculo();
             }
