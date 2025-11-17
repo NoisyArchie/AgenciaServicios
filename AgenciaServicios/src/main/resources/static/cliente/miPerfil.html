@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8" />
@@ -9,406 +9,573 @@
 </head>
 
 <body class="bg-[#0D0D0D] text-white min-h-screen flex">
-    <!-- SIDEBAR -->
-    <aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
-        <div>
-            <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
-                Siscare
-            </h2>
+<!-- SIDEBAR -->
+<aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
+    <div>
+        <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
+            Siscare
+        </h2>
 
-            <nav class="flex flex-col gap-1">
-                <a href="/cliente/home.html" 
-                   class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                    <i class="bx bx-home text-xl"></i> Inicio
-                </a>
-
-                <a href="/cliente/misServicios.html" 
-                   class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                    <i class="bx bx-wrench text-xl"></i> Mis Servicios
-                </a>
-
-                <a href="/cliente/misVehiculos.html" 
-                   class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                    <i class="bx bx-car text-xl"></i> Mis Vehículos
-                </a>
-
-                <a href="/cliente/miPerfil.html" 
-                   class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
-                    <i class="bx bx-user text-xl text-orange-400"></i> Mi Perfil
-                </a>
-            </nav>
-        </div>
-
-        <div class="border-t border-gray-700 pt-4">
-            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
-                <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+        <nav class="flex flex-col gap-1">
+            <a href="/cliente/home.html"
+               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-home text-xl"></i> Inicio
             </a>
+
+            <a href="/cliente/misServicios.html"
+               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-wrench text-xl"></i> Mis Servicios
+            </a>
+
+            <a href="/cliente/misVehiculos.html"
+               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <i class="bx bx-car text-xl"></i> Mis Vehículos
+            </a>
+
+            <a href="/cliente/miPerfil.html"
+               class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                <i class="bx bx-user text-xl text-orange-400"></i> Mi Perfil
+            </a>
+        </nav>
+    </div>
+
+    <div class="border-t border-gray-700 pt-4">
+        <button onclick="cerrarSesion()" class="w-full flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+            <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+        </button>
+    </div>
+</aside>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="flex-1 flex flex-col">
+    <!-- NAVBAR SUPERIOR -->
+    <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+            <span class="text-gray-300 text-sm" id="headerNombre">Cargando...</span>
+            <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
+                <i class="bx bx-user text-white text-xl"></i>
+            </button>
         </div>
-    </aside>
+    </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="flex-1 flex flex-col">
-        <!-- NAVBAR SUPERIOR -->
-        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
-            <!-- Icono de usuario -->
-            <div class="flex items-center gap-3">
-                <span class="text-gray-300 text-sm" id="headerNombre">Juan Pérez García</span>
-                <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
-                    <i class="bx bx-user text-white text-xl"></i>
-                </button>
+    <!-- CONTENIDO -->
+    <section class="p-8 flex-1 overflow-y-auto">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold">Mi Perfil</h1>
+                <p class="text-gray-400 text-sm">
+                    Gestiona tu información personal y credenciales de acceso
+                </p>
             </div>
-        </header>
 
-        <!-- CONTENIDO -->
-        <section class="p-8 flex-1 overflow-y-auto">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold">Mi Perfil</h1>
-                    <p class="text-gray-400 text-sm">
-                        Gestiona tu información personal y credenciales de acceso
-                    </p>
+            <!-- Información del Perfil -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Columna Izquierda -->
+                <div class="lg:col-span-1">
+                    <!-- Avatar -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 text-center">
+                        <div class="w-32 h-32 mx-auto bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/30 border-4 border-white/10 mb-4">
+                            <i class="bx bx-user text-white text-4xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white" id="perfilNombre">Cargando...</h3>
+                        <p class="text-orange-400 text-sm mb-2">Cliente</p>
+                        <p class="text-gray-400 text-xs" id="miembroDesde">Miembro desde: -</p>
+
+                        <!-- Estadísticas -->
+                        <div class="mt-6 space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400">Servicios Totales:</span>
+                                <span class="text-white font-semibold" id="statServicios">0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400">Vehículos:</span>
+                                <span class="text-white font-semibold" id="statVehiculos">0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400">Estado:</span>
+                                <span class="text-green-400 font-semibold" id="statEstado">Activo</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Información del Perfil -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Columna Izquierda: Avatar e Información General -->
-                    <div class="lg:col-span-1">
-                        <!-- Avatar -->
-                        <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 text-center">
-                            <div class="w-32 h-32 mx-auto bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/30 border-4 border-white/10 mb-4">
-                                <i class="bx bx-user text-white text-4xl"></i>
+                <!-- Columna Derecha -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Información Personal (Solo lectura) -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-id-card"></i>
+                            Información Personal
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Nombre Completo
+                                </label>
+                                <div class="w-full bg-black/30 border border-gray-700 text-gray-400 p-3 rounded-lg" id="infoNombreCompleto">
+                                    -
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Contacta al administrador para cambiar tu nombre
+                                </p>
                             </div>
-                            <h3 class="text-xl font-bold text-white" id="perfilNombre">Juan Pérez García</h3>
-                            <p class="text-orange-400 text-sm mb-2">Cliente</p>
-                            <p class="text-gray-400 text-xs">Miembro desde: Ene 2024</p>
-                            
-                            <!-- Estadísticas Rápidas -->
-                            <div class="mt-6 space-y-3">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="text-gray-400">Servicios Totales:</span>
-                                    <span class="text-white font-semibold">15</span>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Dirección
+                                </label>
+                                <div class="w-full bg-black/30 border border-gray-700 text-gray-400 p-3 rounded-lg" id="infoDireccion">
+                                    -
                                 </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="text-gray-400">Vehículos:</span>
-                                    <span class="text-white font-semibold">2</span>
-                                </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="text-gray-400">Estado:</span>
-                                    <span class="text-green-400 font-semibold">Activo</span>
-                                </div>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Contacta al administrador para cambiar tu dirección
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Columna Derecha: Formularios de Edición -->
-                    <div class="lg:col-span-2 space-y-6">
-                        <!-- Información Personal (Solo lectura) -->
-                        <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
-                            <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                <i class="bx bx-id-card"></i>
-                                Información Personal
-                            </h2>
-                            
+                    <!-- Información de Contacto (Editable) -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-phone"></i>
+                            Información de Contacto
+                        </h2>
+
+                        <form id="formContacto" class="space-y-4">
+                            <input type="hidden" id="idCliente">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-300 mb-2">
-                                        Nombre Completo
+                                        Teléfono *
                                     </label>
-                                    <div class="w-full bg-black/30 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                        Juan Pérez García
-                                    </div>
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Contacta al administrador para cambiar tu nombre
-                                    </p>
+                                    <input type="tel" id="inputTelefono" required
+                                           class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-300 mb-2">
-                                        Dirección
+                                        Correo Electrónico *
                                     </label>
-                                    <div class="w-full bg-black/30 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                        Av. Principal #123, Col. Centro, Ciudad de México
-                                    </div>
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Contacta al administrador para cambiar tu dirección
-                                    </p>
+                                    <input type="email" id="inputEmail" required
+                                           class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Información de Contacto (Editable) -->
-                        <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
-                            <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                <i class="bx bx-phone"></i>
-                                Información de Contacto
-                            </h2>
-                            
-                            <form id="formContacto" class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                                            Teléfono *
-                                        </label>
-                                        <input type="tel" id="inputTelefono" required
-                                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                            value="+52 55 1234 5678">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                                            Correo Electrónico *
-                                        </label>
-                                        <input type="email" id="inputEmail" required
-                                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                            value="juan.perez@email.com">
-                                    </div>
-                                </div>
-
-                                <div class="flex justify-end gap-3 pt-4">
-                                    <button type="button" onclick="cancelarEdicionContacto()"
+                            <div class="flex justify-end gap-3 pt-4">
+                                <button type="button" onclick="cancelarEdicionContacto()"
                                         class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                                        Cancelar
-                                    </button>
-                                    <button type="submit"
+                                    Cancelar
+                                </button>
+                                <button type="submit"
                                         class="px-6 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2">
-                                        <i class="bx bx-save"></i>
-                                        Guardar Cambios
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                                    <i class="bx bx-save"></i>
+                                    Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                        <!-- Cambiar Contraseña -->
-                        <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
-                            <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                <i class="bx bx-lock-alt"></i>
-                                Seguridad y Acceso
-                            </h2>
-                            
-                            <form id="formPassword" class="space-y-4">
+                    <!-- Cambiar Contraseña -->
+                    <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
+                            <i class="bx bx-lock-alt"></i>
+                            Seguridad y Acceso
+                        </h2>
+
+                        <form id="formPassword" class="space-y-4">
+                            <input type="hidden" id="idUsuario">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Nombre de Usuario
+                                </label>
+                                <div class="w-full bg-black/30 border border-gray-700 text-gray-400 p-3 rounded-lg" id="infoUsername">
+                                    -
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    El nombre de usuario no se puede cambiar
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-300 mb-2">
-                                        Nombre de Usuario
+                                        Contraseña Actual *
                                     </label>
-                                    <div class="w-full bg-black/30 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                        juan.perez
-                                    </div>
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        El nombre de usuario no se puede cambiar
-                                    </p>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                                            Contraseña Actual *
-                                        </label>
-                                        <input type="password" id="inputPasswordActual" required
-                                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                            placeholder="Ingresa tu contraseña actual">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                                            Nueva Contraseña *
-                                        </label>
-                                        <input type="password" id="inputNuevaPassword" required
-                                            class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                            placeholder="Ingresa nueva contraseña">
-                                    </div>
+                                    <input type="password" id="inputPasswordActual" required
+                                           class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                                           placeholder="Ingresa tu contraseña actual">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-300 mb-2">
-                                        Confirmar Nueva Contraseña *
+                                        Nueva Contraseña *
                                     </label>
-                                    <input type="password" id="inputConfirmarPassword" required
-                                        class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                        placeholder="Confirma tu nueva contraseña">
-                                    <p class="mt-1 text-xs text-gray-400">
-                                        La contraseña debe tener al menos 8 caracteres
-                                    </p>
+                                    <input type="password" id="inputNuevaPassword" required
+                                           class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                                           placeholder="Ingresa nueva contraseña">
                                 </div>
+                            </div>
 
-                                <div class="flex justify-end gap-3 pt-4">
-                                    <button type="button" onclick="cancelarCambioPassword()"
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    Confirmar Nueva Contraseña *
+                                </label>
+                                <input type="password" id="inputConfirmarPassword" required
+                                       class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                                       placeholder="Confirma tu nueva contraseña">
+                                <p class="mt-1 text-xs text-gray-400">
+                                    La contraseña debe tener al menos 6 caracteres
+                                </p>
+                            </div>
+
+                            <div class="flex justify-end gap-3 pt-4">
+                                <button type="button" onclick="cancelarCambioPassword()"
                                         class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                                        Cancelar
-                                    </button>
-                                    <button type="submit"
+                                    Cancelar
+                                </button>
+                                <button type="submit"
                                         class="px-6 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2">
-                                        <i class="bx bx-lock"></i>
-                                        Cambiar Contraseña
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                                    <i class="bx bx-lock"></i>
+                                    Cambiar Contraseña
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+</main>
 
-    <!-- Modal de Confirmación -->
-    <div id="modalConfirmacion" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50">
-        <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-[500px] animate-[zoomIn_.3s_ease]">
-            <div class="text-center">
-                <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="bx bx-check text-green-400 text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2" id="modalTitulo">¡Cambios Guardados!</h3>
-                <p class="text-gray-400 mb-6" id="modalMensaje">Tus cambios se han guardado exitosamente.</p>
-                
-                <button onclick="cerrarModalConfirmacion()" 
-                        class="px-8 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition">
-                    Aceptar
-                </button>
+<!-- Modal -->
+<div id="modalConfirmacion" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50">
+    <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-[500px] animate-[zoomIn_.3s_ease]">
+        <div class="text-center">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" id="modalIcon">
+                <i class="bx bx-check text-2xl"></i>
             </div>
+            <h3 class="text-xl font-bold text-white mb-2" id="modalTitulo">¡Cambios Guardados!</h3>
+            <p class="text-gray-400 mb-6" id="modalMensaje">Tus cambios se han guardado exitosamente.</p>
+
+            <button onclick="cerrarModalConfirmacion()"
+                    class="px-8 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition">
+                Aceptar
+            </button>
         </div>
     </div>
+</div>
 
-    <style>
-        @keyframes zoomIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.85);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+<!-- Loader -->
+<div id="loader" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
+    <div class="bg-[#1A1A1A] p-8 rounded-2xl shadow-xl border border-orange-500/30">
+        <div class="flex flex-col items-center gap-4">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+            <p class="text-gray-300">Guardando cambios...</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes zoomIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.85);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
+    }
+</style>
+
+<script>
+    const API_URL_CLIENTES = 'http://localhost:8080/api/clientes';
+    const API_URL_USUARIOS = 'http://localhost:8080/api/usuarios';
+    const API_URL_VEHICULOS = 'http://localhost:8080/api/vehiculos';
+    const API_URL_SERVICIOS = 'http://localhost:8080/api/servicios';
+
+    let clienteData = null;
+    let usuarioData = null;
+    let datosOriginales = {};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        verificarSesion();
+        cargarDatosCliente();
+        configurarEventos();
+    });
+
+    function verificarSesion() {
+        const usuario = sessionStorage.getItem('usuario');
+        if (!usuario) {
+            window.location.href = '../login.html';
+            return;
         }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
+        try {
+            usuarioData = JSON.parse(usuario);
+            if (usuarioData.rol !== 'cliente') {
+                alert('Acceso denegado.');
+                window.location.href = '../login.html';
+                return;
+            }
+            document.getElementById('headerNombre').textContent = usuarioData.nombreCompleto || 'Cliente';
+        } catch (error) {
+            console.error('Error:', error);
+            window.location.href = '../login.html';
         }
-    </style>
+    }
 
-    <script>
-        // Datos del cliente (en producción vendrían de una API)
-        const datosCliente = {
-            nombre: "Juan Pérez García",
-            telefono: "+52 55 1234 5678",
-            email: "juan.perez@email.com",
-            direccion: "Av. Principal #123, Col. Centro, Ciudad de México",
-            username: "juan.perez",
-            fechaRegistro: "2024-01-15",
-            serviciosTotales: 15,
-            vehiculos: 2
+    function cerrarSesion() {
+        if (confirm('¿Está seguro de cerrar sesión?')) {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = '../login.html';
+        }
+    }
+
+    async function cargarDatosCliente() {
+        try {
+            // 1. Obtener cliente
+            const responseClientes = await fetch(API_URL_CLIENTES);
+            if (!responseClientes.ok) throw new Error('Error al cargar clientes');
+
+            const clientes = await responseClientes.json();
+            clienteData = clientes.find(c => c.usuario?.idUsuario === usuarioData.idUsuario);
+
+            if (!clienteData) throw new Error('Cliente no encontrado');
+
+            console.log('Cliente:', clienteData);
+
+            // 2. Obtener estadísticas
+            const [vehiculos, servicios] = await Promise.all([
+                fetch(`${API_URL_VEHICULOS}/cliente/${clienteData.idCliente}`).then(r => r.json()),
+                fetch(API_URL_SERVICIOS).then(r => r.json())
+            ]);
+
+            const idsVehiculos = vehiculos.map(v => v.idVehiculo);
+            const serviciosCliente = servicios.filter(s => idsVehiculos.includes(s.vehiculo?.idVehiculo));
+
+            // 3. Actualizar UI
+            actualizarUI(vehiculos.length, serviciosCliente.length);
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al cargar datos del perfil');
+        }
+    }
+
+    function actualizarUI(totalVehiculos, totalServicios) {
+        // Información personal
+        document.getElementById('perfilNombre').textContent = clienteData.nombreCompleto;
+        document.getElementById('infoNombreCompleto').textContent = clienteData.nombreCompleto;
+        document.getElementById('infoDireccion').textContent = clienteData.direccion || 'No especificada';
+        document.getElementById('infoUsername').textContent = usuarioData.username;
+
+        // Fecha de registro
+        if (clienteData.fechaRegistro) {
+            const fecha = new Date(clienteData.fechaRegistro);
+            const opciones = { month: 'short', year: 'numeric' };
+            document.getElementById('miembroDesde').textContent =
+                `Miembro desde: ${fecha.toLocaleDateString('es-MX', opciones)}`;
+        }
+
+        // Estadísticas
+        document.getElementById('statServicios').textContent = totalServicios;
+        document.getElementById('statVehiculos').textContent = totalVehiculos;
+        document.getElementById('statEstado').textContent = clienteData.activo ? 'Activo' : 'Inactivo';
+        document.getElementById('statEstado').className = clienteData.activo ?
+            'text-green-400 font-semibold' : 'text-red-400 font-semibold';
+
+        // Información de contacto editable
+        document.getElementById('idCliente').value = clienteData.idCliente;
+        document.getElementById('inputTelefono').value = clienteData.telefono || '';
+        document.getElementById('inputEmail').value = clienteData.email || '';
+
+        // Usuario
+        document.getElementById('idUsuario').value = usuarioData.idUsuario;
+
+        // Guardar originales
+        datosOriginales = {
+            telefono: clienteData.telefono || '',
+            email: clienteData.email || ''
         };
+    }
 
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            cargarDatosCliente();
-            configurarEventos();
+    function configurarEventos() {
+        document.getElementById('formContacto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            guardarCambiosContacto();
         });
 
-        // Cargar datos del cliente en la UI
-        function cargarDatosCliente() {
-            document.getElementById('headerNombre').textContent = datosCliente.nombre;
-            document.getElementById('perfilNombre').textContent = datosCliente.nombre;
-            document.getElementById('inputTelefono').value = datosCliente.telefono;
-            document.getElementById('inputEmail').value = datosCliente.email;
-        }
-
-        // Configurar eventos
-        function configurarEventos() {
-            // Formulario de contacto
-            document.getElementById('formContacto').addEventListener('submit', function(e) {
-                e.preventDefault();
-                guardarCambiosContacto();
-            });
-
-            // Formulario de contraseña
-            document.getElementById('formPassword').addEventListener('submit', function(e) {
-                e.preventDefault();
-                cambiarPassword();
-            });
-        }
-
-        // Guardar cambios de contacto
-        function guardarCambiosContacto() {
-            const nuevoTelefono = document.getElementById('inputTelefono').value.trim();
-            const nuevoEmail = document.getElementById('inputEmail').value.trim();
-
-            if (!nuevoTelefono || !nuevoEmail) {
-                mostrarModal('Error', 'Por favor completa todos los campos requeridos');
-                return;
-            }
-
-            // Validar email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(nuevoEmail)) {
-                mostrarModal('Error', 'Por favor ingresa un correo electrónico válido');
-                return;
-            }
-
-            // Simular guardado (en producción sería una llamada API)
-            datosCliente.telefono = nuevoTelefono;
-            datosCliente.email = nuevoEmail;
-
-            mostrarModal('¡Éxito!', 'Tu información de contacto se ha actualizado correctamente');
-        }
-
-        // Cambiar contraseña
-        function cambiarPassword() {
-            const passwordActual = document.getElementById('inputPasswordActual').value;
-            const nuevaPassword = document.getElementById('inputNuevaPassword').value;
-            const confirmarPassword = document.getElementById('inputConfirmarPassword').value;
-
-            if (!passwordActual || !nuevaPassword || !confirmarPassword) {
-                mostrarModal('Error', 'Por favor completa todos los campos de contraseña');
-                return;
-            }
-
-            if (nuevaPassword.length < 8) {
-                mostrarModal('Error', 'La nueva contraseña debe tener al menos 8 caracteres');
-                return;
-            }
-
-            if (nuevaPassword !== confirmarPassword) {
-                mostrarModal('Error', 'Las contraseñas no coinciden');
-                return;
-            }
-
-            // Simular cambio de contraseña (en producción sería una llamada API)
-            // Aquí se verificaría la contraseña actual y se cambiaría por la nueva
-
-            mostrarModal('¡Éxito!', 'Tu contraseña se ha cambiado correctamente');
-            document.getElementById('formPassword').reset();
-        }
-
-        // Cancelar edición de contacto
-        function cancelarEdicionContacto() {
-            document.getElementById('inputTelefono').value = datosCliente.telefono;
-            document.getElementById('inputEmail').value = datosCliente.email;
-        }
-
-        // Cancelar cambio de contraseña
-        function cancelarCambioPassword() {
-            document.getElementById('formPassword').reset();
-        }
-
-        // Mostrar modal
-        function mostrarModal(titulo, mensaje) {
-            document.getElementById('modalTitulo').textContent = titulo;
-            document.getElementById('modalMensaje').textContent = mensaje;
-            document.getElementById('modalConfirmacion').classList.remove('hidden');
-        }
-
-        // Cerrar modal
-        function cerrarModalConfirmacion() {
-            document.getElementById('modalConfirmacion').classList.add('hidden');
-        }
-
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                cerrarModalConfirmacion();
-            }
+        document.getElementById('formPassword').addEventListener('submit', function(e) {
+            e.preventDefault();
+            cambiarPassword();
         });
-    </script>
+    }
+
+    async function guardarCambiosContacto() {
+        const nuevoTelefono = document.getElementById('inputTelefono').value.trim();
+        const nuevoEmail = document.getElementById('inputEmail').value.trim();
+
+        if (!nuevoTelefono || !nuevoEmail) {
+            mostrarModal('Error', 'Por favor completa todos los campos requeridos', 'error');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(nuevoEmail)) {
+            mostrarModal('Error', 'Por favor ingresa un correo electrónico válido', 'error');
+            return;
+        }
+
+        try {
+            mostrarLoader(true);
+
+            const clienteActualizado = {
+                ...clienteData,
+                telefono: nuevoTelefono,
+                email: nuevoEmail
+            };
+
+            const response = await fetch(`${API_URL_CLIENTES}/${clienteData.idCliente}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(clienteActualizado)
+            });
+
+            if (!response.ok) throw new Error('Error al actualizar');
+
+            clienteData.telefono = nuevoTelefono;
+            clienteData.email = nuevoEmail;
+            datosOriginales = { telefono: nuevoTelefono, email: nuevoEmail };
+
+            mostrarModal('¡Éxito!', 'Tu información de contacto se ha actualizado correctamente', 'success');
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarModal('Error', 'No se pudieron guardar los cambios', 'error');
+        } finally {
+            mostrarLoader(false);
+        }
+    }
+
+    async function cambiarPassword() {
+        const passwordActual = document.getElementById('inputPasswordActual').value;
+        const nuevaPassword = document.getElementById('inputNuevaPassword').value;
+        const confirmarPassword = document.getElementById('inputConfirmarPassword').value;
+
+        if (!passwordActual || !nuevaPassword || !confirmarPassword) {
+            mostrarModal('Error', 'Por favor completa todos los campos de contraseña', 'error');
+            return;
+        }
+
+        if (nuevaPassword.length < 6) {
+            mostrarModal('Error', 'La nueva contraseña debe tener al menos 6 caracteres', 'error');
+            return;
+        }
+
+        if (nuevaPassword !== confirmarPassword) {
+            mostrarModal('Error', 'Las contraseñas no coinciden', 'error');
+            return;
+        }
+
+        try {
+            mostrarLoader(true);
+
+            // Verificar contraseña actual usando el endpoint de login
+            const verificarResponse = await fetch(`${API_URL_USUARIOS}/login`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: usuarioData.username,
+                    password: passwordActual
+                })
+            });
+
+            if (!verificarResponse.ok) {
+                mostrarModal('Error', 'La contraseña actual es incorrecta', 'error');
+                mostrarLoader(false);
+                return;
+            }
+
+            // Si la verificación es exitosa, cambiar la contraseña
+            const usuarioActualizado = {
+                idUsuario: usuarioData.idUsuario,
+                username: usuarioData.username,
+                password: nuevaPassword,
+                nombreCompleto: usuarioData.nombreCompleto,
+                email: usuarioData.email,
+                rol: usuarioData.rol,
+                activo: usuarioData.activo
+            };
+
+            const response = await fetch(`${API_URL_USUARIOS}/${usuarioData.idUsuario}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(usuarioActualizado)
+            });
+
+            if (!response.ok) throw new Error('Error al cambiar contraseña');
+
+            // Actualizar sesión
+            usuarioData.password = nuevaPassword;
+            sessionStorage.setItem('usuario', JSON.stringify(usuarioData));
+
+            mostrarModal('¡Éxito!', 'Tu contraseña se ha cambiado correctamente', 'success');
+            document.getElementById('formPassword').reset();
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarModal('Error', 'No se pudo cambiar la contraseña', 'error');
+        } finally {
+            mostrarLoader(false);
+        }
+    }
+
+    function cancelarEdicionContacto() {
+        document.getElementById('inputTelefono').value = datosOriginales.telefono;
+        document.getElementById('inputEmail').value = datosOriginales.email;
+    }
+
+    function cancelarCambioPassword() {
+        document.getElementById('formPassword').reset();
+    }
+
+    function mostrarModal(titulo, mensaje, tipo = 'success') {
+        const iconDiv = document.getElementById('modalIcon');
+        if (tipo === 'success') {
+            iconDiv.className = 'w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4';
+            iconDiv.innerHTML = '<i class="bx bx-check text-green-400 text-2xl"></i>';
+        } else {
+            iconDiv.className = 'w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4';
+            iconDiv.innerHTML = '<i class="bx bx-error text-red-400 text-2xl"></i>';
+        }
+
+        document.getElementById('modalTitulo').textContent = titulo;
+        document.getElementById('modalMensaje').textContent = mensaje;
+        document.getElementById('modalConfirmacion').classList.remove('hidden');
+        document.getElementById('modalConfirmacion').classList.add('flex');
+    }
+
+    function cerrarModalConfirmacion() {
+        document.getElementById('modalConfirmacion').classList.add('hidden');
+        document.getElementById('modalConfirmacion').classList.remove('flex');
+    }
+
+    function mostrarLoader(mostrar) {
+        document.getElementById('loader').classList.toggle('hidden', !mostrar);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarModalConfirmacion();
+        }
+    });
+</script>
 </body>
 
 </html>
