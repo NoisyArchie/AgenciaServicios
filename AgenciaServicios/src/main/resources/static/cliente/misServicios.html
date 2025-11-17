@@ -238,6 +238,16 @@
     let paginaActual = 1;
     const serviciosPorPagina = 5;
 
+    function formatearFecha(fechaString) {
+        if (!fechaString) return null;
+
+        // Extraer solo la parte de la fecha (YYYY-MM-DD)
+        const [year, month, day] = fechaString.split('T')[0].split('-');
+        // Crear fecha en zona horaria local
+        const fecha = new Date(year, month - 1, day);
+        return fecha.toLocaleDateString('es-MX');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         verificarSesion();
         cargarDatosCliente();
@@ -432,9 +442,9 @@
             const vehiculo = `${servicio.vehiculo?.modelo?.marca?.nombreMarca || 'N/A'} ${servicio.vehiculo?.modelo?.nombreModelo || 'N/A'} - ${servicio.vehiculo?.placas || 'N/A'}`;
             const fechaIngreso = new Date(servicio.fechaIngreso).toLocaleDateString('es-MX');
             const fechaEntrega = servicio.fechaEntregaReal
-                ? new Date(servicio.fechaEntregaReal).toLocaleDateString('es-MX')
+                ? formatearFecha(servicio.fechaEntregaReal)
                 : servicio.fechaEstimadaEntrega
-                    ? `Est: ${new Date(servicio.fechaEstimadaEntrega).toLocaleDateString('es-MX')}`
+                    ? `Est: ${formatearFecha(servicio.fechaEstimadaEntrega)}`
                     : 'En proceso';
 
             const estatusInfo = obtenerEstatusInfo(servicio.estatus);
@@ -506,10 +516,11 @@
         const vehiculo = `${servicio.vehiculo?.modelo?.marca?.nombreMarca || 'N/A'} ${servicio.vehiculo?.modelo?.nombreModelo || 'N/A'} ${servicio.vehiculo?.anio || ''}`;
         const fechaIngreso = new Date(servicio.fechaIngreso).toLocaleDateString('es-MX');
         const fechaEntrega = servicio.fechaEntregaReal
-            ? new Date(servicio.fechaEntregaReal).toLocaleDateString('es-MX')
+            ? formatearFecha(servicio.fechaEntregaReal)
             : servicio.fechaEstimadaEntrega
-                ? `Estimada: ${new Date(servicio.fechaEstimadaEntrega).toLocaleDateString('es-MX')}`
+                ? `Estimada: ${formatearFecha(servicio.fechaEstimadaEntrega)}`
                 : 'En proceso';
+
 
         const estatusInfo = obtenerEstatusInfo(servicio.estatus);
 

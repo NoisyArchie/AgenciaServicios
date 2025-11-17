@@ -398,6 +398,16 @@
     let paginaActual = 1;
     const serviciosPorPagina = 10;
 
+    // Función auxiliar para convertir fecha sin problemas de zona horaria
+    function formatearFecha(fechaString) {
+        if (!fechaString) return null;
+
+        // Si la fecha viene en formato ISO (YYYY-MM-DD), separamos y creamos la fecha localmente
+        const [year, month, day] = fechaString.split('T')[0].split('-');
+        const fecha = new Date(year, month - 1, day);
+        return fecha.toLocaleDateString('es-MX');
+    }
+
     // Cargar servicios desde la API al inicio
     async function cargarServiciosDesdeAPI() {
         try {
@@ -421,7 +431,7 @@
                 tipoMantenimiento: servicio.tipoMantenimiento || 'N/A',
                 estatus: servicio.estatus,
                 fechaIngreso: new Date(servicio.fechaIngreso).toLocaleDateString('es-MX'),
-                fechaEstimada: servicio.fechaEstimadaEntrega ? new Date(servicio.fechaEstimadaEntrega).toLocaleDateString('es-MX') : 'N/A',
+                fechaEstimada: servicio.fechaEstimadaEntrega ? formatearFecha(servicio.fechaEstimadaEntrega) : 'N/A',
                 fechaReal: servicio.fechaEntregaReal ? new Date(servicio.fechaEntregaReal).toLocaleDateString('es-MX') : null,
                 costoTotal: parseFloat(servicio.costoTotal || 0),
                 observaciones: servicio.observaciones || '',
