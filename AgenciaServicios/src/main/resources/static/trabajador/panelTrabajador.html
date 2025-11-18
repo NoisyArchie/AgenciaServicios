@@ -155,7 +155,7 @@
                         </div>
                     </a>
 
-                    <a href="/admin/crearServicio.html"
+                    <a href="/trabajador/crearServicio.html"
                        class="flex items-center gap-3 p-4 bg-orange-600/20 hover:bg-orange-600/30 border border-orange-500/30 rounded-lg transition">
                         <div class="bg-orange-500/20 p-3 rounded-full">
                             <i class="bx bx-plus text-orange-400 text-xl"></i>
@@ -192,172 +192,386 @@
     </style>
 
     <script>
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            inicializarGrafica();
-            cargarDatos();
-        });
+    // URLs de TODOS tus endpoints existentes
+    const API_URLS = {
+        servicios: '/api/servicios',
+        clientes: '/api/clientes',
+        vehiculos: '/api/vehiculos'
+    };
 
-        // Inicializar gráfica simple
-        function inicializarGrafica() {
-            const ctx = document.getElementById('graficaEstatus').getContext('2d');
-            
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Pendiente', 'En Proceso', 'Listo', 'Entregado'],
-                    datasets: [{
-                        label: 'Cantidad',
-                        data: [0, 0, 0, 0],
-                        backgroundColor: [
-                            '#3B82F6', // Azul - Pendiente
-                            '#F59E0B', // Amarillo - En Proceso
-                            '#10B981', // Verde - Listo
-                            '#059669'  // Verde oscuro - Entregado
-                        ],
-                        borderWidth: 0,
-                        borderRadius: 6,
-                        barPercentage: 0.6
-                    }]
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        inicializarGrafica();
+        cargarDashboardCompleto();
+    });
+
+    // Inicializar gráfica
+    function inicializarGrafica() {
+        const ctx = document.getElementById('graficaEstatus').getContext('2d');
+        
+        window.graficaEstatus = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Pendiente', 'En Proceso', 'Completado', 'Entregado'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [0, 0, 0, 0],
+                    backgroundColor: [
+                        '#3B82F6', // Azul - Pendiente
+                        '#F59E0B', // Amarillo - En Proceso
+                        '#10B981', // Verde - Completado
+                        '#059669'  // Verde oscuro - Entregado
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 6,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1F2937',
+                        titleColor: '#F9FAFB',
+                        bodyColor: '#D1D5DB'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#374151'
                         },
-                        tooltip: {
-                            backgroundColor: '#1F2937',
-                            titleColor: '#F9FAFB',
-                            bodyColor: '#D1D5DB'
+                        ticks: {
+                            color: '#9CA3AF',
+                            stepSize: 1
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#374151'
-                            },
-                            ticks: {
-                                color: '#9CA3AF',
-                                stepSize: 1
-                            }
+                    x: {
+                        grid: {
+                            color: '#374151'
                         },
-                        x: {
-                            grid: {
-                                color: '#374151'
-                            },
-                            ticks: {
-                                color: '#9CA3AF'
-                            }
+                        ticks: {
+                            color: '#9CA3AF'
                         }
                     }
                 }
+            }
+        });
+    }
+
+    // Cargar dashboard COMPLETO con todos los datos
+    async function cargarDashboardCompleto() {
+        try {
+            console.log('🔄 Cargando dashboard del trabajador...');
+            
+            // Cargar todos los datos en paralelo
+            const [servicios, clientes, vehiculos] = await Promise.all([
+                cargarDatos(API_URLS.servicios),
+                cargarDatos(API_URLS.clientes),
+                cargarDatos(API_URLS.vehiculos)
+            ]);
+
+            console.log('✅ Datos cargados:', {
+                servicios: servicios.length,
+                clientes: clientes.length,
+                vehiculos: vehiculos.length
             });
+
+            // Procesar todos los datos específicos para trabajador
+            const datosProcesados = procesarDatosTrabajador(servicios, clientes, vehiculos);
+            actualizarUITrabajador(datosProcesados);
+            
+        } catch (error) {
+            console.error('❌ Error cargando dashboard:', error);
+            mostrarError('Error al cargar los datos');
         }
+    }
 
-        // Cargar datos (placeholder - en producción se conectaría al backend)
-        async function cargarDatos() {
-            try {
-                // Simular carga de datos
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // En producción, aquí se harían las llamadas al API
-                // const datos = await fetch('/api/trabajador/dashboard').then(r => r.json());
-                
-                //  datos de ejemplo estáticos
-                const datosEjemplo = {
-                    serviciosHoy: 8,
-                    enTaller: 5,
-                    clientesMes: 12,
-                    vehiculosMes: 15,
-                    serviciosEstatus: [3, 5, 2, 4],
-                    serviciosHoyLista: [
-                        { folio: 'SER-2024-024', vehiculo: 'Toyota Corolla', cliente: 'Juan Pérez', estatus: 'en_proceso' },
-                        { folio: 'SER-2024-025', vehiculo: 'Honda Civic', cliente: 'María López', estatus: 'pendiente' },
-                        { folio: 'SER-2024-026', vehiculo: 'Nissan Sentra', cliente: 'Carlos Rodríguez', estatus: 'listo' }
-                    ]
-                };
+    // Función genérica para cargar datos
+    async function cargarDatos(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Error ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error(`Error cargando ${url}:`, error);
+            return [];
+        }
+    }
 
-                actualizarUI(datosEjemplo);
+    // Procesar datos ESPECÍFICOS para el panel del trabajador
+    function procesarDatosTrabajador(servicios, clientes, vehiculos) {
+        const hoy = new Date();
+        const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+        
+        // Servicios de HOY (por fecha de ingreso)
+        const serviciosHoy = servicios.filter(servicio => {
+            if (!servicio.fechaIngreso) return false;
+            const fechaIngreso = new Date(servicio.fechaIngreso);
+            return fechaIngreso >= inicioHoy;
+        });
+
+        // Servicios en taller (En Proceso)
+        const serviciosEnTaller = servicios.filter(s => s.estatus === 'EN_PROCESO');
+
+        // Clientes registrados este mes (clientes con fecha de registro este mes)
+        const clientesEsteMes = clientes.filter(cliente => {
+            if (!cliente.fechaRegistro) return false;
+            const fechaRegistro = new Date(cliente.fechaRegistro);
+            return fechaRegistro >= inicioMes;
+        });
+
+        // Vehículos registrados este mes (vehículos con fecha de registro este mes)
+        const vehiculosEsteMes = vehiculos.filter(vehiculo => {
+            if (!vehiculo.fechaRegistro) return false;
+            const fechaRegistro = new Date(vehiculo.fechaRegistro);
+            return fechaRegistro >= inicioMes;
+        });
+
+        // Contar servicios por estatus
+        const pendientes = servicios.filter(s => s.estatus === 'PENDIENTE').length;
+        const enProceso = servicios.filter(s => s.estatus === 'EN_PROCESO').length;
+        const completados = servicios.filter(s => s.estatus === 'COMPLETADO').length;
+        const entregados = servicios.filter(s => s.estatus === 'ENTREGADO').length;
+
+        // Servicios de hoy (últimos 5)
+        const serviciosHoyLista = serviciosHoy
+            .sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso))
+            .slice(0, 5);
+
+        return {
+            // Estadísticas principales para trabajador
+            serviciosHoy: serviciosHoy.length,
+            enTaller: serviciosEnTaller.length,
+            clientesMes: clientesEsteMes.length,
+            vehiculosMes: vehiculosEsteMes.length,
+            
+            // Datos para gráfica
+            serviciosEstatus: {
+                PENDIENTE: pendientes,
+                EN_PROCESO: enProceso,
+                COMPLETADO: completados,
+                ENTREGADO: entregados
+            },
+            
+            // Lista de servicios de hoy
+            serviciosHoyLista: serviciosHoyLista.map(servicio => ({
+                folio: 'SER-' + String(servicio.folioServicio).padStart(6, '0'),
+                vehiculo: servicio.vehiculo ? 
+                    `${servicio.vehiculo.modelo?.marca?.nombreMarca || 'Marca'} ${servicio.vehiculo.modelo?.nombreModelo || 'Modelo'}` : 
+                    'Sin vehículo',
+                cliente: servicio.vehiculo?.cliente?.nombreCompleto || 'Sin cliente',
+                estatus: servicio.estatus ? servicio.estatus.toLowerCase() : 'pendiente',
+                fecha: servicio.fechaIngreso
+            }))
+        };
+    }
+
+    // Actualizar la interfaz para TRABAJADOR
+    function actualizarUITrabajador(datos) {
+        const serviciosEstatus = datos.serviciosEstatus || {};
+        
+        console.log('📊 Actualizando UI del trabajador:', datos);
+        
+        // ACTUALIZAR LAS 4 CARDS PRINCIPALES DEL TRABAJADOR
+        actualizarCardsTrabajador(datos);
+        
+        // Actualizar gráfica de estatus
+        actualizarGraficaEstatus(serviciosEstatus);
+
+        // Actualizar lista de servicios de hoy
+        actualizarServiciosHoy(datos.serviciosHoyLista);
+    }
+
+    // Actualizar las 4 cards específicas del trabajador - SIMPLIFICADO
+    function actualizarCardsTrabajador(datos) {
+        // Método SIMPLE: buscar directamente por posición en el grid
+        const grid = document.querySelector('.grid');
+        
+        if (grid) {
+            const cards = grid.children;
+            
+            if (cards.length >= 4) {
+                // Card 1: Servicios Hoy
+                actualizarCard(cards[0], datos.serviciosHoy || '0', 
+                    datos.serviciosHoy > 0 ? 'Servicios ingresados hoy' : 'Sin servicios hoy');
                 
-            } catch (error) {
-                console.error('Error cargando datos:', error);
-                mostrarError();
+                // Card 2: En Taller
+                actualizarCard(cards[1], datos.enTaller || '0', 
+                    datos.enTaller > 0 ? 'En proceso de reparación' : 'Sin servicios en taller');
+                
+                // Card 3: Clientes Mes
+                actualizarCard(cards[2], datos.clientesMes || '0', 
+                    datos.clientesMes > 0 ? 'Clientes registrados este mes' : 'Sin clientes nuevos');
+                
+                // Card 4: Vehículos Mes
+                actualizarCard(cards[3], datos.vehiculosMes || '0', 
+                    datos.vehiculosMes > 0 ? 'Vehículos registrados este mes' : 'Sin vehículos nuevos');
+            }
+        } else {
+            // Método alternativo: buscar por texto específico
+            buscarYActualizarPorTexto('Servicios Hoy', datos.serviciosHoy || '0');
+            buscarYActualizarPorTexto('En Taller', datos.enTaller || '0');
+            buscarYActualizarPorTexto('Clientes Mes', datos.clientesMes || '0');
+            buscarYActualizarPorTexto('Vehículos Mes', datos.vehiculosMes || '0');
+        }
+    }
+
+    // Función auxiliar para actualizar una card individual
+    function actualizarCard(card, valor, descripcion) {
+        const numeroElement = card.querySelector('.text-3xl');
+        const descripcionElement = card.querySelector('.text-gray-400.text-sm.mt-1');
+        
+        if (numeroElement) {
+            numeroElement.textContent = valor;
+            console.log(`✅ Actualizada card: ${valor}`);
+        }
+        if (descripcionElement) {
+            descripcionElement.textContent = descripcion;
+        }
+    }
+
+    // Método alternativo: buscar por texto y actualizar
+    function buscarYActualizarPorTexto(textoBuscado, valor) {
+        // Buscar elemento que contenga el texto
+        const elementos = Array.from(document.querySelectorAll('*')).filter(el => 
+            el.textContent && el.textContent.includes(textoBuscado)
+        );
+        
+        if (elementos.length > 0) {
+            // Tomar el primer elemento que coincida
+            const elemento = elementos[0];
+            const card = elemento.closest('div');
+            
+            if (card) {
+                const numeroElement = card.querySelector('.text-3xl');
+                if (numeroElement) {
+                    numeroElement.textContent = valor;
+                    console.log(`✅ Actualizada ${textoBuscado}: ${valor}`);
+                }
             }
         }
+    }
 
-        // Actualizar la interfaz con los datos
-        function actualizarUI(datos) {
-            // Actualizar cards
-            document.querySelectorAll('.text-3xl')[0].textContent = datos.serviciosHoy;
-            document.querySelectorAll('.text-3xl')[1].textContent = datos.enTaller;
-            document.querySelectorAll('.text-3xl')[2].textContent = datos.clientesMes;
-            document.querySelectorAll('.text-3xl')[3].textContent = datos.vehiculosMes;
-
-            // Actualizar textos de carga
-            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[0].textContent = `${datos.serviciosEstatus[0]} pendientes`;
-            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[1].textContent = 'En proceso';
-            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[2].textContent = '+2 vs ayer';
-            document.querySelectorAll('.text-gray-400.text-sm.mt-1')[3].textContent = 'Nuevos registros';
-
-            // Actualizar gráfica
-            const grafica = Chart.getChart('graficaEstatus');
-            grafica.data.datasets[0].data = datos.serviciosEstatus;
+    // Actualizar gráfica de estatus
+    function actualizarGraficaEstatus(serviciosEstatus) {
+        const grafica = Chart.getChart('graficaEstatus');
+        if (grafica) {
+            grafica.data.datasets[0].data = [
+                serviciosEstatus.PENDIENTE || 0,
+                serviciosEstatus.EN_PROCESO || 0,
+                serviciosEstatus.COMPLETADO || 0,
+                serviciosEstatus.ENTREGADO || 0
+            ];
             grafica.update();
+            console.log('✅ Gráfica actualizada');
+        }
+    }
 
-            // Actualizar lista de servicios de hoy
-            const listaServicios = document.querySelector('.space-y-4');
-            listaServicios.innerHTML = datos.serviciosHoyLista.map(servicio => `
+    // Actualizar lista de servicios de hoy
+    function actualizarServiciosHoy(servicios) {
+        const container = document.querySelector('.space-y-4');
+        
+        if (!container) {
+            console.log('No se encontró el contenedor de servicios de hoy');
+            return;
+        }
+        
+        if (servicios && servicios.length > 0) {
+            container.innerHTML = servicios.map(servicio => `
                 <div class="flex justify-between items-center p-3 bg-black/30 rounded-lg border border-gray-700">
                     <div>
                         <p class="font-medium">${servicio.folio}</p>
                         <p class="text-gray-400 text-sm">${servicio.vehiculo} - ${servicio.cliente}</p>
                     </div>
-                    <span class="${obtenerClaseEstatus(servicio.estatus)} px-2 py-1 rounded-full text-xs">
-                        ${obtenerTextoEstatus(servicio.estatus)}
-                    </span>
+                    <div class="text-right">
+                        <span class="${obtenerClaseEstatus(servicio.estatus)} px-2 py-1 rounded-full text-xs">
+                            ${obtenerTextoEstatus(servicio.estatus)}
+                        </span>
+                        <p class="text-gray-400 text-sm mt-1">${formatearFecha(servicio.fecha)}</p>
+                    </div>
                 </div>
-            `).join('') + `
-                <a href="/admin/servicios.html" class="block text-center text-orange-400 hover:text-orange-300 text-sm mt-4">
-                    Ver todos los servicios <i class="bx bx-chevron-right"></i>
-                </a>
+            `).join('');
+            console.log(`✅ Lista de servicios actualizada: ${servicios.length} servicios`);
+        } else {
+            container.innerHTML = `
+                <div class="text-center py-8 text-gray-400">
+                    <i class="bx bx-calendar-x text-2xl mb-2"></i>
+                    <p>No hay servicios para hoy</p>
+                    <p class="text-sm mt-1">Los servicios ingresados hoy aparecerán aquí</p>
+                </div>
             `;
+            console.log('✅ Lista de servicios: Sin servicios hoy');
         }
+    }
 
-        // Funciones auxiliares para estatus
-        function obtenerClaseEstatus(estatus) {
-            const clases = {
-                'pendiente': 'bg-blue-500/20 text-blue-400',
-                'en_proceso': 'bg-yellow-500/20 text-yellow-400',
-                'listo': 'bg-green-500/20 text-green-400',
-                'entregado': 'bg-green-500/20 text-green-400'
-            };
-            return clases[estatus] || 'bg-gray-500/20 text-gray-400';
-        }
+    // Funciones auxiliares
+    function obtenerClaseEstatus(estatus) {
+        const clases = {
+            'pendiente': 'bg-blue-500/20 text-blue-400',
+            'en_proceso': 'bg-yellow-500/20 text-yellow-400',
+            'completado': 'bg-green-500/20 text-green-400',
+            'entregado': 'bg-green-500/20 text-green-400',
+            'cancelado': 'bg-red-500/20 text-red-400'
+        };
+        return clases[estatus] || 'bg-gray-500/20 text-gray-400';
+    }
 
-        function obtenerTextoEstatus(estatus) {
-            const textos = {
-                'pendiente': 'Pendiente',
-                'en_proceso': 'En Proceso',
-                'listo': 'Listo',
-                'entregado': 'Entregado'
-            };
-            return textos[estatus] || estatus;
-        }
+    function obtenerTextoEstatus(estatus) {
+        const textos = {
+            'pendiente': 'Pendiente',
+            'en_proceso': 'En Proceso',
+            'completado': 'Completado',
+            'entregado': 'Entregado',
+            'cancelado': 'Cancelado'
+        };
+        return textos[estatus] || estatus;
+    }
 
-        // Mostrar error
-        function mostrarError() {
-            document.querySelectorAll('.text-3xl').forEach(el => {
-                el.textContent = 'Error';
+    function formatearFecha(fechaString) {
+        if (!fechaString) return 'Fecha no disponible';
+        try {
+            const fecha = new Date(fechaString);
+            return fecha.toLocaleDateString('es-MX', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
-            document.querySelectorAll('.text-gray-400.text-sm.mt-1').forEach(el => {
-                el.textContent = 'Error al cargar';
-                el.className = 'text-red-400 text-sm mt-1';
-            });
+        } catch (error) {
+            return 'Fecha inválida';
         }
-    </script>
+    }
+
+    function mostrarError(mensaje) {
+        console.error('Error:', mensaje);
+        // Mostrar notificación de error
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50';
+        errorDiv.innerHTML = `
+            <div class="flex items-center gap-2">
+                <i class="bx bx-error"></i>
+                <span>${mensaje}</span>
+            </div>
+        `;
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
+
+    // Recargar cada 2 minutos
+    setInterval(() => {
+        cargarDashboardCompleto();
+    }, 120000);
+</script>
+        
+
 </body>
-
 </html>

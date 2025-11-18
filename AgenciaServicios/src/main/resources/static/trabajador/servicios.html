@@ -262,12 +262,12 @@
 </div>
 
 <!-- Modal Cambiar Estatus -->
-<!-- Modal Cambiar Estatus -->
 <div id="modalCambiarEstatus" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
     <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 w-full max-w-md">
         <div class="border-b border-gray-700 px-6 py-4 flex justify-between items-center">
             <h3 class="text-xl font-bold">Cambiar Estatus</h3>
-            <button onclick="cerrarModalEstatus()" class="text-gray-400 hover:text-white">
+            <!-- Botón de cerrar deshabilitado para bloquear la acción -->
+            <button class="text-gray-400 opacity-50 cursor-not-allowed" aria-disabled="true" title="Acción restringida">
                 <i class="bx bx-x text-3xl"></i>
             </button>
         </div>
@@ -276,11 +276,13 @@
             <input type="hidden" id="servicioIdEstatus">
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Folio</label>
-                <input type="text" id="folioEstatus" disabled class="w-full bg-black/30 border border-gray-700 text-gray-400 p-2 rounded-lg">
+                <input type="text" id="folioEstatus" disabled class="w-full bg-black/30 border border-gray-700 text-gray-400 p-2 rounded-lg" />
             </div>
-            <div class="mb-6">
+
+            <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Nuevo Estatus</label>
-                <select id="selectNuevoEstatus" class="w-full bg-black/30 border border-gray-700 text-white p-2 rounded-lg">
+                <!-- Select deshabilitado para evitar cambios -->
+                <select id="selectNuevoEstatus" disabled class="w-full bg-black/30 border border-gray-700 text-gray-400 p-2 rounded-lg cursor-not-allowed" aria-disabled="true">
                     <option value="PENDIENTE">Pendiente</option>
                     <option value="EN_PROCESO">En Proceso</option>
                     <option value="COMPLETADO">Completado</option>
@@ -289,12 +291,24 @@
                 </select>
             </div>
 
+            <!-- Mensaje claro de bloqueo -->
+            <div class="mb-6 bg-orange-600/10 border border-orange-600/30 text-orange-300 p-4 rounded">
+                <div class="flex items-start gap-3">
+                    <i class="bx bx-lock text-2xl"></i>
+                    <div>
+                        <p class="font-semibold">Acción restringida</p>
+                        <p class="text-sm">Para realizar esta tarea por favor consulte a su administrador</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones: actualizar deshabilitado, cancelar permite cerrar el modal -->
             <div class="flex gap-3">
-                <button onclick="actualizarEstatusServicio()" class="flex-1 bg-orange-600 hover:bg-orange-500 transition px-4 py-2 rounded">
-                    Actualizar
+                <button class="flex-1 bg-gray-700 text-gray-400 cursor-not-allowed opacity-60 p-2 rounded" disabled>
+                    Acceso restringido
                 </button>
                 <button onclick="cerrarModalEstatus()" class="flex-1 bg-gray-700 hover:bg-gray-600 transition px-4 py-2 rounded">
-                    Cancelar
+                    Cerrar
                 </button>
             </div>
         </div>
@@ -316,6 +330,7 @@
 <script>
     // URL base de la API
     const API_URL = '/api/servicios';
+    const API_SERVICIO_DETALLE = '/api/servicio-detalle';
 
     // Variables globales
     let servicios = [];
@@ -582,50 +597,126 @@
         paginaActual = pagina;
         cargarServicios();
     }
-
-    // Ver detalle del servicio
-    function verDetalleServicio(id) {
-        const servicio = servicios.find(s => s.id === id);
-        if (!servicio) return;
-
-        document.getElementById('folioServicio').textContent = servicio.folio;
-        document.getElementById('detalleVehiculo').textContent = servicio.vehiculo;
-        document.getElementById('detallePlacas').textContent = servicio.placas;
-        document.getElementById('detalleColor').textContent = servicio.color;
-        document.getElementById('detalleKilometraje').textContent = servicio.kilometraje;
-        document.getElementById('detalleCliente').textContent = servicio.cliente;
-        document.getElementById('detalleTelefono').textContent = servicio.telefono;
-        document.getElementById('detalleEmail').textContent = servicio.email;
-        document.getElementById('detalleTipoMantenimiento').textContent = servicio.tipoMantenimiento;
-        document.getElementById('detalleFechaIngreso').textContent = servicio.fechaIngreso;
-        document.getElementById('detalleFechaEstimada').textContent = servicio.fechaEstimada;
-        document.getElementById('detalleFechaReal').textContent = servicio.fechaReal || 'No entregado';
-        document.getElementById('detalleFechaReal').className = servicio.fechaReal ? 'text-green-400' : 'text-gray-400';
-        document.getElementById('detalleEstatus').innerHTML = obtenerBadgeEstatus(servicio.estatus);
-        document.getElementById('detalleTotal').textContent = `$${servicio.costoTotal.toFixed(2)}`;
-
-        const listaServicios = document.getElementById('listaServiciosRealizados');
-        listaServicios.innerHTML = '';
-
-        if (servicio.serviciosRealizados.length === 0) {
-            listaServicios.innerHTML = '<p class="text-gray-400 text-center">No hay servicios realizados registrados</p>';
-        } else {
-            servicio.serviciosRealizados.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center py-2 border-b border-gray-700';
-                div.innerHTML = `
-                    <div>
-                        <p class="font-medium">${item.nombre}</p>
-                        <p class="text-gray-400 text-sm">${item.descripcion}</p>
-                    </div>
-                    <span class="text-green-400">$${item.costo.toFixed(2)}</span>
-                `;
-                listaServicios.appendChild(div);
-            });
+    // Función para cargar los detalles del servicio (tipos de servicio realizados)
+async function cargarDetallesServicio(servicioId) {
+    try {
+        console.log(`Cargando detalles para servicio ID: ${servicioId}`);
+        
+        // Usar la URL completa para evitar problemas de ruta
+        const response = await fetch(`http://localhost:8080/api/servicio-detalle/servicio/${servicioId}`);
+        
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
-
-        document.getElementById('modalDetalleServicio').classList.remove('hidden');
+        
+        const detalles = await response.json();
+        console.log('Detalles recibidos del backend:', detalles);
+        
+        // Verificar la estructura de los datos
+        if (detalles && detalles.length > 0) {
+            console.log('Primer detalle:', detalles[0]);
+            console.log('TipoServicio del primer detalle:', detalles[0].tipoServicio);
+        }
+        
+        return detalles;
+    } catch (error) {
+        console.error('Error al cargar detalles del servicio:', error);
+        return [];
     }
+}
+
+     // Ver detalle del servicio
+async function verDetalleServicio(id) {
+    const servicio = servicios.find(s => s.id === id);
+    if (!servicio) {
+        console.error('Servicio no encontrado con ID:', id);
+        return;
+    }
+
+    console.log('Abriendo detalle para servicio:', servicio);
+
+    // Mostrar loading en los servicios realizados
+    const listaServicios = document.getElementById('listaServiciosRealizados');
+    listaServicios.innerHTML = '<p class="text-gray-400 text-center">Cargando servicios realizados...</p>';
+
+    // Llenar modal con datos básicos del servicio
+    document.getElementById('folioServicio').textContent = servicio.folio;
+    document.getElementById('detalleVehiculo').textContent = servicio.vehiculo;
+    document.getElementById('detallePlacas').textContent = servicio.placas;
+    document.getElementById('detalleColor').textContent = servicio.color;
+    document.getElementById('detalleKilometraje').textContent = servicio.kilometraje;
+    document.getElementById('detalleCliente').textContent = servicio.cliente;
+    document.getElementById('detalleTelefono').textContent = servicio.telefono;
+    document.getElementById('detalleEmail').textContent = servicio.email;
+    document.getElementById('detalleTipoMantenimiento').textContent = servicio.tipoMantenimiento;
+    document.getElementById('detalleFechaIngreso').textContent = servicio.fechaIngreso;
+    document.getElementById('detalleFechaEstimada').textContent = servicio.fechaEstimada;
+    document.getElementById('detalleFechaReal').textContent = servicio.fechaReal || 'No entregado';
+    document.getElementById('detalleFechaReal').className = servicio.fechaReal ? 'text-green-400' : 'text-gray-400';
+    document.getElementById('detalleEstatus').innerHTML = obtenerBadgeEstatus(servicio.estatus);
+    document.getElementById('detalleTotal').textContent = `$${servicio.costoTotal.toFixed(2)}`;
+
+    // Abrir el modal inmediatamente
+    document.getElementById('modalDetalleServicio').classList.remove('hidden');
+
+    // Cargar los detalles del servicio (tipos de servicio realizados)
+    try {
+        const detalles = await cargarDetallesServicio(id);
+        console.log('Detalles procesados:', detalles);
+        
+        if (!detalles || detalles.length === 0) {
+            listaServicios.innerHTML = `
+                <div class="text-center py-4 text-gray-400">
+                    <i class="bx bx-wrench text-2xl mb-2 block"></i>
+                    <p>No hay servicios realizados registrados</p>
+                    <p class="text-xs mt-1">No se encontraron tipos de servicio para este mantenimiento</p>
+                </div>
+            `;
+        } else {
+            console.log('Renderizando', detalles.length, 'servicios realizados');
+            
+            // Crear el HTML para cada servicio realizado
+            let serviciosHTML = '';
+            
+            detalles.forEach(detalle => {
+                console.log('Procesando detalle:', detalle);
+                
+                const nombreServicio = detalle.tipoServicio?.nombreServicio || 'Servicio no especificado';
+                const descripcion = detalle.tipoServicio?.descripcion || 'Sin descripción';
+                const costo = detalle.costo || 0;
+                const notas = detalle.notas;
+                
+                serviciosHTML += `
+                    <div class="flex justify-between items-center py-3 border-b border-gray-700">
+                        <div class="flex-1">
+                            <p class="font-medium">${nombreServicio}</p>
+                            <p class="text-gray-400 text-sm">${descripcion}</p>
+                            ${notas ? `<p class="text-xs text-orange-400 mt-1">Notas: ${notas}</p>` : ''}
+                        </div>
+                        <div class="text-right">
+                            <span class="text-green-400 font-semibold">$${costo.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listaServicios.innerHTML = serviciosHTML;
+            console.log('HTML generado:', serviciosHTML);
+        }
+    } catch (error) {
+        console.error('Error al cargar detalles:', error);
+        listaServicios.innerHTML = `
+            <div class="text-center py-4 text-red-400">
+                <i class="bx bx-error text-2xl mb-2 block"></i>
+                <p>Error al cargar los servicios realizados</p>
+                <p class="text-xs mt-1">${error.message}</p>
+            </div>
+        `;
+    }
+}
 
     // Abrir modal para ver estatus (solo lectura para trabajador)
     function abrirModalEstatus(id) {

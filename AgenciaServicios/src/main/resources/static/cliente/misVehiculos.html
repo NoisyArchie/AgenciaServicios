@@ -1,633 +1,861 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Mis Vehículos - Siscare</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-</head>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body class="bg-[#0D0D0D] text-white min-h-screen flex">
-<!-- SIDEBAR -->
-<aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
-    <div>
-        <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
-            Siscare
+  <body class="bg-[#0D0D0D] text-white min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside
+      class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4"
+    >
+      <div>
+        <h2
+          class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center"
+        >
+          Siscare
         </h2>
 
         <nav class="flex flex-col gap-1">
-            <a href="/cliente/home.html"
-               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                <i class="bx bx-home text-xl"></i> Inicio
-            </a>
+          <a
+            href="/cliente/home.html"
+            class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition"
+          >
+            <i class="bx bx-home text-xl"></i> Inicio
+          </a>
 
-            <a href="/cliente/misServicios.html"
-               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                <i class="bx bx-wrench text-xl"></i> Mis Servicios
-            </a>
+          <a
+            href="/cliente/misServicios.html"
+            class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition"
+          >
+            <i class="bx bx-wrench text-xl"></i> Mis Servicios
+          </a>
 
-            <a href="/cliente/misVehiculos.html"
-               class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
-                <i class="bx bx-car text-xl text-orange-400"></i> Mis Vehículos
-            </a>
+          <a
+            href="/cliente/misVehiculos.html"
+            class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition"
+          >
+            <i class="bx bx-car text-xl text-orange-400"></i> Mis Vehículos
+          </a>
 
-            <a href="/cliente/miPerfil.html"
-               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                <i class="bx bx-user text-xl"></i> Mi Perfil
-            </a>
+          <a
+            href="/cliente/miPerfil.html"
+            class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition"
+          >
+            <i class="bx bx-user text-xl"></i> Mi Perfil
+          </a>
         </nav>
-    </div>
+      </div>
 
-    <div class="border-t border-gray-700 pt-4">
-        <button onclick="cerrarSesion()" class="w-full flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
-            <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+      <div class="border-t border-gray-700 pt-4">
+        <button
+          onclick="cerrarSesion()"
+          class="w-full flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400"
+        >
+          <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
         </button>
-    </div>
-</aside>
+      </div>
+    </aside>
 
-<!-- CONTENIDO PRINCIPAL -->
-<main class="flex-1 flex flex-col">
-    <!-- NAVBAR SUPERIOR -->
-    <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+      <!-- NAVBAR SUPERIOR -->
+      <header
+        class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm"
+      >
         <div class="flex items-center gap-3">
-            <span class="text-gray-300 text-sm" id="headerNombre">Cargando...</span>
-            <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
-                <i class="bx bx-user text-white text-xl"></i>
-            </button>
+          <span class="text-gray-300 text-sm" id="headerNombre"
+            >Cargando...</span
+          >
+          <button
+            class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition"
+          >
+            <i class="bx bx-user text-white text-xl"></i>
+          </button>
         </div>
-    </header>
+      </header>
 
-    <!-- CONTENIDO -->
-    <section class="p-8 flex-1 overflow-y-auto">
+      <!-- CONTENIDO -->
+      <section class="p-8 flex-1 overflow-y-auto">
         <div class="max-w-4xl mx-auto">
-            <!-- Encabezado -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold">Mis Vehículos</h1>
-                <p class="text-gray-400 text-sm">
-                    Gestiona la información de tus vehículos registrados
-                </p>
+          <!-- Encabezado -->
+          <div class="mb-8">
+            <h1 class="text-3xl font-bold">Mis Vehículos</h1>
+            <p class="text-gray-400 text-sm">
+              Gestiona la información de tus vehículos registrados
+            </p>
+          </div>
+
+          <!-- Selector de Vehículo -->
+          <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 mb-6">
+            <h2
+              class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2"
+            >
+              <i class="bx bx-car"></i>
+              Seleccionar Vehículo
+            </h2>
+
+            <div class="flex gap-4 items-end">
+              <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Selecciona un vehículo para ver o editar su información
+                </label>
+                <select
+                  id="selectVehiculo"
+                  class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                >
+                  <option value="">Cargando vehículos...</option>
+                </select>
+              </div>
+              <button
+                onclick="cargarVehiculo()"
+                class="px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2"
+              >
+                <i class="bx bx-show"></i>
+                Cargar Vehículo
+              </button>
             </div>
+          </div>
 
-            <!-- Selector de Vehículo -->
-            <div class="bg-[#1A1A1A] p-6 rounded-xl border border-gray-700 mb-6">
-                <h2 class="text-xl font-bold text-orange-400 mb-4 flex items-center gap-2">
-                    <i class="bx bx-car"></i>
-                    Seleccionar Vehículo
-                </h2>
-
-                <div class="flex gap-4 items-end">
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                            Selecciona un vehículo para ver o editar su información
-                        </label>
-                        <select id="selectVehiculo"
-                                class="w-full bg-black/30 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition">
-                            <option value="">Cargando vehículos...</option>
-                        </select>
+          <!-- Información del Vehículo Seleccionado -->
+          <div id="contenedorVehiculo" class="hidden">
+            <div
+              class="bg-[#1A1A1A] rounded-xl border border-gray-700 overflow-hidden"
+            >
+              <!-- Header -->
+              <div
+                class="p-6 border-b border-gray-700 bg-gradient-to-r from-orange-500/10 to-transparent"
+              >
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h2 class="text-2xl font-bold" id="vehiculoTitulo">-</h2>
+                    <p class="text-gray-400" id="vehiculoSubtitulo">-</p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm text-gray-400">Próximo Servicio</div>
+                    <div
+                      class="text-lg font-bold text-orange-400"
+                      id="proximoServicio"
+                    >
+                      -
                     </div>
-                    <button onclick="cargarVehiculo()"
-                            class="px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2">
-                        <i class="bx bx-show"></i>
-                        Cargar Vehículo
-                    </button>
+                  </div>
                 </div>
-            </div>
+              </div>
 
-            <!-- Información del Vehículo Seleccionado -->
-            <div id="contenedorVehiculo" class="hidden">
-                <div class="bg-[#1A1A1A] rounded-xl border border-gray-700 overflow-hidden">
-                    <!-- Header -->
-                    <div class="p-6 border-b border-gray-700 bg-gradient-to-r from-orange-500/10 to-transparent">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h2 class="text-2xl font-bold" id="vehiculoTitulo">-</h2>
-                                <p class="text-gray-400" id="vehiculoSubtitulo">-</p>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-sm text-gray-400">Próximo Servicio</div>
-                                <div class="text-lg font-bold text-orange-400" id="proximoServicio">-</div>
-                            </div>
+              <!-- Contenido -->
+              <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <!-- Columna Izquierda -->
+                  <div class="space-y-6">
+                    <div>
+                      <h3
+                        class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2"
+                      >
+                        <i class="bx bx-info-circle"></i>
+                        Información General
+                      </h3>
+
+                      <div class="space-y-4">
+                        <div
+                          class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                        >
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                          >
+                            Marca y Modelo
+                          </label>
+                          <div
+                            class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg"
+                          >
+                            <span id="infoMarcaModelo">-</span>
+                          </div>
                         </div>
-                    </div>
 
-                    <!-- Contenido -->
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <!-- Columna Izquierda -->
-                            <div class="space-y-6">
-                                <div>
-                                    <h3 class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                        <i class="bx bx-info-circle"></i>
-                                        Información General
-                                    </h3>
-
-                                    <div class="space-y-4">
-                                        <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                Marca y Modelo
-                                            </label>
-                                            <div class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                                <span id="infoMarcaModelo">-</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                Año
-                                            </label>
-                                            <div class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                                <span id="infoAnio">-</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                Número de Serie
-                                            </label>
-                                            <div class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                                <span id="infoNumeroSerie">-</span>
-                                            </div>
-                                            <p class="mt-1 text-xs text-gray-500">
-                                                No se puede modificar
-                                            </p>
-                                        </div>
-
-                                        <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                Kilometraje Actual
-                                            </label>
-                                            <div class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg">
-                                                <span id="infoKilometraje">-</span>
-                                            </div>
-                                            <p class="mt-1 text-xs text-gray-500">
-                                                Se actualiza automáticamente en cada servicio
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Próximo Servicio -->
-                                <div>
-                                    <h3 class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                        <i class="bx bx-calendar-check"></i>
-                                        Próximo Servicio
-                                    </h3>
-
-                                    <div class="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 rounded-xl p-4">
-                                        <div class="flex items-center gap-4">
-                                            <div class="bg-green-500/20 p-3 rounded-lg">
-                                                <i class="bx bx-calendar text-green-400 text-2xl"></i>
-                                            </div>
-                                            <div>
-                                                <p class="text-gray-400 text-sm">Fecha Estimada</p>
-                                                <p class="text-xl font-bold text-white" id="infoFechaProximoServicio">-</p>
-                                                <p class="text-green-400 text-xs" id="infoKilometrajeProximoServicio">Sin servicios programados</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Columna Derecha -->
-                            <div class="space-y-6">
-                                <div>
-                                    <h3 class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                        <i class="bx bx-edit"></i>
-                                        Información Editable
-                                    </h3>
-
-                                    <form id="formVehiculo" class="space-y-4">
-                                        <input type="hidden" id="idVehiculo">
-
-                                        <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                Placas *
-                                            </label>
-                                            <input type="text" id="inputPlacas" required
-                                                   class="w-full bg-black/20 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                                   placeholder="Ej: ABC-123">
-                                            <p class="mt-1 text-xs text-gray-400">
-                                                Actualiza las placas de tu vehículo si han cambiado
-                                            </p>
-                                        </div>
-
-                                        <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                Color *
-                                            </label>
-                                            <input type="text" id="inputColor" required
-                                                   class="w-full bg-black/20 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
-                                                   placeholder="Ej: Rojo, Azul, Negro...">
-                                            <p class="mt-1 text-xs text-gray-400">
-                                                Indica el color actual de tu vehículo
-                                            </p>
-                                        </div>
-
-                                        <div class="flex justify-end gap-3 pt-4">
-                                            <button type="button" onclick="cancelarEdicion()"
-                                                    class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                                                Cancelar
-                                            </button>
-                                            <button type="submit"
-                                                    class="px-6 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2">
-                                                <i class="bx bx-save"></i>
-                                                Guardar Cambios
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <!-- Último Servicio -->
-                                <div>
-                                    <h3 class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2">
-                                        <i class="bx bx-history"></i>
-                                        Último Servicio
-                                    </h3>
-
-                                    <div class="bg-black/30 p-4 rounded-lg border border-gray-600">
-                                        <div class="space-y-3" id="contenedorUltimoServicio">
-                                            <p class="text-gray-400 text-sm text-center">Sin servicios registrados</p>
-                                        </div>
-                                        <div class="mt-3 pt-3 border-t border-gray-600">
-                                            <a href="/cliente/misServicios.html"
-                                               class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1">
-                                                <i class="bx bx-link-external"></i>
-                                                Ver historial completo de servicios
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div
+                          class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                        >
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                          >
+                            Año
+                          </label>
+                          <div
+                            class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg"
+                          >
+                            <span id="infoAnio">-</span>
+                          </div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Mensaje sin vehículo -->
-            <div id="mensajeSinVehiculo" class="bg-[#1A1A1A] p-12 rounded-xl border border-gray-700 text-center">
-                <div class="w-20 h-20 mx-auto bg-gray-700/50 rounded-full flex items-center justify-center mb-4">
-                    <i class="bx bx-car text-gray-400 text-3xl"></i>
+                        <div
+                          class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                        >
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                          >
+                            Número de Serie
+                          </label>
+                          <div
+                            class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg"
+                          >
+                            <span id="infoNumeroSerie">-</span>
+                          </div>
+                          <p class="mt-1 text-xs text-gray-500">
+                            No se puede modificar
+                          </p>
+                        </div>
+
+                        <div
+                          class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                        >
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                          >
+                            Kilometraje Actual
+                          </label>
+                          <div
+                            class="w-full bg-black/20 border border-gray-700 text-gray-400 p-3 rounded-lg"
+                          >
+                            <span id="infoKilometraje">-</span>
+                          </div>
+                          <p class="mt-1 text-xs text-gray-500">
+                            Se actualiza automáticamente en cada servicio
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Próximo Servicio -->
+                    <div>
+                      <h3
+                        class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2"
+                      >
+                        <i class="bx bx-calendar-check"></i>
+                        Próximo Servicio
+                      </h3>
+
+                      <div
+                        class="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 rounded-xl p-4"
+                      >
+                        <div class="flex items-center gap-4">
+                          <div class="bg-green-500/20 p-3 rounded-lg">
+                            <i
+                              class="bx bx-calendar text-green-400 text-2xl"
+                            ></i>
+                          </div>
+                          <div>
+                            <p class="text-gray-400 text-sm">Fecha Estimada</p>
+                            <p
+                              class="text-xl font-bold text-white"
+                              id="infoFechaProximoServicio"
+                            >
+                              -
+                            </p>
+                            <p
+                              class="text-green-400 text-xs"
+                              id="infoKilometrajeProximoServicio"
+                            >
+                              Sin servicios programados
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Columna Derecha -->
+                  <div class="space-y-6">
+                    <div>
+                      <h3
+                        class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2"
+                      >
+                        <i class="bx bx-edit"></i>
+                        Información Editable
+                      </h3>
+
+                      <form id="formVehiculo" class="space-y-4">
+                        <input type="hidden" id="idVehiculo" />
+
+                        <div
+                          class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                        >
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                          >
+                            Placas *
+                          </label>
+                          <input
+                            type="text"
+                            id="inputPlacas"
+                            required
+                            class="w-full bg-black/20 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                            placeholder="Ej: ABC-123"
+                          />
+                          <p class="mt-1 text-xs text-gray-400">
+                            Actualiza las placas de tu vehículo si han cambiado
+                          </p>
+                        </div>
+
+                        <div
+                          class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                        >
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                          >
+                            Color *
+                          </label>
+                          <input
+                            type="text"
+                            id="inputColor"
+                            required
+                            class="w-full bg-black/20 border border-gray-700 text-white p-3 rounded-lg focus:border-orange-500 transition"
+                            placeholder="Ej: Rojo, Azul, Negro..."
+                          />
+                          <p class="mt-1 text-xs text-gray-400">
+                            Indica el color actual de tu vehículo
+                          </p>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-4">
+                          <button
+                            type="button"
+                            onclick="cancelarEdicion()"
+                            class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            type="submit"
+                            class="px-6 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg transition flex items-center gap-2"
+                          >
+                            <i class="bx bx-save"></i>
+                            Guardar Cambios
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+
+                    <!-- Último Servicio -->
+                    <div>
+                      <h3
+                        class="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2"
+                      >
+                        <i class="bx bx-history"></i>
+                        Último Servicio
+                      </h3>
+
+                      <div
+                        class="bg-black/30 p-4 rounded-lg border border-gray-600"
+                      >
+                        <div class="space-y-3" id="contenedorUltimoServicio">
+                          <p class="text-gray-400 text-sm text-center">
+                            Sin servicios registrados
+                          </p>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-gray-600">
+                          <a
+                            href="/cliente/misServicios.html"
+                            class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1"
+                          >
+                            <i class="bx bx-link-external"></i>
+                            Ver historial completo de servicios
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-300 mb-2">Selecciona un vehículo</h3>
-                <p class="text-gray-400 mb-6">Elige un vehículo de la lista para ver y editar su información</p>
+              </div>
             </div>
+          </div>
+
+          <!-- Mensaje sin vehículo -->
+          <div
+            id="mensajeSinVehiculo"
+            class="bg-[#1A1A1A] p-12 rounded-xl border border-gray-700 text-center"
+          >
+            <div
+              class="w-20 h-20 mx-auto bg-gray-700/50 rounded-full flex items-center justify-center mb-4"
+            >
+              <i class="bx bx-car text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-300 mb-2">
+              Selecciona un vehículo
+            </h3>
+            <p class="text-gray-400 mb-6">
+              Elige un vehículo de la lista para ver y editar su información
+            </p>
+          </div>
         </div>
-    </section>
-</main>
+      </section>
+    </main>
 
-<!-- Modal -->
-<div id="modalConfirmacion" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50">
-    <div class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-[500px] animate-[zoomIn_.3s_ease]">
+    <!-- Modal -->
+    <div
+      id="modalConfirmacion"
+      class="fixed inset-0 bg-black/70 backdrop-blur-md hidden justify-center items-center z-50"
+    >
+      <div
+        class="bg-[#1A1A1A]/95 p-8 rounded-2xl shadow-xl border border-orange-500/30 w-[500px] animate-[zoomIn_.3s_ease]"
+      >
         <div class="text-center">
-            <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="bx bx-check text-green-400 text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2" id="modalTitulo">¡Cambios Guardados!</h3>
-            <p class="text-gray-400 mb-6" id="modalMensaje">La información del vehículo se ha actualizado correctamente.</p>
+          <div
+            class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="bx bx-check text-green-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2" id="modalTitulo">
+            ¡Cambios Guardados!
+          </h3>
+          <p class="text-gray-400 mb-6" id="modalMensaje">
+            La información del vehículo se ha actualizado correctamente.
+          </p>
 
-            <button onclick="cerrarModalConfirmacion()"
-                    class="px-8 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition">
-                Aceptar
-            </button>
+          <button
+            onclick="cerrarModalConfirmacion()"
+            class="px-8 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg transition"
+          >
+            Aceptar
+          </button>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- Loader -->
-<div id="loader" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
-    <div class="bg-[#1A1A1A] p-8 rounded-2xl shadow-xl border border-orange-500/30">
+    <!-- Loader -->
+    <div
+      id="loader"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50"
+    >
+      <div
+        class="bg-[#1A1A1A] p-8 rounded-2xl shadow-xl border border-orange-500/30"
+      >
         <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-            <p class="text-gray-300">Guardando cambios...</p>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"
+          ></div>
+          <p class="text-gray-300">Guardando cambios...</p>
         </div>
+      </div>
     </div>
-</div>
 
-<style>
-    @keyframes zoomIn {
+    <style>
+      @keyframes zoomIn {
         0% {
-            opacity: 0;
-            transform: scale(0.85);
+          opacity: 0;
+          transform: scale(0.85);
         }
         100% {
-            opacity: 1;
-            transform: scale(1);
+          opacity: 1;
+          transform: scale(1);
         }
-    }
+      }
 
-    input:focus, select:focus {
+      input:focus,
+      select:focus {
         outline: none;
         box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.2);
-    }
-</style>
+      }
+    </style>
 
-<script>
-    const API_URL_CLIENTES = 'http://localhost:8080/api/clientes';
-    const API_URL_VEHICULOS = 'http://localhost:8080/api/vehiculos';
-    const API_URL_SERVICIOS = 'http://localhost:8080/api/servicios';
+    <script>
+      const API_URL_CLIENTES = "http://localhost:8080/api/clientes";
+      const API_URL_VEHICULOS = "http://localhost:8080/api/vehiculos";
+      const API_URL_SERVICIOS = "http://localhost:8080/api/servicios";
 
-    let clienteData = null;
-    let vehiculosCliente = [];
-    let vehiculoActual = null;
-    let datosOriginales = {};
-    let serviciosVehiculo = [];
+      let clienteData = null;
+      let vehiculosCliente = [];
+      let vehiculoActual = null;
+      let datosOriginales = {};
+      let serviciosVehiculo = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         verificarSesion();
         cargarDatosCliente();
         configurarEventos();
-    });
+      });
 
-    function verificarSesion() {
-        const usuario = sessionStorage.getItem('usuario');
+      function verificarSesion() {
+        const usuario = sessionStorage.getItem("usuario");
         if (!usuario) {
-            window.location.href = '../login.html';
+          window.location.href = "../login.html";
+          return;
+        }
+
+        try {
+          const userData = JSON.parse(usuario);
+          if (userData.rol !== "cliente") {
+            alert("Acceso denegado.");
+            window.location.href = "../login.html";
             return;
-        }
-
-        try {
-            const userData = JSON.parse(usuario);
-            if (userData.rol !== 'cliente') {
-                alert('Acceso denegado.');
-                window.location.href = '../login.html';
-                return;
-            }
-            clienteData = userData;
-            document.getElementById('headerNombre').textContent = userData.nombreCompleto || 'Cliente';
+          }
+          clienteData = userData;
+          document.getElementById("headerNombre").textContent =
+            userData.nombreCompleto || "Cliente";
         } catch (error) {
-            console.error('Error:', error);
-            window.location.href = '../login.html';
+          console.error("Error:", error);
+          window.location.href = "../login.html";
         }
-    }
+      }
 
-    function cerrarSesion() {
-        if (confirm('¿Está seguro de cerrar sesión?')) {
-            sessionStorage.clear();
-            localStorage.clear();
-            window.location.href = '../login.html';
+      function cerrarSesion() {
+        if (confirm("¿Está seguro de cerrar sesión?")) {
+          sessionStorage.clear();
+          localStorage.clear();
+          window.location.href = "../login.html";
         }
-    }
+      }
 
-    async function cargarDatosCliente() {
+      async function cargarDatosCliente() {
         try {
-            // Obtener cliente
-            const responseClientes = await fetch(API_URL_CLIENTES);
-            if (!responseClientes.ok) throw new Error('Error al cargar clientes');
+          // Obtener cliente
+          const responseClientes = await fetch(API_URL_CLIENTES);
+          if (!responseClientes.ok) throw new Error("Error al cargar clientes");
 
-            const clientes = await responseClientes.json();
-            const cliente = clientes.find(c => c.usuario?.idUsuario === clienteData.idUsuario);
+          const clientes = await responseClientes.json();
+          const cliente = clientes.find(
+            (c) => c.usuario?.idUsuario === clienteData.idUsuario
+          );
 
-            if (!cliente) throw new Error('Cliente no encontrado');
+          if (!cliente) throw new Error("Cliente no encontrado");
 
-            // Obtener vehículos
-            const responseVehiculos = await fetch(`${API_URL_VEHICULOS}/cliente/${cliente.idCliente}`);
-            if (!responseVehiculos.ok) throw new Error('Error al cargar vehículos');
+          // Obtener vehículos
+          const responseVehiculos = await fetch(
+            `${API_URL_VEHICULOS}/cliente/${cliente.idCliente}`
+          );
+          if (!responseVehiculos.ok)
+            throw new Error("Error al cargar vehículos");
 
-            vehiculosCliente = await responseVehiculos.json();
-            console.log('Vehículos:', vehiculosCliente);
+          vehiculosCliente = await responseVehiculos.json();
+          console.log("Vehículos:", vehiculosCliente);
 
-            cargarListaVehiculos();
-
+          cargarListaVehiculos();
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error al cargar vehículos');
+          console.error("Error:", error);
+          alert("Error al cargar vehículos");
         }
-    }
+      }
 
-    function cargarListaVehiculos() {
-        const select = document.getElementById('selectVehiculo');
-        select.innerHTML = '<option value="">Selecciona un vehículo...</option>';
+      function cargarListaVehiculos() {
+        const select = document.getElementById("selectVehiculo");
+        select.innerHTML =
+          '<option value="">Selecciona un vehículo...</option>';
 
-        vehiculosCliente.forEach(vehiculo => {
-            const option = document.createElement('option');
-            option.value = vehiculo.idVehiculo;
-            option.textContent = `${vehiculo.modelo?.marca?.nombreMarca || 'N/A'} ${vehiculo.modelo?.nombreModelo || 'N/A'} ${vehiculo.anio} - ${vehiculo.placas}`;
-            select.appendChild(option);
+        vehiculosCliente.forEach((vehiculo) => {
+          const option = document.createElement("option");
+          option.value = vehiculo.idVehiculo;
+          option.textContent = `${
+            vehiculo.modelo?.marca?.nombreMarca || "N/A"
+          } ${vehiculo.modelo?.nombreModelo || "N/A"} ${vehiculo.anio} - ${
+            vehiculo.placas
+          }`;
+          select.appendChild(option);
         });
-    }
+      }
 
-    function configurarEventos() {
-        document.getElementById('formVehiculo').addEventListener('submit', function(e) {
+      function configurarEventos() {
+        document
+          .getElementById("formVehiculo")
+          .addEventListener("submit", function (e) {
             e.preventDefault();
             guardarCambiosVehiculo();
-        });
+          });
 
-        document.getElementById('selectVehiculo').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                cargarVehiculo();
+        document
+          .getElementById("selectVehiculo")
+          .addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              cargarVehiculo();
             }
-        });
-    }
+          });
+      }
 
-    async function cargarVehiculo() {
-        const select = document.getElementById('selectVehiculo');
+      async function cargarVehiculo() {
+        const select = document.getElementById("selectVehiculo");
         const idVehiculo = select.value;
 
         if (!idVehiculo) {
-            mostrarMensajeSinVehiculo();
-            return;
+          mostrarMensajeSinVehiculo();
+          return;
         }
 
-        vehiculoActual = vehiculosCliente.find(v => v.idVehiculo == idVehiculo);
+        vehiculoActual = vehiculosCliente.find(
+          (v) => v.idVehiculo == idVehiculo
+        );
         if (!vehiculoActual) return;
 
         datosOriginales = {
-            placas: vehiculoActual.placas,
-            color: vehiculoActual.color
+          placas: vehiculoActual.placas,
+          color: vehiculoActual.color,
         };
 
         // Cargar servicios del vehículo
         await cargarServiciosVehiculo(idVehiculo);
 
-        document.getElementById('contenedorVehiculo').classList.remove('hidden');
-        document.getElementById('mensajeSinVehiculo').classList.add('hidden');
+        document
+          .getElementById("contenedorVehiculo")
+          .classList.remove("hidden");
+        document.getElementById("mensajeSinVehiculo").classList.add("hidden");
 
         actualizarUI();
-    }
+      }
 
-    async function cargarServiciosVehiculo(idVehiculo) {
+      async function cargarServiciosVehiculo(idVehiculo) {
         try {
-            const response = await fetch(API_URL_SERVICIOS);
-            if (!response.ok) throw new Error('Error al cargar servicios');
+          const response = await fetch(API_URL_SERVICIOS);
+          if (!response.ok) throw new Error("Error al cargar servicios");
 
-            const todosServicios = await response.json();
-            serviciosVehiculo = todosServicios
-                .filter(s => s.vehiculo?.idVehiculo == idVehiculo)
-                .sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso));
+          const todosServicios = await response.json();
+          serviciosVehiculo = todosServicios
+            .filter((s) => s.vehiculo?.idVehiculo == idVehiculo)
+            .sort(
+              (a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso)
+            );
 
-            console.log('Servicios del vehículo:', serviciosVehiculo);
+          console.log("Servicios del vehículo:", serviciosVehiculo);
         } catch (error) {
-            console.error('Error al cargar servicios:', error);
-            serviciosVehiculo = [];
+          console.error("Error al cargar servicios:", error);
+          serviciosVehiculo = [];
         }
-    }
+      }
 
-    function mostrarMensajeSinVehiculo() {
-        document.getElementById('contenedorVehiculo').classList.add('hidden');
-        document.getElementById('mensajeSinVehiculo').classList.remove('hidden');
-    }
+      function mostrarMensajeSinVehiculo() {
+        document.getElementById("contenedorVehiculo").classList.add("hidden");
+        document
+          .getElementById("mensajeSinVehiculo")
+          .classList.remove("hidden");
+      }
 
-    function actualizarUI() {
+      function actualizarUI() {
         if (!vehiculoActual) return;
 
-        const marca = vehiculoActual.modelo?.marca?.nombreMarca || 'N/A';
-        const modelo = vehiculoActual.modelo?.nombreModelo || 'N/A';
+        const marca = vehiculoActual.modelo?.marca?.nombreMarca || "N/A";
+        const modelo = vehiculoActual.modelo?.nombreModelo || "N/A";
 
-        document.getElementById('vehiculoTitulo').textContent =
-            `${marca} ${modelo} ${vehiculoActual.anio}`;
-        document.getElementById('vehiculoSubtitulo').textContent =
-            `Número de Serie: ${vehiculoActual.numeroSerie || 'N/A'}`;
+        document.getElementById(
+          "vehiculoTitulo"
+        ).textContent = `${marca} ${modelo} ${vehiculoActual.anio}`;
+        document.getElementById(
+          "vehiculoSubtitulo"
+        ).textContent = `Número de Serie: ${
+          vehiculoActual.numeroSerie || "N/A"
+        }`;
 
-        document.getElementById('infoMarcaModelo').textContent = `${marca} ${modelo}`;
-        document.getElementById('infoAnio').textContent = vehiculoActual.anio;
-        document.getElementById('infoNumeroSerie').textContent = vehiculoActual.numeroSerie || 'N/A';
-        document.getElementById('infoKilometraje').textContent =
-            `${(vehiculoActual.kilometraje || 0).toLocaleString()} km`;
+        document.getElementById(
+          "infoMarcaModelo"
+        ).textContent = `${marca} ${modelo}`;
+        document.getElementById("infoAnio").textContent = vehiculoActual.anio;
+        document.getElementById("infoNumeroSerie").textContent =
+          vehiculoActual.numeroSerie || "N/A";
+        document.getElementById("infoKilometraje").textContent = `${(
+          vehiculoActual.kilometraje || 0
+        ).toLocaleString()} km`;
 
-        document.getElementById('idVehiculo').value = vehiculoActual.idVehiculo;
-        document.getElementById('inputPlacas').value = vehiculoActual.placas || '';
-        document.getElementById('inputColor').value = vehiculoActual.color || '';
+        document.getElementById("idVehiculo").value = vehiculoActual.idVehiculo;
+        document.getElementById("inputPlacas").value =
+          vehiculoActual.placas || "";
+        document.getElementById("inputColor").value =
+          vehiculoActual.color || "";
 
         // Próximo servicio
-        const serviciosPendientes = serviciosVehiculo.filter(s =>
-            s.estatus !== 'ENTREGADO' && s.estatus !== 'CANCELADO'
+        const serviciosConProximaFecha = serviciosVehiculo.filter(
+          (s) =>
+            s.fechaProximoServicio !== null &&
+            s.fechaProximoServicio !== undefined
         );
 
-        if (serviciosPendientes.length > 0) {
-            const proximo = serviciosPendientes[0];
-            const fecha = proximo.fechaEstimadaEntrega
-                ? new Date(proximo.fechaEstimadaEntrega).toLocaleDateString('es-MX', {
-                    day: 'numeric', month: 'short', year: 'numeric'
-                })
-                : 'Fecha por definir';
+        if (serviciosConProximaFecha.length > 0) {
+          // Ordenar por fecha_proximo_servicio (más cercana primero)
+          serviciosConProximaFecha.sort((a, b) => {
+            const fechaA = new Date(a.fechaProximoServicio);
+            const fechaB = new Date(b.fechaProximoServicio);
+            return fechaA - fechaB;
+          });
 
-            document.getElementById('proximoServicio').textContent = fecha;
-            document.getElementById('infoFechaProximoServicio').textContent = fecha;
-            document.getElementById('infoKilometrajeProximoServicio').textContent =
-                `Servicio: ${proximo.tipoMantenimiento || 'N/A'}`;
+          const proximo = serviciosConProximaFecha[0];
+          const fecha = new Date(
+            proximo.fechaProximoServicio
+          ).toLocaleDateString("es-MX", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+
+          document.getElementById("proximoServicio").textContent = fecha;
+          document.getElementById("infoFechaProximoServicio").textContent =
+            fecha;
+
+          // Mostrar información sin el estatus
+          let infoServicio = `Servicio: ${proximo.tipoMantenimiento || "N/A"}`;
+
+          // Agregar kilometraje del próximo servicio si está disponible
+          if (proximo.proximoServicioKm) {
+            infoServicio += ` | Próximo: ${proximo.proximoServicioKm} km`;
+          }
+
+          document.getElementById(
+            "infoKilometrajeProximoServicio"
+          ).textContent = infoServicio;
         } else {
-            document.getElementById('proximoServicio').textContent = 'Sin servicios';
-            document.getElementById('infoFechaProximoServicio').textContent = 'Sin servicios programados';
-            document.getElementById('infoKilometrajeProximoServicio').textContent = '';
+          document.getElementById("proximoServicio").textContent =
+            "Sin servicios";
+          document.getElementById("infoFechaProximoServicio").textContent =
+            "Sin servicios programados";
+          document.getElementById(
+            "infoKilometrajeProximoServicio"
+          ).textContent = "";
         }
 
         // Último servicio
-        const ultimoServicio = serviciosVehiculo.find(s =>
-            s.estatus === 'ENTREGADO' || s.estatus === 'COMPLETADO'
+        const ultimoServicio = serviciosVehiculo.find(
+          (s) => s.estatus === "ENTREGADO" || s.estatus === "COMPLETADO"
         );
 
-        const contenedor = document.getElementById('contenedorUltimoServicio');
+        const contenedor = document.getElementById("contenedorUltimoServicio");
         if (ultimoServicio) {
-            const fecha = new Date(ultimoServicio.fechaIngreso).toLocaleDateString('es-MX', {
-                day: 'numeric', month: 'short', year: 'numeric'
-            });
-            const estatusInfo = obtenerEstatusInfo(ultimoServicio.estatus);
+          const fecha = new Date(
+            ultimoServicio.fechaIngreso
+          ).toLocaleDateString("es-MX", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+          const estatusInfo = obtenerEstatusInfo(ultimoServicio.estatus);
 
-            contenedor.innerHTML = `
+          contenedor.innerHTML = `
                     <div class="flex justify-between items-center">
                         <span class="text-gray-400">Fecha:</span>
                         <span class="font-medium">${fecha}</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-400">Tipo:</span>
-                        <span class="font-medium">${ultimoServicio.tipoMantenimiento || 'N/A'}</span>
+                        <span class="font-medium">${
+                          ultimoServicio.tipoMantenimiento || "N/A"
+                        }</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-400">Kilometraje:</span>
-                        <span class="font-medium">${(ultimoServicio.kilometrajeActual || 0).toLocaleString()} km</span>
+                        <span class="font-medium">${(
+                          ultimoServicio.kilometrajeActual || 0
+                        ).toLocaleString()} km</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-400">Estatus:</span>
-                        <span class="px-2 py-1 ${estatusInfo.class} rounded text-xs font-medium">${estatusInfo.text}</span>
+                        <span class="px-2 py-1 ${
+                          estatusInfo.class
+                        } rounded text-xs font-medium">${
+            estatusInfo.text
+          }</span>
                     </div>
                 `;
         } else {
-            contenedor.innerHTML = '<p class="text-gray-400 text-sm text-center">Sin servicios registrados</p>';
+          contenedor.innerHTML =
+            '<p class="text-gray-400 text-sm text-center">Sin servicios registrados</p>';
         }
-    }
+      }
 
-    function obtenerEstatusInfo(estatus) {
+      function obtenerEstatusInfo(estatus) {
         const map = {
-            'COMPLETADO': { class: 'bg-green-500/20 text-green-400', text: 'Completado' },
-            'ENTREGADO': { class: 'bg-purple-500/20 text-purple-400', text: 'Entregado' }
+          COMPLETADO: {
+            class: "bg-green-500/20 text-green-400",
+            text: "Completado",
+          },
+          ENTREGADO: {
+            class: "bg-purple-500/20 text-purple-400",
+            text: "Entregado",
+          },
         };
-        return map[estatus] || { class: 'bg-gray-500/20 text-gray-400', text: estatus };
-    }
+        return (
+          map[estatus] || {
+            class: "bg-gray-500/20 text-gray-400",
+            text: estatus,
+          }
+        );
+      }
 
-    async function guardarCambiosVehiculo() {
+      async function guardarCambiosVehiculo() {
         if (!vehiculoActual) return;
 
-        const nuevasPlacas = document.getElementById('inputPlacas').value.trim();
-        const nuevoColor = document.getElementById('inputColor').value.trim();
+        const nuevasPlacas = document
+          .getElementById("inputPlacas")
+          .value.trim();
+        const nuevoColor = document.getElementById("inputColor").value.trim();
 
         if (!nuevasPlacas || !nuevoColor) {
-            alert('Por favor completa todos los campos');
-            return;
+          alert("Por favor completa todos los campos");
+          return;
         }
 
         try {
-            mostrarLoader(true);
+          mostrarLoader(true);
 
-            const vehiculoActualizado = {
-                ...vehiculoActual,
-                placas: nuevasPlacas,
-                color: nuevoColor
-            };
+          const vehiculoActualizado = {
+            ...vehiculoActual,
+            placas: nuevasPlacas,
+            color: nuevoColor,
+          };
 
-            const response = await fetch(`${API_URL_VEHICULOS}/${vehiculoActual.idVehiculo}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(vehiculoActualizado)
-            });
+          const response = await fetch(
+            `${API_URL_VEHICULOS}/${vehiculoActual.idVehiculo}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(vehiculoActualizado),
+            }
+          );
 
-            if (!response.ok) throw new Error('Error al actualizar');
+          if (!response.ok) throw new Error("Error al actualizar");
 
-            vehiculoActual.placas = nuevasPlacas;
-            vehiculoActual.color = nuevoColor;
-            datosOriginales = { placas: nuevasPlacas, color: nuevoColor };
+          vehiculoActual.placas = nuevasPlacas;
+          vehiculoActual.color = nuevoColor;
+          datosOriginales = { placas: nuevasPlacas, color: nuevoColor };
 
-            // Actualizar select
-            cargarListaVehiculos();
-            document.getElementById('selectVehiculo').value = vehiculoActual.idVehiculo;
+          // Actualizar select
+          cargarListaVehiculos();
+          document.getElementById("selectVehiculo").value =
+            vehiculoActual.idVehiculo;
 
-            mostrarModal('¡Éxito!', 'Información actualizada correctamente');
+          mostrarModal("¡Éxito!", "Información actualizada correctamente");
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error al guardar cambios');
+          console.error("Error:", error);
+          alert("Error al guardar cambios");
         } finally {
-            mostrarLoader(false);
+          mostrarLoader(false);
         }
-    }
+      }
 
-    function cancelarEdicion() {
-        document.getElementById('inputPlacas').value = datosOriginales.placas;
-        document.getElementById('inputColor').value = datosOriginales.color;
-    }
+      function cancelarEdicion() {
+        document.getElementById("inputPlacas").value = datosOriginales.placas;
+        document.getElementById("inputColor").value = datosOriginales.color;
+      }
 
-    function mostrarModal(titulo, mensaje) {
-        document.getElementById('modalTitulo').textContent = titulo;
-        document.getElementById('modalMensaje').textContent = mensaje;
-        document.getElementById('modalConfirmacion').classList.remove('hidden');
-        document.getElementById('modalConfirmacion').classList.add('flex');
-    }
+      function mostrarModal(titulo, mensaje) {
+        document.getElementById("modalTitulo").textContent = titulo;
+        document.getElementById("modalMensaje").textContent = mensaje;
+        document.getElementById("modalConfirmacion").classList.remove("hidden");
+        document.getElementById("modalConfirmacion").classList.add("flex");
+      }
 
-    function cerrarModalConfirmacion() {
-        document.getElementById('modalConfirmacion').classList.add('hidden');
-        document.getElementById('modalConfirmacion').classList.remove('flex');
-    }
+      function cerrarModalConfirmacion() {
+        document.getElementById("modalConfirmacion").classList.add("hidden");
+        document.getElementById("modalConfirmacion").classList.remove("flex");
+      }
 
-    function mostrarLoader(mostrar) {
-        document.getElementById('loader').classList.toggle('hidden', !mostrar);
-    }
+      function mostrarLoader(mostrar) {
+        document.getElementById("loader").classList.toggle("hidden", !mostrar);
+      }
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            cerrarModalConfirmacion();
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          cerrarModalConfirmacion();
         }
-    });
-</script>
-</body>
-
+      });
+    </script>
+  </body>
 </html>

@@ -1,432 +1,530 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Inicio - Siscare</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-</head>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body class="bg-gradient-to-br from-[#0D0D0D] to-[#1a0f0f] text-white min-h-screen flex">
-<!-- SIDEBAR -->
-<aside class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4">
-    <div>
-        <h2 class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center">
-            Siscare
+  <body
+    class="bg-gradient-to-br from-[#0D0D0D] to-[#1a0f0f] text-white min-h-screen flex"
+  >
+    <!-- SIDEBAR -->
+    <aside
+      class="w-64 bg-black/80 border-r border-orange-600/20 flex flex-col justify-between py-6 px-4"
+    >
+      <div>
+        <h2
+          class="text-3xl font-bold text-orange-500 border-b border-gray-700 pb-2 mb-6 text-center"
+        >
+          Siscare
         </h2>
 
         <nav class="flex flex-col gap-1">
-            <a href="/cliente/home.html"
-               class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
-                <i class="bx bx-home text-xl text-orange-400"></i> Inicio
-            </a>
+          <a
+            href="/cliente/home.html"
+            class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition"
+          >
+            <i class="bx bx-home text-xl text-orange-400"></i> Inicio
+          </a>
 
-            <a href="/cliente/misServicios.html"
-               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                <i class="bx bx-wrench text-xl"></i> Mis Servicios
-            </a>
+          <a
+            href="/cliente/misServicios.html"
+            class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition"
+          >
+            <i class="bx bx-wrench text-xl"></i> Mis Servicios
+          </a>
 
-            <a href="/cliente/misVehiculos.html"
-               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                <i class="bx bx-car text-xl"></i> Mis Vehículos
-            </a>
+          <a
+            href="/cliente/misVehiculos.html"
+            class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition"
+          >
+            <i class="bx bx-car text-xl"></i> Mis Vehículos
+          </a>
 
-            <a href="/cliente/miPerfil.html"
-               class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
-                <i class="bx bx-user text-xl"></i> Mi Perfil
-            </a>
+          <a
+            href="/cliente/miPerfil.html"
+            class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition"
+          >
+            <i class="bx bx-user text-xl"></i> Mi Perfil
+          </a>
         </nav>
-    </div>
+      </div>
 
-    <div class="border-t border-gray-700 pt-4">
-        <button onclick="cerrarSesion()" class="w-full flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
-            <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
+      <div class="border-t border-gray-700 pt-4">
+        <button
+          onclick="cerrarSesion()"
+          class="w-full flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400"
+        >
+          <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
         </button>
-    </div>
-</aside>
+      </div>
+    </aside>
 
-<!-- CONTENIDO PRINCIPAL -->
-<main class="flex-1 flex flex-col">
-    <!-- NAVBAR SUPERIOR -->
-    <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col">
+      <!-- NAVBAR SUPERIOR -->
+      <header
+        class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm"
+      >
         <div class="flex items-center gap-3">
-            <span id="usuarioRol" class="text-gray-300 text-sm">Cliente</span>
-            <button class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition">
-                <i class="bx bx-user text-white text-xl"></i>
-            </button>
+          <span id="usuarioRol" class="text-gray-300 text-sm">Cliente</span>
+          <button
+            class="bg-orange-600 hover:bg-orange-500 p-2 rounded-full transition"
+          >
+            <i class="bx bx-user text-white text-xl"></i>
+          </button>
         </div>
-    </header>
+      </header>
 
-    <!-- HERO SECTION -->
-    <section class="flex-1 flex items-center justify-center p-8">
+      <!-- HERO SECTION -->
+      <section class="flex-1 flex items-center justify-center p-8">
         <div class="text-center max-w-4xl">
-            <!-- Efecto de partículas -->
-            <div class="absolute inset-0 overflow-hidden pointer-events-none">
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
+          <!-- Efecto de partículas -->
+          <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+
+          <!-- Avatar del Cliente -->
+          <div class="mb-8 animate-float">
+            <div
+              class="w-32 h-32 mx-auto bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/30 border-4 border-white/10"
+            >
+              <i class="bx bx-user text-white text-4xl"></i>
+            </div>
+          </div>
+
+          <!-- Mensaje de Bienvenida -->
+          <div class="animate-slideUp">
+            <h1
+              class="text-6xl font-bold mb-6 bg-gradient-to-r from-white via-orange-200 to-orange-400 bg-clip-text text-transparent"
+            >
+              ¡Bienvenido de vuelta!
+            </h1>
+            <p class="text-3xl text-gray-300 mb-8">
+              <span id="nombreCliente" class="font-semibold text-orange-400"
+                >Cargando...</span
+              >
+            </p>
+          </div>
+
+          <!-- Cards Informativas -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-slideUp delay-300"
+          >
+            <!-- Servicios -->
+            <div
+              class="bg-gradient-to-br from-orange-500/10 to-red-500/5 border border-orange-500/20 rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300"
+            >
+              <div class="flex items-center gap-4">
+                <div class="bg-orange-500/20 p-3 rounded-xl">
+                  <i class="bx bx-check-circle text-orange-400 text-2xl"></i>
+                </div>
+                <div class="text-left">
+                  <p class="text-gray-400 text-sm">Servicios con Nosotros</p>
+                  <p class="text-2xl font-bold text-white" id="totalServicios">
+                    0
+                  </p>
+                  <p class="text-orange-400 text-xs">Total de servicios</p>
+                </div>
+              </div>
             </div>
 
-            <!-- Avatar del Cliente -->
-            <div class="mb-8 animate-float">
-                <div class="w-32 h-32 mx-auto bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/30 border-4 border-white/10">
-                    <i class="bx bx-user text-white text-4xl"></i>
+            <!-- Vehículos -->
+            <div
+              class="bg-gradient-to-br from-blue-500/10 to-purple-500/5 border border-blue-500/20 rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300"
+            >
+              <div class="flex items-center gap-4">
+                <div class="bg-blue-500/20 p-3 rounded-xl">
+                  <i class="bx bx-car text-blue-400 text-2xl"></i>
                 </div>
+                <div class="text-left">
+                  <p class="text-gray-400 text-sm">Mis Vehículos</p>
+                  <p class="text-2xl font-bold text-white" id="totalVehiculos">
+                    0
+                  </p>
+                  <p class="text-blue-400 text-xs">Registrados</p>
+                </div>
+              </div>
             </div>
 
-            <!-- Mensaje de Bienvenida -->
-            <div class="animate-slideUp">
-                <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-white via-orange-200 to-orange-400 bg-clip-text text-transparent">
-                    ¡Bienvenido de vuelta!
-                </h1>
-                <p class="text-3xl text-gray-300 mb-8">
-                    <span id="nombreCliente" class="font-semibold text-orange-400">Cargando...</span>
-                </p>
+            <!-- Próximo Servicio -->
+            <div
+              class="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300"
+            >
+              <div class="flex items-center gap-4">
+                <div class="bg-green-500/20 p-3 rounded-xl">
+                  <i class="bx bx-calendar text-green-400 text-2xl"></i>
+                </div>
+                <div class="text-left">
+                  <p class="text-gray-400 text-sm">Próximo Servicio</p>
+                  <p
+                    class="text-xl font-bold text-white"
+                    id="proximoServicioFecha"
+                  >
+                    -
+                  </p>
+                  <p class="text-green-400 text-xs" id="proximoServicioEstado">
+                    Sin servicios
+                  </p>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <!-- Cards Informativas -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-slideUp delay-300">
-                <!-- Servicios -->
-                <div class="bg-gradient-to-br from-orange-500/10 to-red-500/5 border border-orange-500/20 rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-orange-500/20 p-3 rounded-xl">
-                            <i class="bx bx-check-circle text-orange-400 text-2xl"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-gray-400 text-sm">Servicios con Nosotros</p>
-                            <p class="text-2xl font-bold text-white" id="totalServicios">0</p>
-                            <p class="text-orange-400 text-xs">Total de servicios</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vehículos -->
-                <div class="bg-gradient-to-br from-blue-500/10 to-purple-500/5 border border-blue-500/20 rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-blue-500/20 p-3 rounded-xl">
-                            <i class="bx bx-car text-blue-400 text-2xl"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-gray-400 text-sm">Mis Vehículos</p>
-                            <p class="text-2xl font-bold text-white" id="totalVehiculos">0</p>
-                            <p class="text-blue-400 text-xs">Registrados</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Próximo Servicio -->
-                <div class="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-green-500/20 p-3 rounded-xl">
-                            <i class="bx bx-calendar text-green-400 text-2xl"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-gray-400 text-sm">Próximo Servicio</p>
-                            <p class="text-xl font-bold text-white" id="proximoServicioFecha">-</p>
-                            <p class="text-green-400 text-xs" id="proximoServicioEstado">Sin servicios</p>
-                        </div>
-                    </div>
-                </div>
+          <!-- Acciones Rápidas -->
+          <div class="animate-slideUp delay-500">
+            <h2 class="text-2xl font-bold text-gray-300 mb-6">
+              ¿Qué te gustaría hacer hoy?
+            </h2>
+            <div class="flex flex-wrap justify-center gap-4">
+              <a
+                href="/cliente/misServicios.html"
+                class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/30 flex items-center gap-3"
+              >
+                <i class="bx bx-wrench"></i>
+                Ver Mis Servicios
+              </a>
+              <a
+                href="/cliente/misVehiculos.html"
+                class="bg-gray-800/50 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 flex items-center gap-3"
+              >
+                <i class="bx bx-car"></i>
+                Gestionar Vehículos
+              </a>
             </div>
+          </div>
 
-            <!-- Acciones Rápidas -->
-            <div class="animate-slideUp delay-500">
-                <h2 class="text-2xl font-bold text-gray-300 mb-6">¿Qué te gustaría hacer hoy?</h2>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="/cliente/misServicios.html"
-                       class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/30 flex items-center gap-3">
-                        <i class="bx bx-wrench"></i>
-                        Ver Mis Servicios
-                    </a>
-                    <a href="/cliente/misVehiculos.html"
-                       class="bg-gray-800/50 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 flex items-center gap-3">
-                        <i class="bx bx-car"></i>
-                        Gestionar Vehículos
-                    </a>
-                </div>
+          <!-- Mensaje Inspirador -->
+          <div class="mt-16 animate-fadeIn delay-700">
+            <div
+              class="bg-gradient-to-r from-orange-500/10 to-transparent border-l-4 border-orange-500 p-6 rounded-r-2xl"
+            >
+              <p class="text-gray-300 text-lg italic">
+                "Tu seguridad es nuestra prioridad. Confía en nuestros expertos
+                para el cuidado de tu vehículo."
+              </p>
             </div>
-
-            <!-- Mensaje Inspirador -->
-            <div class="mt-16 animate-fadeIn delay-700">
-                <div class="bg-gradient-to-r from-orange-500/10 to-transparent border-l-4 border-orange-500 p-6 rounded-r-2xl">
-                    <p class="text-gray-300 text-lg italic">
-                        "Tu seguridad es nuestra prioridad. Confía en nuestros expertos para el cuidado de tu vehículo."
-                    </p>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <!-- Footer -->
-    <footer class="border-t border-gray-800/50 py-6 px-8">
+      <!-- Footer -->
+      <footer class="border-t border-gray-800/50 py-6 px-8">
         <div class="flex justify-between items-center text-gray-400 text-sm">
-            <div class="flex items-center gap-4">
-                <i class="bx bx-time text-orange-400"></i>
-                <span>Horario: Lunes a Viernes 8:00 AM - 4:00 PM</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <i class="bx bx-phone text-orange-400"></i>
-                <span>Llámanos: (844) 130-4567</span>
-            </div>
+          <div class="flex items-center gap-4">
+            <i class="bx bx-time text-orange-400"></i>
+            <span>Horario: Lunes a Viernes 8:00 AM - 4:00 PM</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <i class="bx bx-phone text-orange-400"></i>
+            <span>Llámanos: (844) 130-4567</span>
+          </div>
         </div>
-    </footer>
-</main>
+      </footer>
+    </main>
 
-<!-- Loader -->
-<div id="loader" class="fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
-    <div class="bg-[#1A1A1A] p-8 rounded-2xl shadow-xl border border-orange-500/30">
+    <!-- Loader -->
+    <div
+      id="loader"
+      class="fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50"
+    >
+      <div
+        class="bg-[#1A1A1A] p-8 rounded-2xl shadow-xl border border-orange-500/30"
+      >
         <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-            <p class="text-gray-300">Cargando información...</p>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"
+          ></div>
+          <p class="text-gray-300">Cargando información...</p>
         </div>
+      </div>
     </div>
-</div>
 
-<style>
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-    }
+    <style>
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
 
-    @keyframes slideUp {
+      @keyframes slideUp {
         from {
-            opacity: 0;
-            transform: translateY(30px);
+          opacity: 0;
+          transform: translateY(30px);
         }
         to {
-            opacity: 1;
-            transform: translateY(0);
+          opacity: 1;
+          transform: translateY(0);
         }
-    }
+      }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
-    .particle {
+      .particle {
         position: absolute;
         width: 4px;
         height: 4px;
         background: rgba(255, 140, 0, 0.3);
         border-radius: 50%;
         animation: float 6s ease-in-out infinite;
-    }
+      }
 
-    .particle:nth-child(1) {
+      .particle:nth-child(1) {
         top: 20%;
         left: 10%;
         animation-delay: 0s;
-    }
+      }
 
-    .particle:nth-child(2) {
+      .particle:nth-child(2) {
         top: 60%;
         left: 80%;
         animation-delay: 1s;
-    }
+      }
 
-    .particle:nth-child(3) {
+      .particle:nth-child(3) {
         top: 40%;
         left: 30%;
         animation-delay: 2s;
-    }
+      }
 
-    .particle:nth-child(4) {
+      .particle:nth-child(4) {
         top: 80%;
         left: 50%;
         animation-delay: 3s;
-    }
+      }
 
-    .particle:nth-child(5) {
+      .particle:nth-child(5) {
         top: 30%;
         left: 70%;
         animation-delay: 4s;
-    }
+      }
 
-    .animate-float {
+      .animate-float {
         animation: float 3s ease-in-out infinite;
-    }
+      }
 
-    .animate-slideUp {
+      .animate-slideUp {
         animation: slideUp 0.8s ease-out;
-    }
+      }
 
-    .animate-fadeIn {
+      .animate-fadeIn {
         animation: fadeIn 1s ease-out;
-    }
+      }
 
-    .delay-300 {
+      .delay-300 {
         animation-delay: 0.3s;
         animation-fill-mode: both;
-    }
+      }
 
-    .delay-500 {
+      .delay-500 {
         animation-delay: 0.5s;
         animation-fill-mode: both;
-    }
+      }
 
-    .delay-700 {
+      .delay-700 {
         animation-delay: 0.7s;
         animation-fill-mode: both;
-    }
+      }
 
-    ::-webkit-scrollbar {
+      ::-webkit-scrollbar {
         width: 8px;
-    }
+      }
 
-    ::-webkit-scrollbar-track {
+      ::-webkit-scrollbar-track {
         background: #1a1a1a;
-    }
+      }
 
-    ::-webkit-scrollbar-thumb {
+      ::-webkit-scrollbar-thumb {
         background: linear-gradient(to bottom, #f97316, #dc2626);
         border-radius: 4px;
-    }
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
+      ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(to bottom, #ea580c, #b91c1c);
-    }
-</style>
+      }
+    </style>
 
-<script>
-    const API_URL_CLIENTES = 'http://localhost:8080/api/clientes';
-    const API_URL_VEHICULOS = 'http://localhost:8080/api/vehiculos';
-    const API_URL_SERVICIOS = 'http://localhost:8080/api/servicios';
+    <script>
+      const API_URL_CLIENTES = "http://localhost:8080/api/clientes";
+      const API_URL_VEHICULOS = "http://localhost:8080/api/vehiculos";
+      const API_URL_SERVICIOS = "http://localhost:8080/api/servicios";
 
-    let clienteData = null;
+      let clienteData = null;
 
-    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         verificarSesion();
         cargarDatosCliente();
-    });
+      });
 
-    function verificarSesion() {
-        const usuario = sessionStorage.getItem('usuario');
+      function verificarSesion() {
+        const usuario = sessionStorage.getItem("usuario");
         if (!usuario) {
-            window.location.href = '../login.html';
+          window.location.href = "../login.html";
+          return;
+        }
+
+        try {
+          const userData = JSON.parse(usuario);
+          if (userData.rol !== "cliente") {
+            alert("Acceso denegado. Esta página es solo para clientes.");
+            window.location.href = "../login.html";
             return;
-        }
-
-        try {
-            const userData = JSON.parse(usuario);
-            if (userData.rol !== 'cliente') {
-                alert('Acceso denegado. Esta página es solo para clientes.');
-                window.location.href = '../login.html';
-                return;
-            }
-            clienteData = userData;
+          }
+          clienteData = userData;
         } catch (error) {
-            console.error('Error al parsear usuario:', error);
-            window.location.href = '../login.html';
+          console.error("Error al parsear usuario:", error);
+          window.location.href = "../login.html";
         }
-    }
+      }
 
-    function cerrarSesion() {
-        if (confirm('¿Está seguro de cerrar sesión?')) {
-            sessionStorage.clear();
-            localStorage.clear();
-            window.location.href = '../login.html';
+      function cerrarSesion() {
+        if (confirm("¿Está seguro de cerrar sesión?")) {
+          sessionStorage.clear();
+          localStorage.clear();
+          window.location.href = "../login.html";
         }
-    }
+      }
 
-    async function cargarDatosCliente() {
+      async function cargarDatosCliente() {
         try {
-            mostrarLoader(true);
+          mostrarLoader(true);
 
-            // 1. Obtener datos del cliente por su usuario
-            const responseClientes = await fetch(API_URL_CLIENTES);
-            if (!responseClientes.ok) throw new Error('Error al cargar clientes');
+          // 1. Obtener datos del cliente por su usuario
+          const responseClientes = await fetch(API_URL_CLIENTES);
+          if (!responseClientes.ok) throw new Error("Error al cargar clientes");
 
-            const clientes = await responseClientes.json();
-            console.log('Clientes:', clientes);
-            console.log('Usuario actual:', clienteData);
+          const clientes = await responseClientes.json();
+          console.log("Clientes:", clientes);
+          console.log("Usuario actual:", clienteData);
 
-            // Buscar el cliente que corresponde al usuario logueado
-            const cliente = clientes.find(c => c.usuario?.idUsuario === clienteData.idUsuario);
+          // Buscar el cliente que corresponde al usuario logueado
+          const cliente = clientes.find(
+            (c) => c.usuario?.idUsuario === clienteData.idUsuario
+          );
 
-            if (!cliente) {
-                throw new Error('Cliente no encontrado');
-            }
+          if (!cliente) {
+            throw new Error("Cliente no encontrado");
+          }
 
-            console.log('Cliente encontrado:', cliente);
+          console.log("Cliente encontrado:", cliente);
 
-            // Actualizar nombre
-            document.getElementById('nombreCliente').textContent = cliente.nombreCompleto;
+          // Actualizar nombre
+          document.getElementById("nombreCliente").textContent =
+            cliente.nombreCompleto;
 
-            // 2. Obtener vehículos del cliente
-            const responseVehiculos = await fetch(`${API_URL_VEHICULOS}/cliente/${cliente.idCliente}`);
-            if (!responseVehiculos.ok) throw new Error('Error al cargar vehículos');
+          // 2. Obtener vehículos del cliente
+          const responseVehiculos = await fetch(
+            `${API_URL_VEHICULOS}/cliente/${cliente.idCliente}`
+          );
+          if (!responseVehiculos.ok)
+            throw new Error("Error al cargar vehículos");
 
-            const vehiculos = await responseVehiculos.json();
-            console.log('Vehículos:', vehiculos);
-            document.getElementById('totalVehiculos').textContent = vehiculos.length;
+          const vehiculos = await responseVehiculos.json();
+          console.log("Vehículos:", vehiculos);
+          document.getElementById("totalVehiculos").textContent =
+            vehiculos.length;
 
-            // 3. Obtener servicios del cliente
-            const responseServicios = await fetch(API_URL_SERVICIOS);
-            if (!responseServicios.ok) throw new Error('Error al cargar servicios');
+          // 3. Obtener servicios del cliente
+          const responseServicios = await fetch(API_URL_SERVICIOS);
+          if (!responseServicios.ok)
+            throw new Error("Error al cargar servicios");
 
-            const todosServicios = await responseServicios.json();
+          const todosServicios = await responseServicios.json();
 
-            // Filtrar servicios de los vehículos del cliente
-            const idsVehiculos = vehiculos.map(v => v.idVehiculo);
-            const serviciosCliente = todosServicios.filter(s =>
-                idsVehiculos.includes(s.vehiculo?.idVehiculo)
-            );
+          // Filtrar servicios de los vehículos del cliente
+          const idsVehiculos = vehiculos.map((v) => v.idVehiculo);
+          const serviciosCliente = todosServicios.filter((s) =>
+            idsVehiculos.includes(s.vehiculo?.idVehiculo)
+          );
 
-            console.log('Servicios del cliente:', serviciosCliente);
-            document.getElementById('totalServicios').textContent = serviciosCliente.length;
+          console.log("Servicios del cliente:", serviciosCliente);
+          document.getElementById("totalServicios").textContent =
+            serviciosCliente.length;
 
-            // 4. Encontrar próximo servicio (el más reciente que no esté entregado)
-            const serviciosPendientes = serviciosCliente.filter(s =>
-                s.estatus !== 'ENTREGADO' && s.estatus !== 'CANCELADO'
-            );
+          // 4. Encontrar próximo servicio (basado en fecha_proximo_servicio)
+          const serviciosConProximaFecha = serviciosCliente.filter(
+            (s) =>
+              s.fechaProximoServicio !== null &&
+              s.fechaProximoServicio !== undefined
+          );
 
-            if (serviciosPendientes.length > 0) {
-                // Ordenar por fecha estimada de entrega
-                serviciosPendientes.sort((a, b) => {
-                    const fechaA = a.fechaEstimadaEntrega ? new Date(a.fechaEstimadaEntrega) : new Date('9999-12-31');
-                    const fechaB = b.fechaEstimadaEntrega ? new Date(b.fechaEstimadaEntrega) : new Date('9999-12-31');
-                    return fechaA - fechaB;
-                });
+          if (serviciosConProximaFecha.length > 0) {
+            // Ordenar por fecha_proximo_servicio (más cercana primero)
+            serviciosConProximaFecha.sort((a, b) => {
+              const fechaA = new Date(a.fechaProximoServicio);
+              const fechaB = new Date(b.fechaProximoServicio);
+              return fechaA - fechaB;
+            });
 
-                const proximoServicio = serviciosPendientes[0];
+            const proximoServicio = serviciosConProximaFecha[0];
 
-                if (proximoServicio.fechaEstimadaEntrega) {
-                    const fecha = new Date(proximoServicio.fechaEstimadaEntrega);
-                    const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
-                    document.getElementById('proximoServicioFecha').textContent =
-                        fecha.toLocaleDateString('es-MX', opciones);
-                } else {
-                    document.getElementById('proximoServicioFecha').textContent = 'Por definir';
-                }
+            // Formatear fecha_proximo_servicio
+            const fecha = new Date(proximoServicio.fechaProximoServicio);
+            const opciones = {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            };
+            document.getElementById("proximoServicioFecha").textContent =
+              fecha.toLocaleDateString("es-MX", opciones);
 
-                const estados = {
-                    'PENDIENTE': 'Pendiente',
-                    'EN_PROCESO': 'En proceso',
-                    'COMPLETADO': 'Completado'
-                };
-                document.getElementById('proximoServicioEstado').textContent =
-                    estados[proximoServicio.estatus] || proximoServicio.estatus;
-            } else {
-                document.getElementById('proximoServicioFecha').textContent = '-';
-                document.getElementById('proximoServicioEstado').textContent = 'Sin servicios activos';
-            }
+            // Mostrar información adicional del próximo servicio
+            const vehiculoInfo = proximoServicio.vehiculo
+              ? `${proximoServicio.vehiculo.modelo?.marca?.nombreMarca || ""} ${
+                  proximoServicio.vehiculo.modelo?.nombreModelo || ""
+                }`.trim()
+              : "Vehículo no disponible";
 
+            const estados = {
+              PENDIENTE: "Pendiente",
+              EN_PROCESO: "En proceso",
+              COMPLETADO: "Completado",
+              ENTREGADO: "Entregado",
+              CANCELADO: "Cancelado",
+            };
+
+            document.getElementById("proximoServicioEstado").textContent = `${
+              estados[proximoServicio.estatus] || proximoServicio.estatus
+            } - ${vehiculoInfo}`;
+
+          } else {
+            document.getElementById("proximoServicioFecha").textContent = "-";
+            document.getElementById("proximoServicioEstado").textContent =
+              "Sin servicios programados";
+          }
         } catch (error) {
-            console.error('Error al cargar datos:', error);
-            alert('Error al cargar la información del cliente');
+          console.error("Error al cargar datos:", error);
+          alert("Error al cargar la información del cliente");
         } finally {
-            mostrarLoader(false);
+          mostrarLoader(false);
         }
-    }
+      }
 
-    function mostrarLoader(mostrar) {
-        document.getElementById('loader').style.display = mostrar ? 'flex' : 'none';
-    }
-</script>
-</body>
-
+      function mostrarLoader(mostrar) {
+        document.getElementById("loader").style.display = mostrar
+          ? "flex"
+          : "none";
+      }
+    </script>
+  </body>
 </html>

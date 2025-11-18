@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/logout.js"></script>
 </head>
 
 <body class="bg-[#0D0D0D] text-white min-h-screen flex">
@@ -18,15 +19,18 @@
             </h2>
 
             <nav class="flex flex-col gap-1">
-                <a href="/admin/panelAdmin.html" class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
+                <a href="/admin/panelAdmin.html"
+                    class="flex items-center gap-3 p-3 rounded bg-orange-500/20 transition">
                     <i class="bx bx-home text-xl"></i> Panel
                 </a>
 
-                <a href="/admin/servicios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <a href="/admin/servicios.html"
+                    class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
                     <i class="bx bx-wrench text-xl"></i> Servicios
                 </a>
 
-                <a href="/admin/usuarios.html" class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
+                <a href="/admin/usuarios.html"
+                    class="flex items-center gap-3 p-3 rounded hover:bg-orange-500/20 transition">
                     <i class="bx bx-id-card text-xl"></i> Usuarios
                 </a>
 
@@ -52,7 +56,8 @@
         </div>
 
         <div class="border-t border-gray-700 pt-4">
-            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
+            <a href="/login.html"
+                class="flex items-center gap-3 p-3 hover:bg-red-500/30 rounded transition text-red-400">
                 <i class="bx bx-log-out text-xl"></i> Cerrar Sesión
             </a>
         </div>
@@ -61,7 +66,8 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-1 flex flex-col">
         <!-- NAVBAR SUPERIOR -->
-        <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
+        <header
+            class="flex justify-between items-center px-8 py-4 border-b border-gray-800 bg-[#111]/80 backdrop-blur-sm">
             <div>
                 <h1 class="text-2xl font-bold">Dashboard Administrativo</h1>
                 <p class="text-gray-400 text-sm">Resumen general del sistema</p>
@@ -134,7 +140,7 @@
                         <div>
                             <p class="text-gray-400 text-sm">Clientes Activos</p>
                             <p id="clientesActivos" class="text-3xl font-bold">-</p>
-                           
+
                         </div>
                         <div class="bg-purple-500/20 p-4 rounded-full">
                             <i class="bx bx-user text-purple-400 text-2xl"></i>
@@ -150,7 +156,8 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-orange-400">Estatus de Servicios</h2>
                         <div class="flex gap-2">
-                            <select id="selectPeriodoGrafica" class="bg-black/30 border border-gray-700 text-white p-2 rounded text-sm">
+                            <select id="selectPeriodoGrafica"
+                                class="bg-black/30 border border-gray-700 text-white p-2 rounded text-sm">
                                 <option value="mes" selected>Este Mes</option>
                                 <option value="semana">Esta Semana</option>
                                 <option value="total">Total General</option>
@@ -208,8 +215,15 @@
 
     <style>
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .card-hover {
@@ -223,111 +237,313 @@
     </style>
 
     <script>
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            configurarEventos();
-            cargarDatosDashboard();
-        });
+    // URLs de tus APIs existentes
+    const API_URLS = {
+        servicios: "/api/servicios",
+        clientes: "/api/clientes",
+        vehiculos: "/api/vehiculos",
+        refacciones: "/api/refacciones",
+        marcas: "/api/marcas"
+    };
 
-        // Configurar eventos
-        function configurarEventos() {
-            // Submenú de Catálogos
-            const btnCatalogos = document.getElementById("btnCatalogos");
-            const submenu = document.getElementById("submenuCatalogos");
-            const iconArrow = document.getElementById("iconArrow");
+    // Variables globales para almacenar datos
+    let datosCargados = {
+        servicios: [],
+        clientes: [],
+        vehiculos: [],
+        refacciones: [],
+        marcas: []
+    };
 
+    // Cache para datos
+    let cache = {
+        servicios: null,
+        timestamp: null
+    };
+
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function () {
+        configurarEventos();
+        cargarDashboardOptimizado();
+    });
+
+    // Configurar eventos
+    function configurarEventos() {
+        // Submenú de Catálogos
+        const btnCatalogos = document.getElementById("btnCatalogos");
+        const submenu = document.getElementById("submenuCatalogos");
+        const iconArrow = document.getElementById("iconArrow");
+
+        if (btnCatalogos) {
             btnCatalogos.addEventListener("click", () => {
                 submenu.classList.toggle("hidden");
                 iconArrow.classList.toggle("bx-chevron-down");
                 iconArrow.classList.toggle("bx-chevron-up");
             });
+        }
 
-            // Cambio en período de gráfica
-            document.getElementById('selectPeriodoGrafica').addEventListener('change', function() {
-                cargarGraficaEstatusServicios(this.value);
+        // Cambio en período de gráfica - MEJORADO
+        const selectPeriodo = document.getElementById('selectPeriodoGrafica');
+        if (selectPeriodo) {
+            selectPeriodo.addEventListener('change', function () {
+                console.log(`🔄 Cambiando período a: ${this.value}`);
+                cargarGraficaEstatusServicios();
+                actualizarTituloGrafica(this.value);
             });
+        }
 
-            // Agregar efecto hover a las cards
-            document.querySelectorAll('.bg-\\[#1A1A1A\\]').forEach(card => {
-                card.classList.add('card-hover');
+        // Agregar efecto hover a las cards
+        const cards = document.querySelectorAll('.bg-\\[#1A1A1A\\]');
+        cards.forEach(card => {
+            card.classList.add('card-hover');
+        });
+    }
+
+    // ==================== FUNCIÓN PRINCIPAL OPTIMIZADA ====================
+
+    async function cargarDashboardOptimizado() {
+        try {
+            console.log("🚀 Iniciando carga optimizada del dashboard...");
+            mostrarLoading(true);
+
+            // ESTRATEGIA: Cargar servicios primero (lo más importante) y mostrar inmediatamente
+            await cargarServiciosRapido();
+            
+            // Mostrar datos críticos inmediatamente
+            await cargarEstadisticasPrincipales();
+            await cargarGraficaEstatusServicios();
+            await cargarServiciosRecientes();
+
+            // Cargar el resto en segundo plano (menos crítico) después de un breve delay
+            setTimeout(() => {
+                cargarDatosSecundarios();
+            }, 1000);
+
+        } catch (error) {
+            console.error('❌ Error en carga principal:', error);
+            mostrarError('Error al cargar datos principales');
+        } finally {
+            // No ocultar loading completo aquí, solo cuando terminen los secundarios
+        }
+    }
+
+    // Cargar datos secundarios (menos importantes) en segundo plano
+    async function cargarDatosSecundarios() {
+        try {
+            console.log("🔄 Cargando datos secundarios en segundo plano...");
+            
+            await Promise.all([
+                cargarClientes(),
+                cargarVehiculos(),
+                cargarRefacciones(),
+                cargarMarcas()
+            ]);
+            
+            // Actualizar secciones que dependen de estos datos
+            await actualizarClientesActivos();
+            await cargarRefaccionesBajoStock();
+            await cargarVehiculosPorMarca();
+            
+            console.log("✅ Todos los datos secundarios cargados");
+            
+        } catch (error) {
+            console.error('⚠️ Error en datos secundarios:', error);
+            // No mostramos error al usuario para no molestar
+        } finally {
+            mostrarLoading(false);
+        }
+    }
+
+    // ==================== FUNCIONES DE CARGA OPTIMIZADAS ====================
+
+    async function cargarServiciosRapido() {
+        try {
+            // Verificar cache (válido por 30 segundos)
+            const ahora = Date.now();
+            if (cache.servicios && cache.timestamp && (ahora - cache.timestamp < 30000)) {
+                datosCargados.servicios = cache.servicios;
+                console.log("📊 Servicios cargados desde cache");
+                return;
+            }
+
+            console.log("📥 Solicitando servicios desde API...");
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout de 10 segundos
+
+            const response = await fetch(API_URLS.servicios, {
+                signal: controller.signal
             });
-        }
+            
+            clearTimeout(timeoutId);
 
-        // Función principal para cargar todos los datos del dashboard
-        async function cargarDatosDashboard() {
-            try {
-                // Cargar estadísticas principales
-                await cargarEstadisticasPrincipales();
-                
-                // Cargar gráfica de estatus
-                await cargarGraficaEstatusServicios('mes');
-                
-                // Cargar servicios recientes
-                await cargarServiciosRecientes();
-                
-                // Cargar refacciones con bajo stock
-                await cargarRefaccionesBajoStock();
-                
-                // Cargar vehículos por marca
-                await cargarVehiculosPorMarca();
-                
-            } catch (error) {
-                console.error('Error cargando datos del dashboard:', error);
-                mostrarError('Error al cargar los datos del dashboard');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            datosCargados.servicios = await response.json();
+            
+            // Guardar en cache
+            cache.servicios = datosCargados.servicios;
+            cache.timestamp = ahora;
+            
+            console.log(`📊 ${datosCargados.servicios.length} servicios cargados`);
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                console.error("⏰ Timeout cargando servicios");
+                mostrarError('Timeout al cargar servicios');
+            } else {
+                console.error("❌ Error cargando servicios:", error);
+                mostrarError('Error al cargar servicios');
             }
+            datosCargados.servicios = [];
         }
+    }
 
-        // 1. Cargar estadísticas principales
-        async function cargarEstadisticasPrincipales() {
-            try {
-                // Total de servicios
-                const totalServicios = await fetch('/api/dashboard/total-servicios').then(r => r.json());
-                document.getElementById('totalServicios').textContent = totalServicios.total;
-                
-                // Servicios activos
-                const serviciosActivos = await fetch('/api/dashboard/servicios-activos').then(r => r.json());
-                document.getElementById('serviciosActivos').textContent = serviciosActivos.total;
-                
-                // Ingresos del mes
-                const ingresosMes = await fetch('/api/dashboard/ingresos-mes').then(r => r.json());
-                document.getElementById('ingresosMes').textContent = '$' + ingresosMes.total.toLocaleString();
-                
-                // Clientes activos
-                const clientesActivos = await fetch('/api/dashboard/clientes-activos').then(r => r.json());
-                document.getElementById('clientesActivos').textContent = clientesActivos.total;
-                
-            } catch (error) {
-                console.error('Error cargando estadísticas:', error);
-                document.getElementById('totalServicios').textContent = 'Error';
-                document.getElementById('serviciosActivos').textContent = 'Error';
-                document.getElementById('ingresosMes').textContent = 'Error';
-                document.getElementById('clientesActivos').textContent = 'Error';
-            }
+    async function cargarClientes() {
+        try {
+            const response = await fetch(API_URLS.clientes);
+            if (!response.ok) return; // No lanzar error, es secundario
+            datosCargados.clientes = await response.json();
+            console.log(`👥 ${datosCargados.clientes.length} clientes cargados`);
+        } catch (error) {
+            console.error("⚠️ Error cargando clientes:", error);
+            datosCargados.clientes = [];
         }
+    }
 
-        // 2. Cargar gráfica de estatus de servicios
-        async function cargarGraficaEstatusServicios(periodo) {
-            try {
-                const datos = await fetch(`/api/dashboard/estatus-servicios?periodo=${periodo}`).then(r => r.json());
+    async function cargarVehiculos() {
+        try {
+            const response = await fetch(API_URLS.vehiculos);
+            if (!response.ok) return;
+            datosCargados.vehiculos = await response.json();
+            console.log(`🚗 ${datosCargados.vehiculos.length} vehículos cargados`);
+        } catch (error) {
+            console.error("⚠️ Error cargando vehículos:", error);
+            datosCargados.vehiculos = [];
+        }
+    }
+
+    async function cargarRefacciones() {
+        try {
+            const response = await fetch(API_URLS.refacciones);
+            if (!response.ok) return;
+            datosCargados.refacciones = await response.json();
+            console.log(`🔧 ${datosCargados.refacciones.length} refacciones cargadas`);
+        } catch (error) {
+            console.error("⚠️ Error cargando refacciones:", error);
+            datosCargados.refacciones = [];
+        }
+    }
+
+    async function cargarMarcas() {
+        try {
+            const response = await fetch(API_URLS.marcas);
+            if (!response.ok) return;
+            datosCargados.marcas = await response.json();
+            console.log(`🏷️ ${datosCargados.marcas.length} marcas cargadas`);
+        } catch (error) {
+            console.error("⚠️ Error cargando marcas:", error);
+            datosCargados.marcas = [];
+        }
+    }
+
+    // ==================== FUNCIONES DE VISUALIZACIÓN OPTIMIZADAS ====================
+
+    // 1. Cargar estadísticas principales (OPTIMIZADO)
+    async function cargarEstadisticasPrincipales() {
+        try {
+            const servicios = datosCargados.servicios;
+            
+            // Cálculos optimizados - una sola pasada por los servicios
+            let serviciosActivos = 0;
+            let ingresosMes = 0;
+            const hoy = new Date();
+            const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+            // Usar for loop que es más rápido para arrays grandes
+            for (let i = 0; i < servicios.length; i++) {
+                const servicio = servicios[i];
                 
-                // Destruir gráfica anterior si existe
-                if (window.graficaEstatus) {
-                    window.graficaEstatus.destroy();
+                // Contar servicios activos
+                if (servicio.estatus === 'PENDIENTE' || servicio.estatus === 'EN_PROCESO') {
+                    serviciosActivos++;
                 }
                 
+                // Calcular ingresos del mes
+                if (servicio.fechaEntregaReal) {
+                    const fechaEntrega = new Date(servicio.fechaEntregaReal);
+                    if (fechaEntrega >= primerDiaMes && fechaEntrega <= hoy) {
+                        ingresosMes += servicio.costoTotal || 0;
+                    }
+                }
+            }
+
+            // Actualizar UI inmediatamente
+            actualizarElementoSeguro('totalServicios', servicios.length);
+            actualizarElementoSeguro('serviciosActivos', serviciosActivos);
+            actualizarElementoSeguro('ingresosMes', '$' + ingresosMes.toLocaleString('es-MX', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }));
+            
+            // Clientes se actualizará después cuando se carguen
+            actualizarElementoSeguro('clientesActivos', '...');
+            
+            console.log("✅ Estadísticas principales actualizadas");
+            
+        } catch (error) {
+            console.error('❌ Error cargando estadísticas:', error);
+            // Establecer valores de error
+            actualizarElementoSeguro('totalServicios', 'Error');
+            actualizarElementoSeguro('serviciosActivos', 'Error');
+            actualizarElementoSeguro('ingresosMes', 'Error');
+            actualizarElementoSeguro('clientesActivos', 'Error');
+        }
+    }
+
+    // 2. Cargar gráfica de estatus de servicios CON FILTRO POR PERÍODO
+    async function cargarGraficaEstatusServicios() {
+        try {
+            const servicios = datosCargados.servicios;
+            const periodo = document.getElementById('selectPeriodoGrafica')?.value || 'mes';
+            
+            // Filtrar servicios por período
+            const serviciosFiltrados = filtrarServiciosPorPeriodo(servicios, periodo);
+            
+            console.log(`📈 Filtrando por período: ${periodo}, ${serviciosFiltrados.length} servicios`);
+
+            // Contar servicios por estatus
+            const conteoEstatus = serviciosFiltrados.reduce((acc, servicio) => {
+                const estatus = servicio.estatus || 'DESCONOCIDO';
+                acc[estatus] = (acc[estatus] || 0) + 1;
+                return acc;
+            }, {});
+
+            const labels = Object.keys(conteoEstatus);
+            const values = Object.values(conteoEstatus);
+
+            console.log("📈 Datos para gráfica:", { labels, values });
+
+            // Actualizar gráfica existente en lugar de recrearla
+            if (window.graficaEstatus) {
+                window.graficaEstatus.data.labels = labels;
+                window.graficaEstatus.data.datasets[0].data = values;
+                window.graficaEstatus.update('none'); // 'none' para animación más rápida
+                console.log("✅ Gráfica actualizada (existente)");
+            } else {
+                // Crear gráfica por primera vez
                 const ctx = document.getElementById('graficaEstatusServicios').getContext('2d');
                 window.graficaEstatus = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: datos.labels,
+                        labels: labels,
                         datasets: [{
-                            data: datos.values,
+                            data: values,
                             backgroundColor: [
-                                '#10B981', // Entregado
+                                '#10B981', // Completado/Entregado
                                 '#F59E0B', // En Proceso
                                 '#3B82F6', // Pendiente
-                                '#059669', // Completado
-                                '#EF4444'  // Cancelado
+                                '#EF4444', // Cancelado
+                                '#8B5CF6', // Otros estados
+                                '#06B6D4'  // Más estados
                             ],
                             borderWidth: 2,
                             borderColor: '#0D0D0D'
@@ -350,152 +566,412 @@
                                 titleColor: '#F9FAFB',
                                 bodyColor: '#D1D5DB',
                                 borderColor: '#374151',
-                                borderWidth: 1
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
                             }
                         },
-                        cutout: '60%'
+                        cutout: '60%',
+                        animation: {
+                            duration: 800 // Animación más rápida
+                        }
                     }
                 });
-                
-            } catch (error) {
-                console.error('Error cargando gráfica de estatus:', error);
-                document.getElementById('graficaEstatusServicios').innerHTML = 
+                console.log("✅ Gráfica creada por primera vez");
+            }
+            
+        } catch (error) {
+            console.error('❌ Error cargando gráfica de estatus:', error);
+            const container = document.getElementById('graficaEstatusServicios');
+            if (container) {
+                container.innerHTML = 
                     '<div class="text-center text-gray-400 py-8">Error al cargar la gráfica</div>';
             }
         }
+    }
 
-        // 3. Cargar servicios recientes
-        async function cargarServiciosRecientes() {
-            try {
-                const servicios = await fetch('/api/dashboard/servicios-recientes').then(r => r.json());
-                const container = document.getElementById('listaServiciosRecientes');
+    // Función para filtrar servicios por período
+    function filtrarServiciosPorPeriodo(servicios, periodo) {
+        const hoy = new Date();
+        
+        switch (periodo) {
+            case 'dia':
+                // Servicios del día actual (por fecha de ingreso)
+                const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+                const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
                 
-                if (servicios.length === 0) {
-                    container.innerHTML = '<div class="text-center text-gray-400 py-8">No hay servicios recientes</div>';
-                    return;
-                }
+                return servicios.filter(servicio => {
+                    if (!servicio.fechaIngreso) return false;
+                    const fechaIngreso = new Date(servicio.fechaIngreso);
+                    return fechaIngreso >= inicioDia && fechaIngreso <= finDia;
+                });
+
+            case 'semana':
+                // Servicios de la semana actual (lunes a domingo)
+                const inicioSemana = new Date(hoy);
+                inicioSemana.setDate(hoy.getDate() - hoy.getDay() + (hoy.getDay() === 0 ? -6 : 1)); // Lunes
+                inicioSemana.setHours(0, 0, 0, 0);
                 
-                container.innerHTML = servicios.map(servicio => `
+                const finSemana = new Date(inicioSemana);
+                finSemana.setDate(inicioSemana.getDate() + 6); // Domingo
+                finSemana.setHours(23, 59, 59, 999);
+                
+                return servicios.filter(servicio => {
+                    if (!servicio.fechaIngreso) return false;
+                    const fechaIngreso = new Date(servicio.fechaIngreso);
+                    return fechaIngreso >= inicioSemana && fechaIngreso <= finSemana;
+                });
+
+            case 'mes':
+                // Servicios del mes actual
+                const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+                const finMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0, 23, 59, 59);
+                
+                return servicios.filter(servicio => {
+                    if (!servicio.fechaIngreso) return false;
+                    const fechaIngreso = new Date(servicio.fechaIngreso);
+                    return fechaIngreso >= inicioMes && fechaIngreso <= finMes;
+                });
+
+            case 'total':
+            default:
+                // Todos los servicios
+                return servicios;
+        }
+    }
+
+    // Función para actualizar el título de la gráfica según el período
+    function actualizarTituloGrafica(periodo) {
+        const titulo = document.querySelector('#graficaEstatusServicios').closest('.bg-\\[#1A1A1A\\]').querySelector('h2');
+        if (titulo) {
+            const textos = {
+                'dia': 'Estatus de Servicios - Hoy',
+                'semana': 'Estatus de Servicios - Esta Semana',
+                'mes': 'Estatus de Servicios - Este Mes',
+                'total': 'Estatus de Servicios - Total General'
+            };
+            titulo.textContent = textos[periodo] || 'Estatus de Servicios';
+        }
+    }
+
+    // 3. Cargar servicios recientes (OPTIMIZADO)
+    async function cargarServiciosRecientes() {
+        try {
+            const servicios = datosCargados.servicios;
+            
+            // Ordenar y tomar solo los primeros 5 (más eficiente que slice después de sort completo)
+            const serviciosRecientes = servicios
+                .sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso))
+                .slice(0, 5);
+
+            const container = document.getElementById('listaServiciosRecientes');
+            
+            if (!container) {
+                console.log("⚠️ No se encontró contenedor de servicios recientes");
+                return;
+            }
+
+            if (serviciosRecientes.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-8">No hay servicios recientes</div>';
+                return;
+            }
+            
+            // Construir HTML de forma eficiente
+            let html = '';
+            for (let i = 0; i < serviciosRecientes.length; i++) {
+                const servicio = serviciosRecientes[i];
+                const vehiculoInfo = servicio.vehiculo ? 
+                    `${servicio.vehiculo.modelo?.marca?.nombreMarca || 'Marca'} ${servicio.vehiculo.modelo?.nombreModelo || 'Modelo'}` : 
+                    'Vehículo no asignado';
+                
+                const clienteInfo = servicio.vehiculo?.cliente?.nombreCompleto || 'Cliente no asignado';
+                
+                html += `
                     <div class="flex justify-between items-center p-3 bg-black/30 rounded-lg border border-gray-700">
                         <div>
-                            <p class="font-medium">${servicio.folio}</p>
-                            <p class="text-gray-400 text-sm">${servicio.vehiculo} - ${servicio.cliente}</p>
+                            <p class="font-medium">SER-${String(servicio.folioServicio).padStart(6, '0')}</p>
+                            <p class="text-gray-400 text-sm">${vehiculoInfo} - ${clienteInfo}</p>
                         </div>
                         <div class="text-right">
                             <span class="${obtenerClaseEstatus(servicio.estatus)} px-2 py-1 rounded-full text-xs">
                                 ${obtenerTextoEstatus(servicio.estatus)}
                             </span>
-                            <p class="text-gray-400 text-sm mt-1">${formatearFecha(servicio.fecha_ingreso)}</p>
+                            <p class="text-gray-400 text-sm mt-1">${formatearFecha(servicio.fechaIngreso)}</p>
                         </div>
                     </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Error cargando servicios recientes:', error);
-                document.getElementById('listaServiciosRecientes').innerHTML = 
+                `;
+            }
+            
+            container.innerHTML = html;
+            console.log(`✅ ${serviciosRecientes.length} servicios recientes mostrados`);
+            
+        } catch (error) {
+            console.error('❌ Error cargando servicios recientes:', error);
+            const container = document.getElementById('listaServiciosRecientes');
+            if (container) {
+                container.innerHTML = 
                     '<div class="text-center text-red-400 py-8">Error al cargar servicios</div>';
             }
         }
+    }
 
-        // 4. Cargar refacciones con bajo stock
-        async function cargarRefaccionesBajoStock() {
-            try {
-                const refacciones = await fetch('/api/dashboard/refacciones-bajo-stock').then(r => r.json());
-                const container = document.getElementById('listaRefaccionesBajoStock');
-                
-                if (refacciones.length === 0) {
-                    container.innerHTML = '<div class="text-center text-green-400 py-8">✅ Todo el stock en niveles óptimos</div>';
-                    return;
-                }
-                
-                container.innerHTML = refacciones.map(refaccion => `
+    // 4. Cargar refacciones con bajo stock
+    async function cargarRefaccionesBajoStock() {
+        try {
+            const refacciones = datosCargados.refacciones;
+            
+            // Filtrar refacciones con stock bajo (menos de 5 unidades)
+            const refaccionesBajoStock = refacciones.filter(r => r.stock < 5);
+            
+            const container = document.getElementById('listaRefaccionesBajoStock');
+            
+            if (!container) {
+                console.log("⚠️ No se encontró contenedor de refacciones");
+                return;
+            }
+
+            if (refaccionesBajoStock.length === 0) {
+                container.innerHTML = '<div class="text-center text-green-400 py-8">✅ Todo el stock en niveles óptimos</div>';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < refaccionesBajoStock.length; i++) {
+                const refaccion = refaccionesBajoStock[i];
+                html += `
                     <div class="flex justify-between items-center p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
                         <div>
-                            <p class="font-medium text-red-400">${refaccion.nombre_refaccion}</p>
-                            <p class="text-gray-400 text-sm">Stock actual: ${refaccion.stock} unidades</p>
+                            <p class="font-medium text-red-400">${refaccion.nombreRefaccion || 'Sin nombre'}</p>
+                            <p class="text-gray-400 text-sm">Stock actual: ${refaccion.stock || 0} unidades</p>
                         </div>
                         <div class="text-right">
                             <span class="bg-red-500/20 text-red-400 px-2 py-1 rounded text-sm">¡Stock Bajo!</span>
                         </div>
                     </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Error cargando refacciones con bajo stock:', error);
-                document.getElementById('listaRefaccionesBajoStock').innerHTML = 
+                `;
+            }
+            
+            container.innerHTML = html;
+            console.log(`✅ ${refaccionesBajoStock.length} refacciones con bajo stock mostradas`);
+            
+        } catch (error) {
+            console.error('❌ Error cargando refacciones con bajo stock:', error);
+            const container = document.getElementById('listaRefaccionesBajoStock');
+            if (container) {
+                container.innerHTML = 
                     '<div class="text-center text-red-400 py-8">Error al cargar refacciones</div>';
             }
         }
+    }
 
-        // 5. Cargar vehículos por marca
-        async function cargarVehiculosPorMarca() {
-            try {
-                const marcas = await fetch('/api/dashboard/vehiculos-por-marca').then(r => r.json());
-                const container = document.getElementById('listaVehiculosPorMarca');
+    // 5. Cargar vehículos por marca
+    async function cargarVehiculosPorMarca() {
+        try {
+            const vehiculos = datosCargados.vehiculos;
+            const marcas = datosCargados.marcas;
+            
+            // Contar vehículos por marca
+            const conteoPorMarca = {};
+            
+            for (let i = 0; i < vehiculos.length; i++) {
+                const vehiculo = vehiculos[i];
+                const marcaId = vehiculo.modelo?.marca?.idMarca;
+                const marcaNombre = vehiculo.modelo?.marca?.nombreMarca || 'Sin marca';
                 
-                if (marcas.length === 0) {
-                    container.innerHTML = '<div class="text-center text-gray-400 py-8">No hay vehículos registrados</div>';
-                    return;
+                if (marcaId) {
+                    if (!conteoPorMarca[marcaId]) {
+                        conteoPorMarca[marcaId] = {
+                            nombre_marca: marcaNombre,
+                            total_vehiculos: 0
+                        };
+                    }
+                    conteoPorMarca[marcaId].total_vehiculos++;
                 }
-                
-                container.innerHTML = marcas.map(marca => `
+            }
+
+            const marcasConteo = Object.values(conteoPorMarca);
+            const container = document.getElementById('listaVehiculosPorMarca');
+            
+            if (!container) {
+                console.log("⚠️ No se encontró contenedor de vehículos por marca");
+                return;
+            }
+
+            if (marcasConteo.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-8">No hay vehículos registrados</div>';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < marcasConteo.length; i++) {
+                const marca = marcasConteo[i];
+                html += `
                     <div class="flex justify-between items-center p-3 bg-black/30 rounded-lg border border-gray-700">
                         <span class="text-gray-300">${marca.nombre_marca}</span>
                         <span class="text-orange-400 font-medium">${marca.total_vehiculos} vehículos</span>
                     </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Error cargando vehículos por marca:', error);
-                document.getElementById('listaVehiculosPorMarca').innerHTML = 
+                `;
+            }
+            
+            container.innerHTML = html;
+            console.log(`✅ ${marcasConteo.length} marcas con vehículos mostradas`);
+            
+        } catch (error) {
+            console.error('❌ Error cargando vehículos por marca:', error);
+            const container = document.getElementById('listaVehiculosPorMarca');
+            if (container) {
+                container.innerHTML = 
                     '<div class="text-center text-red-400 py-8">Error al cargar vehículos</div>';
             }
         }
+    }
 
-        // Funciones auxiliares
-        function obtenerClaseEstatus(estatus) {
-            const clases = {
-                'entregado': 'bg-green-500/20 text-green-400',
-                'en_proceso': 'bg-yellow-500/20 text-yellow-400',
-                'pendiente': 'bg-blue-500/20 text-blue-400',
-                'completado': 'bg-green-500/20 text-green-400',
-                'cancelado': 'bg-red-500/20 text-red-400'
-            };
-            return clases[estatus] || 'bg-gray-500/20 text-gray-400';
+    // 6. Actualizar clientes activos (función separada para llamada desde secundarios)
+    async function actualizarClientesActivos() {
+        try {
+            const clientesActivos = datosCargados.clientes.length;
+            actualizarElementoSeguro('clientesActivos', clientesActivos);
+            console.log(`✅ Clientes activos actualizados: ${clientesActivos}`);
+        } catch (error) {
+            console.error('❌ Error actualizando clientes activos:', error);
+            actualizarElementoSeguro('clientesActivos', 'Error');
         }
+    }
 
-        function obtenerTextoEstatus(estatus) {
-            const textos = {
-                'entregado': 'Entregado',
-                'en_proceso': 'En Proceso',
-                'pendiente': 'Pendiente',
-                'completado': 'Completado',
-                'cancelado': 'Cancelado'
-            };
-            return textos[estatus] || estatus;
+    // ==================== FUNCIONES AUXILIARES OPTIMIZADAS ====================
+
+    // Función segura para actualizar elementos
+    function actualizarElementoSeguro(id, valor) {
+        try {
+            const elemento = document.getElementById(id);
+            if (elemento) {
+                elemento.textContent = valor;
+            }
+        } catch (error) {
+            console.error(`⚠️ Error actualizando elemento ${id}:`, error);
         }
+    }
 
-        function formatearFecha(fechaString) {
+    function calcularIngresosDelMes(servicios) {
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+        return servicios
+            .filter(servicio => {
+                if (!servicio.fechaEntregaReal) return false;
+                const fechaEntrega = new Date(servicio.fechaEntregaReal);
+                return fechaEntrega >= primerDiaMes && fechaEntrega <= hoy;
+            })
+            .reduce((total, servicio) => total + (servicio.costoTotal || 0), 0);
+    }
+
+    function obtenerClaseEstatus(estatus) {
+        if (!estatus) return 'bg-gray-500/20 text-gray-400';
+
+        const clases = {
+            'ENTREGADO': 'bg-green-500/20 text-green-400',
+            'EN_PROCESO': 'bg-yellow-500/20 text-yellow-400',
+            'PENDIENTE': 'bg-blue-500/20 text-blue-400',
+            'COMPLETADO': 'bg-green-500/20 text-green-400',
+            'CANCELADO': 'bg-red-500/20 text-red-400'
+        };
+        return clases[estatus] || 'bg-gray-500/20 text-gray-400';
+    }
+
+    function obtenerTextoEstatus(estatus) {
+        if (!estatus) return 'Desconocido';
+
+        const textos = {
+            'ENTREGADO': 'Entregado',
+            'EN_PROCESO': 'En Proceso',
+            'PENDIENTE': 'Pendiente',
+            'COMPLETADO': 'Completado',
+            'CANCELADO': 'Cancelado'
+        };
+        return textos[estatus] || estatus;
+    }
+
+    function formatearFecha(fechaString) {
+        if (!fechaString) return 'Fecha no disponible';
+
+        try {
             const fecha = new Date(fechaString);
             return fecha.toLocaleDateString('es-MX', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                year: 'numeric'
             });
+        } catch (error) {
+            return 'Fecha inválida';
         }
+    }
 
-        function mostrarError(mensaje) {
-            // Podrías implementar un sistema de notificaciones aquí
-            console.error(mensaje);
+    function mostrarLoading(mostrar) {
+        try {
+            if (mostrar) {
+                console.log("⏳ Mostrando loading...");
+                // Puedes agregar aquí un spinner visual si lo deseas
+            } else {
+                console.log("✅ Ocultando loading");
+                // Ocultar spinner visual si lo agregaste
+            }
+        } catch (error) {
+            console.error("⚠️ Error en mostrarLoading:", error);
         }
+    }
 
-        // Recargar datos cada 2 minutos
-        setInterval(() => {
-            cargarDatosDashboard();
-        }, 120000);
-    </script>
+    function mostrarError(mensaje) {
+        try {
+            console.error('❌ Error:', mensaje);
+            
+            // Sistema de notificaciones simple
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50';
+            notification.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="bx bx-error"></i>
+                    <span>${mensaje}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                try {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                } catch (e) {
+                    console.error("Error removiendo notificación:", e);
+                }
+            }, 5000);
+            
+        } catch (error) {
+            console.error("❌ Error en mostrarError:", error);
+        }
+    }
+
+    // Recargar datos cada 2 minutos (pero más inteligente)
+    setInterval(() => {
+        console.log("🔄 Recargando datos automáticamente...");
+        cargarDashboardOptimizado();
+    }, 120000);
+
+    // Exportar funciones para debugging si es necesario
+    window.debugDashboard = {
+        datos: datosCargados,
+        recargar: cargarDashboardOptimizado,
+        cache: cache
+    };
+
+</script>
+
 </body>
 
 </html>
